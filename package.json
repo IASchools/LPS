@@ -1,0 +1,7 @@
+{
+  "name": "iaschools-lps",
+  "private": true,
+  "devDependencies": {
+    "wrangler": "^4.113.0"
+  }
+}
