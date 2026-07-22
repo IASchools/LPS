@@ -1,7 +1,7 @@
 {
   // Worker 100% estático — serve tudo dentro de ./public. Sem "main", sem build, sem npm.
   // Cada LP mora numa subpasta: public/mba/ -> lp.iaschools.com.br/mba/
-  "name": "iaschools-lps",
+  "name": "lps",
   "compatibility_date": "2026-07-22",
   "assets": {
     "directory": "./public",
