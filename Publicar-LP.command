@@ -43,9 +43,15 @@ fi
 [ -f "$SRC/index.html" ] || { echo "❌ Falta index.html em: $SRC"; [ -n "$TMP" ] && rm -rf "$TMP"; exit 1; }
 
 # 4) nome / slug (só minúsculas, números e hífen)
-read -r -p "Nome da LP na URL (ex: mba, workshop, evento): " SLUG
-SLUG="$(printf '%s' "$SLUG" | tr '[:upper:]' '[:lower:]' | tr -cd 'a-z0-9-')"
+read -r -p "Nome da LP na URL (ex: mba, evento diretores): " SLUG
+# minúsculas -> espaço/underscore viram hífen -> tira o resto -> junta hífens -> apara pontas
+SLUG="$(printf '%s' "$SLUG" \
+  | tr '[:upper:]' '[:lower:]' \
+  | tr ' _' '--' \
+  | tr -cd 'a-z0-9-' \
+  | sed -E 's/-+/-/g; s/^-+//; s/-+$//')"
 [ -n "$SLUG" ] || { echo "❌ Nome inválido."; [ -n "$TMP" ] && rm -rf "$TMP"; exit 1; }
+echo "→ URL final: /$SLUG/"
 
 DEST="public/$SLUG"
 if [ -d "$DEST" ]; then
