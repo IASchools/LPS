@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Workshop Gestão de IA na Prática Escolar · IA Schools</title>
+<meta name="description" content="Um dia inteiro dentro de uma escola que já usa Inteligência Artificial na gestão. 17 de agosto de 2026, na Ways Bilingual School (SP). Você sai com o plano de implantação da sua escola.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="IA Schools">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:title" content="Workshop Gestão de IA na Prática Escolar · IA Schools">
+<meta property="og:description" content="17 de agosto, Ways Bilingual School (SP). Da captação à fidelização: você vê a operação real e constrói o plano de IA da sua escola.">
+<meta property="og:url" content="https://lp.iaschools.com.br/workshop/">
+<link rel="canonical" href="https://lp.iaschools.com.br/workshop/">
+<meta property="og:image" content="https://lp.iaschools.com.br/workshop/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:image" content="https://lp.iaschools.com.br/workshop/assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Workshop Gestão de IA na Prática Escolar · IA Schools">
+<meta name="twitter:description" content="17 de agosto, Ways Bilingual School (SP). Um dia dentro de uma escola que já opera com IA.">
+<link rel="icon" type="image/svg+xml" href="./assets/icone-app.svg">
+<script>document.documentElement.classList.add('js')</script>
+<style>
+/* Tipografia oficial IA Schools — Neulis (manual de marca 260518) */
+@font-face{font-family:'Neulis Sans';src:url('./assets/neulis-sans-400.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'Neulis Sans';src:url('./assets/neulis-sans-500.woff2') format('woff2');font-weight:500;font-style:normal;font-display:swap}
+@font-face{font-family:'Neulis Sans';src:url('./assets/neulis-sans-600.woff2') format('woff2');font-weight:600;font-style:normal;font-display:swap}
+@font-face{font-family:'Neulis Sans';src:url('./assets/neulis-sans-700.woff2') format('woff2');font-weight:700;font-style:normal;font-display:swap}
+@font-face{font-family:'Neulis Cursive';src:url('./assets/neulis-cursive-500.woff2') format('woff2');font-weight:500;font-style:normal;font-display:swap}
+</style>
+<style>
+:root{
+  /* paleta oficial IA Schools */
+  --navy:#161146; --navy-deep:#0F0B33; --navy2:#241D58; --navy3:#2D2761;
+  --roxo:#6D35FB; --lavanda:#EEE7FF; --lavanda2:#EEEAFB;
+  --laranja:#FDA75F; --laranja-forte:#FD9252; --pessego:#FFF6EC;
+  --cinza:#333333; --ink-soft:#6F6B78; --creme:#E4DED3;
+  --paper:#FAF8F4; --paper2:#F4F1EC; --surface:#FFFFFF;
+  /* texto sobre superfícies escuras */
+  --on:#FFFFFF; --on-2:#C9C3E4; --on-3:#A49CCB;
+  --line:rgba(22,17,70,.09); --line-soft:rgba(22,17,70,.055);
+  --line-dark:rgba(255,255,255,.13); --line-dark-2:rgba(255,255,255,.2);
+  --grad-brand:linear-gradient(125deg,#6D35FB 0%,#161146 100%);
+  --shadow-cta:0 18px 38px -14px rgba(253,167,95,.5);
+  --shadow-1:0 2px 8px -2px rgba(22,17,70,.06);
+  --shadow-2:0 24px 60px -32px rgba(22,17,70,.36);
+  --shadow-3:0 44px 90px -40px rgba(6,3,24,.75);
+  --r:20px; --maxw:1160px; --e:cubic-bezier(.22,.61,.36,1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:'Neulis Sans',system-ui,sans-serif;background:var(--paper);color:var(--cinza);font-size:17px;line-height:1.62;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+h1,h2,h3,h4{font-family:'Neulis Sans',sans-serif;color:var(--navy);letter-spacing:-.033em;line-height:1.08;font-weight:600;text-wrap:balance}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 26px}
+.wrap-n{max-width:880px;margin:0 auto;padding:0 26px}
+section{padding:88px 0}
+@media(max-width:760px){section{padding:62px 0}}
+
+.skip{position:absolute;left:-9999px;top:0;z-index:200;background:var(--laranja);color:var(--navy);padding:12px 20px;border-radius:0 0 12px 0;font-weight:600;font-size:15px}
+.skip:focus{left:0}
+
+/* motion — contido e proposital */
+.js .rv{opacity:0;transform:translateY(24px);transition:opacity .85s var(--e),transform .85s var(--e)}
+.rv.in{opacity:1;transform:none}
+.js .stg>*{opacity:0;transform:translateY(20px);transition:opacity .75s var(--e),transform .75s var(--e)}
+.stg.in>*{opacity:1;transform:none}
+.stg.in>*:nth-child(2){transition-delay:.07s}.stg.in>*:nth-child(3){transition-delay:.14s}.stg.in>*:nth-child(4){transition-delay:.21s}.stg.in>*:nth-child(5){transition-delay:.28s}.stg.in>*:nth-child(6){transition-delay:.35s}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto!important}*,*::before,*::after{animation:none!important}.rv,.stg>*{opacity:1!important;transform:none!important;transition:none!important}}
+
+/* ---------- section header (padrão da 10/10) ---------- */
+.sh{max-width:640px;margin-bottom:48px}
+.sh.c{margin-inline:auto;text-align:center}
+.sh.c .eye{justify-content:center}
+.sh h2{margin-top:16px}
+.sh p{font-size:18px;color:var(--ink-soft);margin-top:15px;line-height:1.6}
+@media(max-width:600px){.sh{margin-bottom:32px}}
+
+/* ---------- ícone em tile (padrão .card .ic da 10/10) ---------- */
+.ic-tile{width:44px;height:44px;border-radius:12px;background:var(--lavanda);display:grid;place-items:center;margin-bottom:16px;flex-shrink:0}
+.ic-tile svg{width:22px;height:22px;color:var(--roxo)}
+
+/* ---------- átomos ---------- */
+.eye{font-family:'Neulis Sans',sans-serif;font-size:13.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--roxo);display:inline-flex;align-items:center;gap:12px}
+.eye::before{content:"";width:28px;height:2px;border-radius:2px;background:var(--grad-brand)}
+.eye.on-dark{color:var(--laranja)}
+.eye.on-dark::before{background:linear-gradient(90deg,var(--laranja),rgba(253,167,95,.15))}
+.eye.c{justify-content:center}
+
+.btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:10px;font-family:'Neulis Sans';font-weight:600;font-size:16.5px;color:var(--navy);background:var(--laranja);border:0;border-radius:100px;padding:19px 34px;cursor:pointer;box-shadow:var(--shadow-cta);transition:transform .22s var(--e),box-shadow .22s var(--e);overflow:hidden;white-space:nowrap;line-height:1.15}
+.btn::after{content:"";position:absolute;top:0;left:-120%;width:70%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.3),transparent);transform:skewX(-18deg);transition:left .7s var(--e)}
+.btn:hover{transform:translateY(-3px);box-shadow:0 26px 50px -14px rgba(253,167,95,.6)}
+.btn:hover::after{left:130%}
+.btn:focus-visible{outline:3px solid var(--roxo);outline-offset:3px}
+.btn.sm{padding:12px 22px;font-size:15px}
+.btn.big{padding:22px 40px;font-size:18px}
+.btn.ghost{background:transparent;color:var(--on);border:1.5px solid var(--line-dark-2);box-shadow:none}
+.btn.ghost:hover{border-color:rgba(255,255,255,.55);background:rgba(255,255,255,.05);transform:translateY(-3px);box-shadow:none}
+.btn.ghost::after{display:none}
+
+.lbl{font-size:14px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--roxo)}
+.lbl.on-dark{color:var(--laranja)}
+
+/* ---------- topbar + header ---------- */
+.topbar{background:var(--navy);color:var(--on);text-align:center;font-size:13px;letter-spacing:.05em;padding:11px 16px;position:relative;z-index:70}
+.topbar b{color:var(--laranja);font-weight:600}
+/* navy sólido: o header fica FORA do hero — transparente mostraria o creme do body e mataria o logo */
+header{position:sticky;top:0;z-index:60;background:var(--navy-deep);border-bottom:1px solid transparent;transition:border-color .32s,box-shadow .32s}
+header.scr{border-bottom-color:var(--line-dark);box-shadow:0 12px 34px -20px rgba(0,0,0,.85)}
+.hd{display:flex;align-items:center;justify-content:space-between;height:74px;gap:20px}
+.hd .logo img{height:27px}
+.hd-evt{font-size:13.5px;color:var(--on-2);padding-left:16px;border-left:1px solid var(--line-dark-2);line-height:1.25}
+.hd-l{display:flex;align-items:center;gap:16px;min-width:0}
+@media(max-width:900px){.hd-evt{display:none}}
+@media(max-width:520px){.hd .btn{display:none}}
+
+/* ---------- hero ---------- */
+.hero{position:relative;background:var(--navy-deep);color:var(--on);padding:78px 0 92px;overflow:hidden}
+.aura{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+.aura .e{position:absolute;top:50%;left:50%;width:82vw;height:92vh;filter:blur(78px) saturate(130%);will-change:transform}
+.aura .roxo{background:radial-gradient(38% 56% at 34% 42%,rgba(109,53,251,.5),transparent 68%),radial-gradient(44% 50% at 64% 60%,rgba(124,72,255,.34),transparent 72%);animation:orb 26s ease-in-out infinite}
+.aura .laranja{background:radial-gradient(38% 54% at 62% 56%,rgba(253,167,95,.32),transparent 68%),radial-gradient(30% 44% at 40% 74%,rgba(255,196,140,.2),transparent 70%);animation:orbOpp 26s ease-in-out infinite}
+@keyframes orb{0%{transform:translate(-50%,-50%) translate(26vw,-18vh)}50%{transform:translate(-50%,-50%) translate(-26vw,14vh)}100%{transform:translate(-50%,-50%) translate(26vw,-18vh)}}
+@keyframes orbOpp{0%{transform:translate(-50%,-50%) translate(-24vw,18vh)}50%{transform:translate(-50%,-50%) translate(28vw,-14vh)}100%{transform:translate(-50%,-50%) translate(-24vw,18vh)}}
+.hero .wrap{position:relative;z-index:1}
+.hgrid{display:grid;grid-template-columns:1fr;gap:56px;align-items:center}
+@media(min-width:1000px){.hgrid{grid-template-columns:1.08fr .92fr;gap:64px}}
+.hero h1{font-size:clamp(34px,4.7vw,55px);font-weight:700;color:var(--on);margin:22px 0 0;max-width:16ch}
+.hero h1 .ac{color:var(--laranja)}
+.hero .sub{font-size:clamp(17px,1.7vw,19.5px);color:var(--on-2);margin-top:22px;max-width:46ch;line-height:1.58}
+.hctas{display:flex;flex-wrap:wrap;gap:14px;margin-top:34px}
+.hnote{font-size:13.5px;color:var(--on-3);margin-top:16px}
+.hmeta-line{font-size:14px;color:var(--on-3);margin-top:26px;letter-spacing:.01em}
+
+/* ---------- vídeo-convite (hero) ---------- */
+.vfacade{position:relative;display:block;width:100%;aspect-ratio:16/9;border-radius:22px;overflow:hidden;border:1px solid var(--line-dark);box-shadow:var(--shadow-3);cursor:pointer;background:var(--navy2);isolation:isolate}
+.vfacade:focus-visible{outline:3px solid var(--laranja);outline-offset:3px}
+.vthumb{width:100%;height:100%;object-fit:cover;transition:transform .5s var(--e)}
+.vfacade::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(15,11,51,.12),rgba(15,11,51,.62));z-index:1}
+.vfacade:hover .vthumb{transform:scale(1.04)}
+.vplay{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:76px;height:76px;border-radius:50%;background:var(--laranja);color:var(--navy);display:grid;place-items:center;z-index:2;box-shadow:0 18px 44px -12px rgba(253,167,95,.65);transition:transform .22s var(--e)}
+.vplay svg{width:32px;height:32px;margin-left:4px}
+.vfacade:hover .vplay{transform:translate(-50%,-50%) scale(1.08)}
+.vcap{position:absolute;left:0;right:0;bottom:16px;z-index:2;text-align:center;color:#fff;font-family:'Neulis Sans';font-weight:600;font-size:14px;letter-spacing:.02em}
+.vframe{position:absolute;inset:0;width:100%;height:100%;border:0;z-index:3}
+.vsound{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);z-index:4;background:var(--laranja);color:var(--navy);font-family:'Neulis Sans';font-weight:600;font-size:13px;padding:8px 15px;border-radius:100px;cursor:pointer;box-shadow:0 10px 26px -10px rgba(0,0,0,.6);white-space:nowrap;animation:soundpulse 2s var(--e) infinite}
+@keyframes soundpulse{0%,100%{transform:translateX(-50%) scale(1)}50%{transform:translateX(-50%) scale(1.05)}}
+@media(prefers-reduced-motion:reduce){.vsound{animation:none}}
+.hmeta{display:grid;grid-template-columns:.78fr .82fr .78fr 1.32fr;gap:0;margin-top:44px;padding-top:26px;border-top:1px solid var(--line-dark)}
+.hmeta .it{padding:0 20px;border-left:1px solid var(--line-dark)}
+.hmeta .it:first-child{border-left:0;padding-left:0}
+.hmeta .k{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--on-3);margin-bottom:7px;font-weight:500}
+.hmeta .v{font-weight:600;font-size:16px;color:var(--on);line-height:1.3}
+@media(max-width:860px){.hmeta{grid-template-columns:1fr 1fr;row-gap:24px}.hmeta .it:nth-child(3){border-left:0;padding-left:0}}
+@media(max-width:420px){.hmeta{grid-template-columns:1fr}.hmeta .it{border-left:0;padding-left:0;padding-bottom:16px;border-bottom:1px solid var(--line-dark)}.hmeta .it:last-child{border-bottom:0;padding-bottom:0}}
+
+/* ---------- SIGNATURE: credencial de visitante ---------- */
+.badge-wrap{position:relative;perspective:1500px;display:flex;justify-content:center}
+.lanyard{position:absolute;top:-120px;left:50%;transform:translateX(-50%);width:148px;height:138px;z-index:0}
+@media(max-width:1000px){.lanyard{display:none}}
+.lanyard svg{width:100%;height:100%;overflow:visible}
+.badge{position:relative;width:100%;max-width:352px;background:var(--surface);border-radius:22px;padding:30px 28px 24px;box-shadow:var(--shadow-3);animation:bob 7.5s ease-in-out infinite;transform-style:preserve-3d}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-.6deg)}50%{transform:translateY(-12px) rotate(.6deg)}}
+.badge-wrap:hover .badge{animation-play-state:paused;transform:rotateY(-7deg) rotateX(3deg)}
+.badge::before{content:"";position:absolute;top:14px;left:50%;transform:translateX(-50%);width:74px;height:9px;border-radius:100px;background:var(--navy-deep);opacity:.85}
+.badge-top{display:flex;align-items:center;justify-content:space-between;margin-top:16px;padding-bottom:18px;border-bottom:1px solid var(--line)}
+.badge-top img{height:20px}
+.badge-kind{font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--roxo);background:var(--lavanda);border-radius:100px;padding:5px 12px}
+.badge-body{padding:22px 0 18px}
+.badge-body .f{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);font-weight:500}
+.badge-body .nome{font-family:'Neulis Cursive','Neulis Sans',cursive;font-size:34px;color:var(--navy);line-height:1.15;margin:4px 0 18px}
+.badge-body .esc{font-size:17px;font-weight:600;color:var(--navy);margin-top:3px}
+.badge-line{height:1px;background:repeating-linear-gradient(90deg,var(--line) 0 7px,transparent 7px 14px);margin:16px 0}
+.badge-foot{display:flex;align-items:center;justify-content:space-between;gap:14px;padding-top:16px;border-top:1px solid var(--line)}
+.badge-foot .d{font-size:13px;color:var(--ink-soft);line-height:1.35}
+.badge-foot .d b{display:block;color:var(--navy);font-size:15.5px;font-weight:600}
+.seal{width:56px;height:56px;border-radius:50%;background:var(--grad-brand);display:grid;place-items:center;flex-shrink:0;box-shadow:0 14px 28px -10px rgba(109,53,251,.55);position:relative}
+.seal::before{content:"";position:absolute;inset:-5px;border-radius:50%;border:2px solid rgba(109,53,251,.25);animation:ring 3.2s var(--e) infinite}
+@keyframes ring{0%{transform:scale(1);opacity:.7}100%{transform:scale(1.32);opacity:0}}
+.seal svg{width:26px;height:26px;color:#fff}
+.badge-cap{text-align:center;font-size:13px;color:var(--on-3);margin-top:22px}
+
+/* ---------- superfícies ---------- */
+.sec-light{background:var(--paper)}
+.sec-light2{background:var(--paper2)}
+.sec-white{background:var(--surface);border-top:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft)}
+.sec-dark{background:var(--navy-deep);color:var(--on);position:relative;overflow:hidden}
+.sec-dark h2,.sec-dark h3{color:var(--on)}
+.sec-dark p{color:var(--on-2)}
+h2{font-size:clamp(28px,3.5vw,42px);font-weight:700}
+h3{font-size:20px}
+.lede{font-size:18px;line-height:1.6;color:var(--ink-soft);margin-top:15px;max-width:60ch}
+.lede b{font-weight:600;color:var(--navy)}
+.sec-dark .lede{color:var(--on-2)}
+.sec-dark .lede b{color:var(--on)}
+
+/* ---------- contexto / dores ---------- */
+.pains{display:grid;grid-template-columns:1fr;gap:18px;margin-top:44px}
+@media(min-width:780px){.pains{grid-template-columns:1fr 1fr}}
+.pain{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:30px 28px;box-shadow:var(--shadow-1)}
+.pain .t{font-size:14px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--laranja-forte);display:block;margin-bottom:12px}
+.pain p{font-size:16.5px;color:var(--cinza)}
+.pivot{margin-top:22px;background:var(--navy);color:var(--on);border-radius:var(--r);padding:32px 34px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap}
+.pivot p{color:var(--on-2);font-size:18px;max-width:52ch;margin:0}
+.pivot b{color:var(--on);font-weight:600}
+
+/* ---------- agenda / timeline (2º momento forte) ---------- */
+.tl{position:relative;margin-top:52px}
+.tl-spine{position:absolute;left:83px;top:14px;bottom:14px;width:2px;background:linear-gradient(180deg,var(--navy) 0%,var(--roxo) 46%,var(--laranja) 100%);border-radius:2px}
+@media(max-width:640px){.tl-spine{left:0}}
+.tl-i{position:relative;display:grid;grid-template-columns:84px 1fr;gap:34px;padding:15px 0}
+.tl-i+.tl-i{border-top:1px solid var(--line-soft)}
+@media(max-width:640px){.tl-i{grid-template-columns:1fr;gap:8px;padding-left:26px}}
+.tl-h{font-size:16.5px;font-weight:600;color:var(--navy);padding-top:2px;letter-spacing:-.01em}
+@media(max-width:640px){.tl-h{color:var(--roxo)}}
+.tl-dot{position:absolute;left:77px;top:22px;width:15px;height:15px;border-radius:50%;background:var(--surface);border:3px solid var(--roxo);z-index:1}
+@media(max-width:640px){.tl-dot{left:-6px;top:26px}}
+.tl-i.key .tl-dot{background:var(--laranja);border-color:var(--laranja);box-shadow:0 0 0 6px rgba(253,167,95,.18)}
+.tl-i h3{margin:8px 0 6px}
+.tl-i p{font-size:14.5px;color:var(--ink-soft);line-height:1.55;max-width:60ch}
+.chip{display:inline-block;font-size:14.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;padding:4px 11px;border-radius:100px;background:var(--lavanda2);color:var(--roxo)}
+.chip.laranja{background:var(--pessego);color:var(--laranja-forte)}
+.chip.navy{background:rgba(22,17,70,.07);color:var(--navy)}
+
+/* ---------- o que é / para quem ---------- */
+.two{display:grid;grid-template-columns:1fr;gap:46px;align-items:start}
+@media(min-width:900px){.two{grid-template-columns:1.12fr .88fr;gap:60px}}
+.checks{list-style:none;margin-top:28px;display:flex;flex-direction:column;gap:15px}
+.checks li{display:flex;gap:13px;align-items:center;font-size:16.5px;color:var(--cinza)}
+.checks svg{width:21px;height:21px;color:var(--roxo);flex-shrink:0;margin-top:2px}
+.who{background:var(--navy);color:var(--on);border-radius:24px;padding:36px 34px;box-shadow:var(--shadow-2)}
+.who h3{color:var(--on);font-size:23px;margin-top:14px}
+.who p{color:var(--on-2);font-size:16px;margin-top:14px}
+.tags{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
+.tags span{font-size:15px;padding:9px 16px;border-radius:100px;background:rgba(255,255,255,.07);border:1px solid var(--line-dark);color:var(--on)}
+.who .note{margin-top:26px;padding-top:20px;border-top:1px solid var(--line-dark);font-size:15px;color:var(--on-3)}
+.who .note b{color:var(--laranja);font-weight:600}
+
+/* ---------- Rose ---------- */
+.rose{display:grid;grid-template-columns:1fr;gap:38px;align-items:center}
+@media(min-width:820px){.rose{grid-template-columns:.82fr 1.18fr;gap:56px}}
+.rose-ph{position:relative;border-radius:24px;overflow:hidden;box-shadow:var(--shadow-3);aspect-ratio:4/5;background:var(--navy2)}
+.rose-ph img{width:100%;height:100%;object-fit:cover;object-position:center 18%}
+.rose-ph::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 52%,rgba(15,11,51,.72) 100%)}
+.rose h2{margin-top:18px}
+.rose .role{font-size:16px;color:var(--laranja);margin-top:12px;font-weight:500}
+.rose p{margin-top:20px;font-size:17px;max-width:56ch}
+.rose-facts{display:flex;gap:32px;flex-wrap:wrap;margin-top:30px;padding-top:26px;border-top:1px solid var(--line-dark)}
+.rose-facts .n{font-size:30px;font-weight:700;color:var(--on);line-height:1}
+.rose-facts .l{font-size:14px;color:var(--on-3);margin-top:6px;max-width:22ch;line-height:1.4}
+
+
+/* ---------- badge 1ª turma no hero ---------- */
+.turma{display:inline-flex;align-items:center;gap:9px;font-size:13.5px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--navy);background:var(--laranja);padding:8px 16px 8px 13px;border-radius:100px;margin-bottom:22px}
+.hd-turma{margin-bottom:0;flex-shrink:0}
+@media(max-width:600px){.hd-turma{font-size:11.5px;padding:7px 12px 7px 11px;letter-spacing:.05em}}
+.dot-live{width:8px;height:8px;border-radius:50%;background:var(--navy);position:relative;flex-shrink:0}
+.dot-live::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:2px solid var(--navy);opacity:.5;animation:pulse 1.8s var(--e) infinite}
+@keyframes pulse{0%{transform:scale(.7);opacity:.6}100%{transform:scale(1.5);opacity:0}}
+@media(prefers-reduced-motion:reduce){.dot-live::after{animation:none}}
+
+/* ---------- stat row (device Rose) ---------- */
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:8px}
+@media(min-width:820px){.stats{grid-template-columns:repeat(4,1fr)}}
+.stat{min-width:0;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:26px 18px;text-align:center;box-shadow:var(--shadow-1)}
+.stat .n.check{font-size:30px}
+.stat .n{font-family:'Neulis Sans';font-weight:700;font-size:34px;color:var(--laranja-forte);line-height:1;letter-spacing:-.02em}
+.stat .l{font-size:14.5px;color:var(--ink-soft);margin-top:9px;line-height:1.35}
+
+/* ---------- diferenciais (4 blocos numerados Rose) ---------- */
+.diffs{display:grid;grid-template-columns:1fr;gap:18px;margin-top:44px}
+@media(min-width:780px){.diffs{grid-template-columns:1fr 1fr}}
+.diff{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:28px 26px;box-shadow:var(--shadow-1);transition:transform .35s var(--e),box-shadow .35s var(--e)}
+.diff:hover{transform:translateY(-2px);box-shadow:var(--shadow-2)}
+.diff .num{font-family:'Neulis Sans';font-weight:800;font-size:15px;color:#fff;width:34px;height:34px;border-radius:12px;background:var(--grad-brand);display:grid;place-items:center;margin-bottom:16px}
+.diff h3{margin:0 0 8px;font-size:17.5px;line-height:1.32}
+.diff p{font-size:14.5px;color:var(--ink-soft);line-height:1.55}
+
+/* ---------- caixa escura com 4 sub-blocos (para quem / visita) ---------- */
+.darkbox{margin-top:44px;background:var(--navy);border-radius:26px;padding:44px 42px;color:var(--on);box-shadow:var(--shadow-2)}
+@media(max-width:600px){.darkbox{padding:34px 26px}}
+.darkbox>.lede{color:var(--on-2);max-width:60ch}
+.darkbox>.lede b{color:var(--on)}
+.darkbox .vlead{color:var(--on);font-family:'Neulis Sans';font-weight:600;font-size:20px;line-height:1.4;max-width:36ch;margin-bottom:28px}
+
+/* ---------- 2 facilitadores ---------- */
+/* faixa institucional */
+.trust-band{background:var(--navy);border-top:1px solid var(--line-dark);position:relative;z-index:1}
+.trust-band .wrap{display:flex;align-items:center;gap:18px;flex-wrap:wrap;padding-top:20px;padding-bottom:20px}
+.tb-l{font-size:13px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--on-3)}
+.tb-i{font-family:'Neulis Sans';font-weight:600;font-size:17px;color:var(--on)}
+.tb-sep{width:5px;height:5px;border-radius:50%;background:var(--laranja)}
+.tb-tail{margin-left:auto}
+@media(max-width:720px){.tb-tail{margin-left:0;flex-basis:100%}}
+.people{display:grid;grid-template-columns:1fr;gap:22px;margin-top:44px}
+@media(min-width:760px){.people{grid-template-columns:1fr 1fr}}
+.person{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:32px;box-shadow:var(--shadow-1)}
+.person-top{display:flex;align-items:center;gap:18px}
+.person-top img{width:78px;height:78px;border-radius:50%;object-fit:cover;object-position:center 20%;flex-shrink:0;border:2px solid var(--lavanda2)}
+.person .role{font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--roxo);margin-bottom:6px}
+.person h3{font-size:22px;font-weight:700}
+.person .credly{font-size:13.5px;color:var(--ink-soft);margin-top:3px}
+.person .bio{font-size:15.5px;color:var(--ink-soft);margin-top:18px;line-height:1.6}
+.person .quote{font-size:16px;font-weight:600;color:var(--navy);margin-top:16px;padding-top:16px;border-top:1px solid var(--line)}
+.team-note{margin-top:22px;background:var(--pessego);border:1px solid rgba(253,167,95,.32);border-radius:16px;padding:20px 24px;font-size:15.5px;color:var(--cinza)}
+.team-note b{color:var(--navy);font-weight:600}
+
+/* ---------- oferta ---------- */
+.incl{display:grid;grid-template-columns:1fr;gap:14px;margin-top:36px}
+@media(min-width:640px){.incl{grid-template-columns:1fr 1fr}}
+@media(min-width:980px){.incl{grid-template-columns:repeat(3,1fr)}}
+.incl.four{grid-template-columns:1fr}
+@media(min-width:720px){.incl.four{grid-template-columns:1fr 1fr}}
+.incl .i{background:rgba(255,255,255,.05);border:1px solid var(--line-dark);border-radius:16px;padding:20px 22px;display:flex;gap:13px;align-items:flex-start}
+.incl .i svg{width:20px;height:20px;color:var(--laranja);flex-shrink:0;margin-top:2px}
+.incl .i b{display:block;color:var(--on);font-weight:600;font-size:16.5px}
+.incl .i span{font-size:14.5px;color:var(--on-3);display:block;margin-top:3px;line-height:1.45}
+.incl.on-light .i{background:var(--surface);border-color:var(--line)}
+.incl.on-light .i b{color:var(--navy)}
+.incl.on-light .i span{color:var(--ink-soft)}
+.incl.on-light .i svg{color:var(--laranja-forte)}
+.nb{margin-top:18px;padding:22px 26px;border-radius:16px;background:rgba(109,53,251,.16);border:1px solid rgba(109,53,251,.4);font-size:16px;color:var(--on-2);display:flex;gap:14px;align-items:flex-start}
+.nb svg{width:22px;height:22px;color:#B79BFF;flex-shrink:0;margin-top:1px}
+.nb b{color:var(--on);font-weight:600}
+/* checkout enxuto — padrão /universidade */
+.cobox{max-width:600px;margin:0 auto}
+.co-plans{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:520px){.co-plans{grid-template-columns:1fr}}
+.co-plan{position:relative;background:rgba(255,255,255,.05);border:1px solid var(--line-dark);border-radius:18px;padding:26px 20px;text-align:center}
+.co-plan.hi{border-color:rgba(253,167,95,.5);background:rgba(253,167,95,.08)}
+.co-plan .k{font-size:12.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--laranja);display:block;margin-bottom:12px}
+.co-plan .p{font-size:36px;font-weight:700;color:var(--on);letter-spacing:-.03em;line-height:1}
+.co-plan .p small{display:block;font-size:13.5px;font-weight:500;color:var(--on-3);margin-top:8px;letter-spacing:0}
+.co-plan .rec{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--laranja);color:var(--navy);font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:5px 13px;border-radius:100px;white-space:nowrap}
+.btn.full{display:flex;width:100%;margin-top:30px}
+/* visita técnica — leve, sem caixa */
+.vis-row{display:grid;grid-template-columns:repeat(4,1fr);gap:34px 30px;margin:44px auto 0;max-width:1000px}
+@media(max-width:760px){.vis-row{grid-template-columns:1fr 1fr}}
+@media(max-width:440px){.vis-row{grid-template-columns:1fr;text-align:center}}
+.vis-row b{display:block;color:var(--navy);font-weight:600;font-size:16.5px;margin-bottom:8px;letter-spacing:-.01em}
+.vis-row span{font-size:14.5px;color:var(--ink-soft);line-height:1.5}
+/* cartão do dia — onde e quando */
+.daycard{max-width:800px;margin:44px auto 0;background:var(--surface);border:1px solid var(--line-soft);border-radius:24px;box-shadow:var(--shadow-2);display:grid;grid-template-columns:auto 1fr;overflow:hidden}
+@media(max-width:600px){.daycard{grid-template-columns:1fr}}
+.dc-date{background:var(--navy);color:var(--on);padding:44px 46px;display:flex;flex-direction:column;justify-content:center;text-align:center}
+.dc-date .d{font-size:58px;font-weight:700;line-height:.9;letter-spacing:-.03em;color:var(--on)}
+.dc-date .m{font-size:17px;font-weight:600;text-transform:uppercase;letter-spacing:.09em;color:var(--laranja);margin-top:7px}
+.dc-date .t{font-size:14.5px;color:var(--on-2);margin-top:18px;line-height:1.45}
+.dc-body{padding:38px 42px;display:flex;flex-direction:column;gap:26px;justify-content:center}
+.dc-row .k{font-size:12.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--roxo);margin-bottom:9px}
+.dc-row .nm{font-size:18.5px;font-weight:600;color:var(--navy)}
+.dc-row .addr{font-size:14.5px;color:var(--ink-soft);margin-top:4px}
+.dc-incl{display:flex;flex-wrap:wrap;gap:10px}
+.dc-incl span{display:inline-flex;align-items:center;gap:8px;font-size:14.5px;color:var(--cinza);background:var(--paper2);border:1px solid var(--line-soft);border-radius:100px;padding:9px 16px}
+.dc-incl span svg{width:15px;height:15px;color:var(--laranja-forte);flex-shrink:0}
+
+/* FAQ acordeão — componente exato da 10/10 */
+.faq{max-width:820px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+.qi{background:var(--surface);border:1px solid var(--line-soft);border-radius:16px;overflow:hidden;transition:box-shadow .3s}
+.qi.open{box-shadow:var(--shadow-2)}
+.q{width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:22px 26px;font-family:'Neulis Sans';font-weight:600;font-size:16.5px;color:var(--navy);cursor:pointer;text-align:left;background:none;border:0}
+.q:focus-visible{outline:3px solid var(--roxo);outline-offset:-3px}
+.q .ic{width:26px;height:26px;flex-shrink:0;color:var(--roxo);transition:transform .3s var(--e)}
+.qi.open .q .ic{transform:rotate(45deg)}
+.fa{max-height:0;overflow:hidden;visibility:hidden;transition:max-height .35s var(--e),visibility 0s linear .35s}
+.qi.open .fa{visibility:visible;transition:max-height .35s var(--e),visibility 0s}
+.fa p{padding:0 26px 24px;font-size:15.5px;color:var(--ink-soft)}
+@media(max-width:600px){.q{padding:18px 20px;font-size:15.5px}.fa p{padding:0 20px 20px;font-size:14.5px}}
+
+/* ---------- cta final ---------- */
+.final{position:relative;overflow:hidden;background:var(--navy-deep);border-radius:30px;padding:76px 44px;text-align:center;color:var(--on)}
+.final .wrapin{position:relative;z-index:1}
+.final h2{color:var(--on);max-width:20ch;margin:18px auto 0}
+.final p{color:var(--on-2);max-width:52ch;margin:20px auto 0;font-size:17.5px}
+.final .btn{margin-top:34px}
+.final .fnote{font-size:15px;color:var(--on-3);margin-top:18px}
+@media(max-width:620px){.final{padding:56px 24px;border-radius:24px}}
+.sig{display:flex;gap:20px;align-items:center;margin-top:52px;padding-top:34px;border-top:1px solid var(--line)}
+.sig img{width:62px;height:62px;border-radius:50%;object-fit:cover;flex-shrink:0}
+.sig .nm{font-family:'Neulis Cursive','Neulis Sans',cursive;font-size:30px;color:var(--navy);line-height:1.1}
+.sig .rl{font-size:15px;color:var(--ink-soft);margin-top:4px}
+
+/* ---------- footer ---------- */
+footer{background:var(--navy-deep);color:var(--on-3);padding:52px 0 44px;font-size:13px;line-height:1.7}
+footer .ftop{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:20px}
+footer img{height:24px;opacity:.9}
+footer .fnav{display:flex;flex-wrap:wrap;gap:8px 26px}
+footer .fnav a{color:var(--on-2);font-size:13.5px;transition:color .2s}
+footer .fnav a:hover{color:#fff}
+footer .finst{font-size:13px;color:var(--on-3);border-top:1px solid var(--line-dark);padding-top:20px}
+
+/* ---------- barra fixa mobile ---------- */
+/* sticky bar — padrão da 10/10 (desktop + mobile, entra no scroll) */
+.sticky{position:fixed;left:0;right:0;bottom:0;z-index:80;background:rgba(15,11,51,.95);backdrop-filter:blur(12px);border-top:1px solid var(--line-dark);transform:translateY(110%);transition:transform .4s var(--e)}
+.sticky.on{transform:none}
+.sticky .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 26px}
+.sticky .txt{color:var(--on);font-size:14.5px;font-weight:500;line-height:1.3}
+.sticky .txt b{color:var(--laranja);font-weight:600}
+@media(max-width:620px){.sticky .wrap{padding:11px 16px calc(11px + env(safe-area-inset-bottom))}.sticky .txt{font-size:12.5px}.sticky .btn.sm{padding:11px 15px;font-size:13px;flex-shrink:0}}
+</style>
+</head>
+<body>
+<a href="#conteudo" class="skip">Ir para o conteúdo</a>
+
+<header id="hdr">
+  <div class="wrap hd">
+    <div class="hd-l">
+      <a href="#" class="logo" aria-label="IA Schools"><img src="./assets/logo-horizontal-escuro.svg" alt="IA Schools"></a>
+      <div class="hd-evt">Workshop Gestão de IA<br>na Prática Escolar</div>
+    </div>
+    <span class="turma hd-turma"><span class="dot-live" aria-hidden="true"></span>Últimas 18 vagas · 1ª turma</span>
+  </div>
+</header>
+
+<main id="conteudo">
+
+<!-- ═══════════ HERO ═══════════ -->
+<section class="hero">
+  <div class="aura" aria-hidden="true"><div class="e roxo"></div><div class="e laranja"></div></div>
+  <div class="wrap">
+    <div class="hgrid">
+      <div class="rv">
+        <span class="eye on-dark">Workshop presencial · para gestores</span>
+        <h1>Um dia dentro de uma escola que <span class="ac">já usa IA</span> na gestão.</h1>
+        <p class="sub">Você acompanha a operação inteira, da captação à fidelização, e sai com o plano da <b style="color:var(--on);font-weight:600">sua</b> escola na mão.</p>
+        <div class="hctas">
+          <a href="#inscricao" class="btn" data-cta="hero">Reservar minha vaga</a>
+          <a href="#dia" class="btn ghost">Ver o roteiro do dia</a>
+        </div>
+        <p class="hmeta-line">17 de agosto · 8h30–18h · Ways Bilingual School, São Paulo</p>
+      </div>
+
+      <div class="rv">
+        <div class="vfacade" data-yt="8qig3s6mOUM" role="button" tabindex="0" aria-label="Assistir ao convite em vídeo da Rose">
+          <img class="vthumb" src="https://i.ytimg.com/vi/8qig3s6mOUM/hqdefault.jpg" alt="" loading="lazy" decoding="async">
+          <span class="vplay" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
+          <span class="vcap">Convite em vídeo · com a Rose</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ FAIXA INSTITUCIONAL ═══════════ -->
+<div class="trust-band">
+  <div class="wrap">
+    <span class="tb-l">Uma iniciativa de</span>
+    <span class="tb-i">Grupo Dom Bosco</span>
+    <span class="tb-sep" aria-hidden="true"></span>
+    <span class="tb-i">Ways Bilingual School</span>
+  </div>
+</div>
+
+<!-- ═══════════ CONTEXTO ═══════════ -->
+<section class="sec-light">
+  <div class="wrap-n">
+    <div class="sh c rv">
+      <span class="eye c">O ponto de partida</span>
+      <h2>Todo mundo fala de IA. Poucos sabem por onde começar.</h2>
+    </div>
+    <div class="stats stg">
+      <div class="stat"><div class="n">8h</div><div class="l">de imersão presencial</div></div>
+      <div class="stat"><div class="n">5</div><div class="l">módulos e uma visita técnica</div></div>
+      <div class="stat"><div class="n">8</div><div class="l">departamentos percorridos</div></div>
+      <div class="stat"><div class="n">1</div><div class="l">plano pronto para implantar</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ ROTEIRO DO DIA ═══════════ -->
+<section class="sec-light2" id="dia">
+  <div class="wrap-n">
+    <div class="sh c rv">
+      <span class="eye c">A estrutura</span>
+      <h2>A jornada do dia.</h2>
+    </div>
+
+    <div class="tl">
+      <div class="tl-spine" aria-hidden="true"></div>
+
+      <div class="tl-i rv">
+        <div class="tl-h">08:30</div><div class="tl-dot" aria-hidden="true"></div>
+        <div><span class="chip navy">Chegada</span><h3>Credenciamento e café</h3>
+        <p>Boas-vindas, kit do participante e networking.</p></div>
+      </div>
+
+      <div class="tl-i key rv">
+        <div class="tl-h">09:00</div><div class="tl-dot" aria-hidden="true"></div>
+        <div><span class="chip">Módulo 1</span><h3>Abertura e diagnóstico</h3>
+        <p>A escola do futuro e os quatro níveis de maturidade em IA.</p></div>
+      </div>
+
+      <div class="tl-i rv">
+        <div class="tl-h">10:15</div><div class="tl-dot" aria-hidden="true"></div>
+        <div><span class="chip">Módulo 2</span><h3>Base legal e governança</h3>
+        <p>LGPD, ECA Digital, matriz de risco e política de uso.</p></div>
+      </div>
+
+      <div class="tl-i rv">
+        <div class="tl-h">11:15</div><div class="tl-dot" aria-hidden="true"></div>
+        <div><span class="chip">Módulo 3</span><h3>Oficina prática de IA</h3>
+        <p>Mão na massa com as ferramentas do dia a dia da gestão.</p></div>
+      </div>
+
+      <div class="tl-i key rv">
+        <div class="tl-h">13:00</div><div class="tl-dot" aria-hidden="true"></div>
+        <div><span class="chip laranja">Visita técnica</span><h3>Almoço e visita técnica</h3>
+        <p>Percurso guiado pela Ways Bilingual School, com quem a dirige.</p></div>
+      </div>
+
+      <div class="tl-i rv">
+        <div class="tl-h">14:30</div><div class="tl-dot" aria-hidden="true"></div>
+        <div><span class="chip">Módulo 4</span><h3>O ecossistema escolar</h3>
+        <p>A jornada do aluno por todos os departamentos da escola.</p></div>
+      </div>
+
+      <div class="tl-i key rv">
+        <div class="tl-h">16:00</div><div class="tl-dot" aria-hidden="true"></div>
+        <div><span class="chip laranja">Módulo 5</span><h3>Seu plano de ação</h3>
+        <p>Construção guiada do plano de implementação da sua escola.</p></div>
+      </div>
+
+      <div class="tl-i rv">
+        <div class="tl-h">18:00</div><div class="tl-dot" aria-hidden="true"></div>
+        <div><span class="chip navy">Encerramento</span><h3>Plano pronto, certificado e próximos passos</h3></div>
+      </div>
+    </div>
+
+    <div class="nb rv" style="max-width:none">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--roxo)"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M2 20h20"/></svg>
+      <div style="color:var(--cinza)"><b style="color:var(--navy)">Traga o notebook.</b> O plano é construído com apoio de IA ao longo de todo o dia.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ VISITA TÉCNICA ═══════════ -->
+<section class="sec-light">
+  <div class="wrap">
+    <div class="sh c rv">
+      <span class="eye c">Visita técnica</span>
+      <h2>A escola é o próprio lugar do encontro.</h2>
+      <p>Abrimos a nossa inteligência educacional e mostramos o que fazemos de verdade.</p>
+    </div>
+    <div class="vis-row rv">
+      <div><b>Percurso guiado</b><span>Espaços pedagógicos e administrativos, por dentro.</span></div>
+      <div><b>A IA na rotina real</b><span>Como cada setor opera no dia a dia, sem vitrine.</span></div>
+      <div><b>Conversa com quem executa</b><span>O time da escola, disponível para perguntas.</span></div>
+      <div><b>Almoço na escola</b><span>Servido no local, com networking entre gestores.</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ PARA QUEM ═══════════ -->
+<section class="sec-white">
+  <div class="wrap">
+    <div class="sh c rv">
+      <span class="eye c">Para quem se destina</span>
+      <h2>Um encontro de gestão, para quem decide.</h2>
+    </div>
+    <div class="darkbox rv" style="text-align:center">
+      <p class="vlead" style="max-width:54ch;margin:0 auto">Não é uma formação para o professor da sala de aula. É um dia para quem responde pelo orçamento, pela matrícula e pelo rumo da escola.</p>
+      <div class="tags" style="margin-top:28px;justify-content:center"><span>Mantenedores</span><span>Diretores</span><span>Coordenadores</span><span>Alta liderança</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ QUEM CONDUZ ═══════════ -->
+<section class="sec-light">
+  <div class="wrap">
+    <div class="sh c rv">
+      <span class="eye c">Quem conduz o dia</span>
+      <h2>Conduzido por quem vive a operação.</h2>
+    </div>
+    <div class="people stg">
+      <div class="person">
+        <div class="person-top">
+          <img src="./assets/rose_round.jpg" alt="Rose Rodrigues" width="460" height="460" loading="lazy" decoding="async">
+          <div>
+            <div class="role">Fundadora e CEO</div>
+            <h3>Rose Rodrigues</h3>
+          </div>
+        </div>
+        <p class="bio">Fundadora do Grupo Dom Bosco e da Ways Bilingual School. Há mais de 30 anos à frente de escolas, formando educadores e liderando a inovação pedagógica no Brasil.</p>
+        <p class="quote">“Criei porque vivi cada problema que ela resolve.”</p>
+      </div>
+      <div class="person">
+        <div class="person-top">
+          <img src="./assets/matheus_round.jpg" alt="Matheus Tomoto" width="460" height="460" loading="lazy" decoding="async">
+          <div>
+            <div class="role">Head de IA e Growth</div>
+            <h3>Matheus Tomoto</h3>
+          </div>
+        </div>
+        <p class="bio">Engenheiro pela Purdue e Research Fellow em Harvard. Forbes Under 30, com mais de 10 anos desenvolvendo projetos de IA e educação.</p>
+        <p class="quote">“Tecnologia que transforma a escola por dentro.”</p>
+      </div>
+    </div>
+    <div class="team-note rv">Com apoio da equipe da IA Schools e de quem opera a IA na rotina da Ways.</div>
+  </div>
+</section>
+
+<!-- ═══════════ INVESTIMENTO ═══════════ -->
+<!-- ═══════════ ENTREGÁVEIS ═══════════ -->
+<section class="sec-white">
+  <div class="wrap">
+    <div class="sh c rv">
+      <span class="eye c">Entregáveis</span>
+      <h2>O que você leva com você.</h2>
+    </div>
+
+    <div class="incl four on-light stg">
+      <div class="i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><div><b>Plano de ação pronto</b><span>O Plano de Implementação da sua escola, feito no dia.</span></div></div>
+      <div class="i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><div><b>Diagnóstico de maturidade</b><span>O estágio da sua escola hoje, em quatro níveis.</span></div></div>
+      <div class="i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><div><b>Política de uso</b><span>Rascunho pronto para levar à direção.</span></div></div>
+      <div class="i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><div><b>Kit impresso</b><span>Mini-guia, trilha dos departamentos e caderno do plano.</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ INVESTIMENTO ═══════════ -->
+<section class="sec-dark" id="inscricao">
+  <div class="aura" aria-hidden="true" style="opacity:.55"><div class="e roxo"></div><div class="e laranja"></div></div>
+  <div class="wrap" style="position:relative;z-index:1">
+    <div class="sh c rv">
+      <span class="eye on-dark c">Investimento</span>
+      <h2>Reserve o seu lugar.</h2>
+    </div>
+
+    <div class="cobox rv">
+      <div class="co-plans">
+        <div class="co-plan">
+          <span class="k">Individual</span>
+          <div class="p">R$ 290<small>por pessoa</small></div>
+        </div>
+        <div class="co-plan hi">
+          <span class="rec">Recomendado</span>
+          <span class="k">Dupla da mesma escola</span>
+          <div class="p">R$ 400<small>as duas vagas · R$ 200 cada</small></div>
+        </div>
+      </div>
+
+      <a href="#" class="btn big full" data-cta="diagnostico">Fazer o diagnóstico e reservar</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ ONDE E QUANDO ═══════════ -->
+<section class="sec-light">
+  <div class="wrap">
+    <div class="sh c rv">
+      <span class="eye c">Onde e quando</span>
+      <h2>Um dia inteiro, presencial.</h2>
+    </div>
+    <div class="daycard rv">
+      <div class="dc-date">
+        <div class="d">17</div>
+        <div class="m">Agosto</div>
+        <div class="t">Segunda-feira<br>8h30 às 18h</div>
+      </div>
+      <div class="dc-body">
+        <div class="dc-row">
+          <div class="k">Local</div>
+          <div class="nm">Ways Bilingual School</div>
+          <div class="addr">Av. Braz Leme, 1717 · Santana · São Paulo, SP</div>
+        </div>
+        <div class="dc-row">
+          <div class="k">Inclui</div>
+          <div class="dc-incl">
+            <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Almoço na escola</span>
+            <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Café</span>
+            <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Visita guiada</span>
+            <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Certificado de participação</span>
+            <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Estacionamento no local</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ FAQ ═══════════ -->
+<section class="sec-light2">
+  <div class="wrap-n">
+    <div class="sh c rv">
+      <span class="eye c">Dúvidas</span>
+      <h2>Perguntas frequentes.</h2>
+    </div>
+    <div class="faq rv">
+      <div class="qi"><button class="q" id="fq2" aria-expanded="false" aria-controls="fa2">É só para quem já usa IA na escola?<span class="ic"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></button><div class="fa" id="fa2" role="region" aria-labelledby="fq2"><p>Funciona nos dois casos. O dia começa por um diagnóstico, do zero ao avançado.</p></div></div>
+      <div class="qi"><button class="q" id="fq3" aria-expanded="false" aria-controls="fa3">Posso ir sozinho ou preciso ir em dupla?<span class="ic"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></button><div class="fa" id="fa3" role="region" aria-labelledby="fq3"><p>Pode ir sozinho (R$ 290). A dupla da mesma escola (R$ 400) é recomendada: gestão e coordenação com o mesmo plano.</p></div></div>
+      <div class="qi"><button class="q" id="fq4" aria-expanded="false" aria-controls="fa4">O almoço está incluso?<span class="ic"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></button><div class="fa" id="fa4" role="region" aria-labelledby="fq4"><p>Sim, na própria Ways e já incluso no valor.</p></div></div>
+      <div class="qi"><button class="q" id="fq5" aria-expanded="false" aria-controls="fa5">Como funciona a inscrição?<span class="ic"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></button><div class="fa" id="fa5" role="region" aria-labelledby="fq5"><p>Responda ao Diagnóstico de Maturidade da sua escola. Depois, confirmamos a sua vaga.</p></div></div>
+      <div class="qi"><button class="q" id="fq7" aria-expanded="false" aria-controls="fa7">Já fiz formações de IA e não saí com nada aplicável.<span class="ic"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></button><div class="fa" id="fa7" role="region" aria-labelledby="fq7"><p>Por isso o dia termina com um artefato pronto — o plano de ação e o certificado —, para aplicar já na volta.</p></div></div>
+      <div class="qi"><button class="q" id="fq8" aria-expanded="false" aria-controls="fa8">Um dia inteiro fora não é muito tempo?<span class="ic"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></button><div class="fa" id="fa8" role="region" aria-labelledby="fq8"><p>É o tempo que costuma faltar para decidir com clareza. E você volta com o plano pronto.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ CTA FINAL ═══════════ -->
+<section class="sec-light">
+  <div class="wrap">
+    <div class="final rv">
+      <div class="aura" aria-hidden="true" style="opacity:.7"><div class="e roxo"></div><div class="e laranja"></div></div>
+      <div class="wrapin">
+        <span class="eye on-dark c">17 de agosto · 1ª turma · Ways Bilingual School</span>
+        <h2>Garanta a sua vaga.</h2>
+        <p>O primeiro passo é o diagnóstico de maturidade em IA da sua escola.</p>
+        <a href="#inscricao" class="btn big" data-cta="cta-final">Fazer o diagnóstico e reservar</a>
+        <p class="fnote">Turma única · 17 de agosto de 2026.</p>
+      </div>
+    </div>
+
+    <div class="sig">
+      <img src="./assets/rose_round.jpg" alt="" width="460" height="460">
+      <div>
+        <div class="nm">Rose Rodrigues</div>
+        <div class="rl">Fundadora e CEO · IA Schools&nbsp;&nbsp;|&nbsp;&nbsp;Mantenedora · Ways Bilingual School</div>
+        <div style="font-family:'Neulis Cursive','Neulis Sans',cursive;font-size:22px;color:var(--laranja-forte);margin-top:8px">De escolas para escolas.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="ftop">
+      <img src="./assets/logo-horizontal-escuro.svg" alt="IA Schools">
+      <nav class="fnav">
+        <a href="mailto:comercial@iaschools.com.br">comercial@iaschools.com.br</a>
+        <a href="tel:+5511991910343">(11) 99191-0343</a>
+      </nav>
+    </div>
+    <div class="finst">Workshop Gestão de IA na Prática Escolar · 17.08.2026 · Ways Bilingual School, São Paulo · © 2026 IA Schools</div>
+  </div>
+</footer>
+
+<!-- STICKY BAR (padrão 10/10 — entra no scroll, desktop + mobile) -->
+<div class="sticky" id="sticky">
+  <div class="wrap">
+    <div class="txt"><b>Últimas 18 vagas</b> · 17/08</div>
+    <a href="#inscricao" class="btn sm">Reservar minha vaga</a>
+  </div>
+</div>
+
+<script>
+// FAQ acordeão (1 aberto por vez, maxHeight animado) — igual à 10/10
+document.querySelectorAll('.qi .q').forEach(function(q){q.addEventListener('click',function(){
+  var i=q.closest('.qi'),a=i.querySelector('.fa'),op=i.classList.contains('open');
+  document.querySelectorAll('.qi.open').forEach(function(o){o.classList.remove('open');o.querySelector('.fa').style.maxHeight=null;o.querySelector('.q').setAttribute('aria-expanded','false')});
+  if(!op){i.classList.add('open');a.style.maxHeight=a.scrollHeight+'px';q.setAttribute('aria-expanded','true')}
+})});
+
+// vídeo-convite — começa ao clicar (com som), não pesa o load
+document.querySelectorAll('.vfacade').forEach(function(f){
+  function play(){
+    var ifr=document.createElement('iframe');
+    ifr.className='vframe';
+    ifr.src='https://www.youtube.com/embed/'+f.dataset.yt+'?autoplay=1&rel=0&modestbranding=1&playsinline=1';
+    ifr.title='Convite em vídeo — Workshop Gestão de IA na Prática Escolar';
+    ifr.allow='autoplay; encrypted-media; picture-in-picture; fullscreen';
+    ifr.setAttribute('allowfullscreen','');
+    f.innerHTML='';f.appendChild(ifr);
+  }
+  f.addEventListener('click',play);
+  f.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();play();}});
+});
+
+// clique no CTA — avisa o pixel/analytics se existirem (não quebra se não existirem)
+document.querySelectorAll('[data-cta]').forEach(function(a){a.addEventListener('click',function(){
+  var d={evento:'inicio_inscricao',origem:a.dataset.cta||''};
+  try{if(window.fbq)fbq('track','InitiateCheckout');}catch(e){}
+  try{if(window.gtag)gtag('event','begin_checkout',d);}catch(e){}
+  try{(window.dataLayer=window.dataLayer||[]).push(d);}catch(e){}
+})});
+
+// reveal + count-up + header shadow + sticky (scroll>700)
+(function(){
+  var hdr=document.getElementById('hdr'),sticky=document.getElementById('sticky'),inscr=document.getElementById('inscricao');
+  var noMo=window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  addEventListener('scroll',function(){
+    hdr.classList.toggle('scr',scrollY>10);
+    var show=scrollY>700 && (!inscr||inscr.getBoundingClientRect().top>innerHeight);
+    sticky.classList.toggle('on',show);
+  },{passive:true});
+  function fill(t){t.querySelectorAll('[data-count]').forEach(function(el){var to=+el.dataset.count,suf=el.dataset.suf||'';if(noMo){el.textContent=to+suf;return}var st=performance.now();function step(n){var p=Math.min((n-st)/1100,1);el.textContent=Math.round(p*to)+suf;if(p<1)requestAnimationFrame(step)}requestAnimationFrame(step)})}
+  if(noMo||!('IntersectionObserver'in window)){document.querySelectorAll('.rv,.stg').forEach(function(e){e.classList.add('in');fill(e)});return;}
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');fill(e.target);io.unobserve(e.target)}})},{rootMargin:'0px 0px -8% 0px',threshold:.12});
+  document.querySelectorAll('.rv,.stg').forEach(function(el){io.observe(el)});
+})();
+</script>
+</body>
+</html>
