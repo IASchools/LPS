@@ -11,11 +11,11 @@
 <meta property="og:title" content="Workshop Gestão de IA na Prática Escolar · IA Schools">
 <meta property="og:description" content="17 de agosto, Ways Bilingual School (SP). Da captação à fidelização: você vê a operação real e constrói o plano de IA da sua escola.">
 <meta property="og:url" content="https://lp.iaschools.com.br/workshop/">
+  <meta property="og:image" content="https://lp.iaschools.com.br/workshop/assets/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:image" content="https://lp.iaschools.com.br/workshop/assets/og.png">
 <link rel="canonical" href="https://lp.iaschools.com.br/workshop/">
-<meta property="og:image" content="https://lp.iaschools.com.br/workshop/assets/og.png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta name="twitter:image" content="https://lp.iaschools.com.br/workshop/assets/og.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Workshop Gestão de IA na Prática Escolar · IA Schools">
 <meta name="twitter:description" content="17 de agosto, Ways Bilingual School (SP). Um dia dentro de uma escola que já opera com IA.">
@@ -136,6 +136,7 @@ header.scr{border-bottom-color:var(--line-dark);box-shadow:0 12px 34px -20px rgb
 
 /* ---------- vídeo-convite (hero) ---------- */
 .vfacade{position:relative;display:block;width:100%;aspect-ratio:16/9;border-radius:22px;overflow:hidden;border:1px solid var(--line-dark);box-shadow:var(--shadow-3);cursor:pointer;background:var(--navy2);isolation:isolate}
+@media(min-width:1000px){.vfacade{width:calc(100% + 140px)}}
 .vfacade:focus-visible{outline:3px solid var(--laranja);outline-offset:3px}
 .vthumb{width:100%;height:100%;object-fit:cover;transition:transform .5s var(--e)}
 .vfacade::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(15,11,51,.12),rgba(15,11,51,.62));z-index:1}
@@ -295,7 +296,7 @@ h3{font-size:20px}
 .tb-tail{margin-left:auto}
 @media(max-width:720px){.tb-tail{margin-left:0;flex-basis:100%}}
 .people{display:grid;grid-template-columns:1fr;gap:22px;margin-top:44px}
-@media(min-width:760px){.people{grid-template-columns:1fr 1fr}}
+@media(min-width:920px){.people{grid-template-columns:repeat(3,1fr)}}
 .person{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:32px;box-shadow:var(--shadow-1)}
 .person-top{display:flex;align-items:center;gap:18px}
 .person-top img{width:78px;height:78px;border-radius:50%;object-fit:cover;object-position:center 20%;flex-shrink:0;border:2px solid var(--lavanda2)}
@@ -410,7 +411,7 @@ footer .finst{font-size:13px;color:var(--on-3);border-top:1px solid var(--line-d
       <a href="#" class="logo" aria-label="IA Schools"><img src="./assets/logo-horizontal-escuro.svg" alt="IA Schools"></a>
       <div class="hd-evt">Workshop Gestão de IA<br>na Prática Escolar</div>
     </div>
-    <span class="turma hd-turma"><span class="dot-live" aria-hidden="true"></span>Últimas 18 vagas · 1ª turma</span>
+    <a href="https://yayforms.link/V8Qkgqm" class="turma hd-turma js-form" data-cta="badge" target="_blank" rel="noopener" style="text-decoration:none;cursor:pointer"><span class="dot-live" aria-hidden="true"></span>Últimas 18 vagas · 1ª turma</a>
   </div>
 </header>
 
@@ -426,15 +427,15 @@ footer .finst{font-size:13px;color:var(--on-3);border-top:1px solid var(--line-d
         <h1>Um dia dentro de uma escola que <span class="ac">já usa IA</span> na gestão.</h1>
         <p class="sub">Você acompanha a operação inteira, da captação à fidelização, e sai com o plano da <b style="color:var(--on);font-weight:600">sua</b> escola na mão.</p>
         <div class="hctas">
-          <a href="#inscricao" class="btn" data-cta="hero">Reservar minha vaga</a>
+          <a href="https://yayforms.link/V8Qkgqm" class="btn js-form" data-cta="hero" target="_blank" rel="noopener">Reservar minha vaga</a>
           <a href="#dia" class="btn ghost">Ver o roteiro do dia</a>
         </div>
         <p class="hmeta-line">17 de agosto · 8h30–18h · Ways Bilingual School, São Paulo</p>
       </div>
 
       <div class="rv">
-        <div class="vfacade" data-yt="8qig3s6mOUM" role="button" tabindex="0" aria-label="Assistir ao convite em vídeo da Rose">
-          <img class="vthumb" src="https://i.ytimg.com/vi/8qig3s6mOUM/hqdefault.jpg" alt="" loading="lazy" decoding="async">
+        <div class="vfacade" data-yt="8iVrN7Qr8Xw" role="button" tabindex="0" aria-label="Assistir ao convite em vídeo da Rose">
+          <img class="vthumb" src="https://i.ytimg.com/vi/8iVrN7Qr8Xw/maxresdefault.jpg" alt="" loading="lazy" decoding="async">
           <span class="vplay" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
           <span class="vcap">Convite em vídeo · com a Rose</span>
         </div>
@@ -482,55 +483,61 @@ footer .finst{font-size:13px;color:var(--on-3);border-top:1px solid var(--line-d
 
       <div class="tl-i rv">
         <div class="tl-h">08:30</div><div class="tl-dot" aria-hidden="true"></div>
-        <div><span class="chip navy">Chegada</span><h3>Credenciamento e café</h3>
-        <p>Boas-vindas, kit do participante e networking.</p></div>
+        <div><span class="chip navy">Chegada</span><h3>Credenciamento e café de boas-vindas</h3></div>
       </div>
 
       <div class="tl-i key rv">
         <div class="tl-h">09:00</div><div class="tl-dot" aria-hidden="true"></div>
-        <div><span class="chip">Módulo 1</span><h3>Abertura e diagnóstico</h3>
-        <p>A escola do futuro e os quatro níveis de maturidade em IA.</p></div>
+        <div><span class="chip">Abertura</span><h3>A escola do futuro e a tese do dia</h3></div>
+      </div>
+
+      <div class="tl-i rv">
+        <div class="tl-h">09:30</div><div class="tl-dot" aria-hidden="true"></div>
+        <div><span class="chip">Base legal</span><h3>Base legal e governança</h3>
+        <p>LGPD, ECA e ECA Digital, com a Dra. Mabely Meira Fernandes.</p></div>
       </div>
 
       <div class="tl-i rv">
         <div class="tl-h">10:15</div><div class="tl-dot" aria-hidden="true"></div>
-        <div><span class="chip">Módulo 2</span><h3>Base legal e governança</h3>
-        <p>LGPD, ECA Digital, matriz de risco e política de uso.</p></div>
+        <div><span class="chip">Diagnóstico</span><h3>Os quatro níveis de maturidade em IA</h3></div>
       </div>
 
       <div class="tl-i rv">
         <div class="tl-h">11:15</div><div class="tl-dot" aria-hidden="true"></div>
-        <div><span class="chip">Módulo 3</span><h3>Oficina prática de IA</h3>
-        <p>Mão na massa com as ferramentas do dia a dia da gestão.</p></div>
+        <div><span class="chip navy">Pausa</span><h3>Intervalo</h3></div>
+      </div>
+
+      <div class="tl-i rv">
+        <div class="tl-h">11:25</div><div class="tl-dot" aria-hidden="true"></div>
+        <div><span class="chip">Oficina</span><h3>Oficina prática de IA na gestão escolar</h3></div>
       </div>
 
       <div class="tl-i key rv">
         <div class="tl-h">13:00</div><div class="tl-dot" aria-hidden="true"></div>
-        <div><span class="chip laranja">Visita técnica</span><h3>Almoço e visita técnica</h3>
-        <p>Percurso guiado pela Ways Bilingual School, com quem a dirige.</p></div>
+        <div><span class="chip laranja">Visita técnica</span><h3>Almoço e visita técnica à escola</h3>
+        <p>Visita guiada pela escola, das 13h às 14h30.</p></div>
       </div>
 
       <div class="tl-i rv">
         <div class="tl-h">14:30</div><div class="tl-dot" aria-hidden="true"></div>
-        <div><span class="chip">Módulo 4</span><h3>O ecossistema escolar</h3>
-        <p>A jornada do aluno por todos os departamentos da escola.</p></div>
+        <div><span class="chip">Ecossistema</span><h3>O ecossistema escolar</h3>
+        <p>Captação, marketing, atendimento, comercial, financeiro, pessoas, coordenação e gestão.</p></div>
       </div>
 
       <div class="tl-i key rv">
         <div class="tl-h">16:00</div><div class="tl-dot" aria-hidden="true"></div>
-        <div><span class="chip laranja">Módulo 5</span><h3>Seu plano de ação</h3>
-        <p>Construção guiada do plano de implementação da sua escola.</p></div>
+        <div><span class="chip laranja">Plano de ação</span><h3>Construção do plano de ação</h3></div>
       </div>
 
       <div class="tl-i rv">
         <div class="tl-h">18:00</div><div class="tl-dot" aria-hidden="true"></div>
-        <div><span class="chip navy">Encerramento</span><h3>Plano pronto, certificado e próximos passos</h3></div>
+        <div><span class="chip navy">Encerramento</span><h3>Plano pronto e próximos passos</h3></div>
       </div>
     </div>
 
     <div class="nb rv" style="max-width:none">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--roxo)"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M2 20h20"/></svg>
-      <div style="color:var(--cinza)"><b style="color:var(--navy)">Traga o notebook.</b> O plano é construído com apoio de IA ao longo de todo o dia.</div>
+      <div style="color:var(--cinza)"><b style="color:var(--navy)">Traga o notebook carregado</b> e o carregador. Chegue com as três maiores dores de gestão da sua escola em mente — é com elas que você constrói o plano no dia.</div>
     </div>
   </div>
 </section>
@@ -587,6 +594,17 @@ footer .finst{font-size:13px;color:var(--on-3);border-top:1px solid var(--line-d
       </div>
       <div class="person">
         <div class="person-top">
+          <img src="./assets/thiago_round.jpg" alt="Thiago Narahari" width="460" height="460" loading="lazy" decoding="async">
+          <div>
+            <div class="role">Co-fundador</div>
+            <h3>Thiago Narahari</h3>
+          </div>
+        </div>
+        <p class="bio">Engenheiro pela UFRJ e pela CentraleSupélec, em Paris. Sócio do Colégio Bahiense e do Pentágono, leva a IA para a sala de aula desde 2014.</p>
+        <p class="quote">“Construí a tecnologia que eu mesmo precisei em sala de aula.”</p>
+      </div>
+      <div class="person">
+        <div class="person-top">
           <img src="./assets/matheus_round.jpg" alt="Matheus Tomoto" width="460" height="460" loading="lazy" decoding="async">
           <div>
             <div class="role">Head de IA e Growth</div>
@@ -611,10 +629,10 @@ footer .finst{font-size:13px;color:var(--on-3);border-top:1px solid var(--line-d
     </div>
 
     <div class="incl four on-light stg">
-      <div class="i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><div><b>Plano de ação pronto</b><span>O Plano de Implementação da sua escola, feito no dia.</span></div></div>
-      <div class="i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><div><b>Diagnóstico de maturidade</b><span>O estágio da sua escola hoje, em quatro níveis.</span></div></div>
-      <div class="i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><div><b>Política de uso</b><span>Rascunho pronto para levar à direção.</span></div></div>
-      <div class="i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><div><b>Kit impresso</b><span>Mini-guia, trilha dos departamentos e caderno do plano.</span></div></div>
+      <div class="i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><div><b>Mini-guia de IA para a gestão</b><span>Política de uso, matriz de risco e prompts por área.</span></div></div>
+      <div class="i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><div><b>Trilha de IA por departamento</b><span>Para mapear as oportunidades da sua escola.</span></div></div>
+      <div class="i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><div><b>Caderno do Plano de Implementação</b><span>O plano da sua escola, preenchido ao longo do dia.</span></div></div>
+      <div class="i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><div><b>Certificado de participação</b><span>8 horas, enviado por e-mail após o encontro.</span></div></div>
     </div>
   </div>
 </section>
@@ -641,7 +659,7 @@ footer .finst{font-size:13px;color:var(--on-3);border-top:1px solid var(--line-d
         </div>
       </div>
 
-      <a href="#" class="btn big full" data-cta="diagnostico">Fazer o diagnóstico e reservar</a>
+      <a href="https://yayforms.link/V8Qkgqm" class="btn big full js-form" data-cta="diagnostico" target="_blank" rel="noopener">Fazer o diagnóstico e reservar</a>
     </div>
   </div>
 </section>
@@ -707,17 +725,8 @@ footer .finst{font-size:13px;color:var(--on-3);border-top:1px solid var(--line-d
         <span class="eye on-dark c">17 de agosto · 1ª turma · Ways Bilingual School</span>
         <h2>Garanta a sua vaga.</h2>
         <p>O primeiro passo é o diagnóstico de maturidade em IA da sua escola.</p>
-        <a href="#inscricao" class="btn big" data-cta="cta-final">Fazer o diagnóstico e reservar</a>
+        <a href="https://yayforms.link/V8Qkgqm" class="btn big js-form" data-cta="cta-final" target="_blank" rel="noopener">Fazer o diagnóstico e reservar</a>
         <p class="fnote">Turma única · 17 de agosto de 2026.</p>
-      </div>
-    </div>
-
-    <div class="sig">
-      <img src="./assets/rose_round.jpg" alt="" width="460" height="460">
-      <div>
-        <div class="nm">Rose Rodrigues</div>
-        <div class="rl">Fundadora e CEO · IA Schools&nbsp;&nbsp;|&nbsp;&nbsp;Mantenedora · Ways Bilingual School</div>
-        <div style="font-family:'Neulis Cursive','Neulis Sans',cursive;font-size:22px;color:var(--laranja-forte);margin-top:8px">De escolas para escolas.</div>
       </div>
     </div>
   </div>
@@ -742,7 +751,31 @@ footer .finst{font-size:13px;color:var(--on-3);border-top:1px solid var(--line-d
 <div class="sticky" id="sticky">
   <div class="wrap">
     <div class="txt"><b>Últimas 18 vagas</b> · 17/08</div>
-    <a href="#inscricao" class="btn sm">Reservar minha vaga</a>
+    <a href="https://yayforms.link/V8Qkgqm" class="btn sm js-form" data-cta="sticky" target="_blank" rel="noopener">Reservar minha vaga</a>
+  </div>
+</div>
+
+<!-- MODAL do formulário (YayForms) — abre na própria página, zero saída -->
+<style>
+.fmodal{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;padding:18px}
+.fmodal.on{display:flex}
+.fmodal-bg{position:absolute;inset:0;background:rgba(15,11,51,.62);backdrop-filter:blur(3px)}
+.fmodal-card{position:relative;display:flex;flex-direction:column;width:min(560px,94vw);height:min(760px,90vh);background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 30px 80px rgba(15,11,51,.42);animation:fmup .28s var(--e,cubic-bezier(.16,1,.3,1))}
+@keyframes fmup{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}
+.fmodal-head{display:flex;justify-content:flex-end;padding:8px 8px 4px;background:#fff}
+.fmodal-x{width:38px;height:38px;border:0;border-radius:50%;background:rgba(15,11,51,.06);color:var(--navy);font-size:22px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s}
+.fmodal-x:hover{background:rgba(15,11,51,.13)}
+.fmodal-frame{flex:1;width:100%;border:0}
+.fmodal-fb{text-align:center;font-size:13px;padding:9px;color:var(--ink-soft);background:#fff;border-top:1px solid var(--line)}
+.fmodal-fb a{color:var(--roxo);font-weight:600}
+@media(prefers-reduced-motion:reduce){.fmodal-card{animation:none}}
+</style>
+<div class="fmodal" id="fmodal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Reserva do workshop">
+  <div class="fmodal-bg" data-close></div>
+  <div class="fmodal-card">
+    <div class="fmodal-head"><button class="fmodal-x" type="button" data-close aria-label="Fechar">&times;</button></div>
+    <iframe class="fmodal-frame" id="fmodal-frame" title="Formulário de reserva — Workshop Gestão de IA na Prática Escolar" allow="autoplay; encrypted-media"></iframe>
+    <div class="fmodal-fb">Prefere em outra aba? <a href="https://yayforms.link/V8Qkgqm" target="_blank" rel="noopener">Abrir o formulário &#8599;</a></div>
   </div>
 </div>
 
@@ -776,6 +809,18 @@ document.querySelectorAll('[data-cta]').forEach(function(a){a.addEventListener('
   try{if(window.gtag)gtag('event','begin_checkout',d);}catch(e){}
   try{(window.dataLayer=window.dataLayer||[]).push(d);}catch(e){}
 })});
+
+// modal do formulário (YayForms) — abre na própria página, sem tirar o lead da LP
+(function(){
+  var m=document.getElementById('fmodal');
+  if(!m)return;
+  var fr=document.getElementById('fmodal-frame'),FORM='https://yayforms.link/V8Qkgqm';
+  function open(e){if(e)e.preventDefault();if(!fr.getAttribute('src'))fr.setAttribute('src',FORM);m.classList.add('on');m.setAttribute('aria-hidden','false');document.documentElement.style.overflow='hidden';}
+  function close(){m.classList.remove('on');m.setAttribute('aria-hidden','true');document.documentElement.style.overflow='';}
+  document.querySelectorAll('.js-form').forEach(function(a){a.addEventListener('click',open);});
+  m.querySelectorAll('[data-close]').forEach(function(b){b.addEventListener('click',close);});
+  addEventListener('keydown',function(e){if(e.key==='Escape'&&m.classList.contains('on'))close();});
+})();
 
 // reveal + count-up + header shadow + sticky (scroll>700)
 (function(){
