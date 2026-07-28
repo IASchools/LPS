@@ -32,6 +32,7 @@ public/
 apps/
 └── universidade/   ← aplicação separada, publicada pelo Worker universidade-static
     ├── wrangler.jsonc
+    ├── route-worker.js
     └── public/
         ├── index.html
         └── og-certificacao.png

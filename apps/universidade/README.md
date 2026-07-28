@@ -4,7 +4,8 @@ Aplicação independente da rota `https://iaschools.com.br/universidade/`.
 
 - Fonte pública: `public/`
 - Worker de conteúdo: `universidade-static`
-- Worker de rota: `universidade-rota`
+- Worker de rota: `universidade-rota` (fonte de recuperação em
+  `route-worker.js`)
 - Deploy: GitHub → Cloudflare Builds, com raiz `/apps/universidade`
 
 Esta pasta não faz parte da fábrica de LPs. O bloqueio contra
