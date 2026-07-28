@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "updated_at": "2026-07-28",
+  "repository": "IASchools/LPS",
+  "branch": "main",
+  "surfaces": {
+    "lps": {
+      "source": "public",
+      "worker": "lps",
+      "route": "lp.iaschools.com.br/*"
+    },
+    "universidade": {
+      "source": "apps/universidade/public",
+      "worker": "universidade-static",
+      "route_worker": "universidade-rota",
+      "route": "iaschools.com.br/universidade*"
+    }
+  }
+}

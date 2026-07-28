@@ -4,13 +4,14 @@ Central de landing pages do iaschools. Você sobe uma pasta, o site publica sozi
 **`https://lp.iaschools.com.br/<slug>/`** em ~1-2 min.
 
 > ⚠️ Isto é SÓ a fábrica de LPs em `lp.iaschools.com.br`. **Não** é o M60, nem a Universidade IA,
-> nem o site raiz `iaschools.com.br` (esse é dos devs — você não consegue quebrar ele por aqui).
+> nem o site raiz `iaschools.com.br`. A Universidade usa este GitHub institucional, mas fica
+> isolada em `apps/universidade/`; o time de LPs nunca deve editar essa pasta.
 
 ---
 
 ## Antes: acesso ao repositório
-O repo `IASchools/LPS` é **privado**. Você precisa de acesso de escrita. Peça pro responsável te
-adicionar em `Settings → Collaborators` com permissão **Write** (usando a sua conta do GitHub).
+Você precisa de acesso de escrita ao repo `IASchools/LPS`. Peça ao responsável a
+permissão **Write** usando a sua conta do GitHub.
 
 ---
 
@@ -44,6 +45,7 @@ adicionar em `Settings → Collaborators` com permissão **Write** (usando a sua
 ## Não faça
 - Não edite `wrangler.jsonc`, `package.json` nem `Publicar-LP.command` (é a "encanação" que faz o deploy).
 - Mexa só **dentro de `public/`**.
+- Nunca crie `public/universidade` nem edite `apps/universidade/` pelo fluxo de LPs.
 - Limite do upload pelo navegador: 25 MB por arquivo.
 
 ---
