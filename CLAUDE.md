@@ -5,6 +5,10 @@ push no GitHub → a Cloudflare publica em `https://lp.iaschools.com.br/<slug>/`
 
 > ⚠️ **Escopo:** isto é SÓ a fábrica de LPs em `lp.iaschools.com.br`.
 > NÃO é o M60, nem a "LP Universidade IA", nem o IA101, nem o site raiz `iaschools.com.br`.
+>
+> **Exceção permanente:** `universidade` nunca pode ser criada, copiada ou espelhada aqui.
+> Sua fonte exclusiva é `giugiu-a11y/ia-rose` e seu endereço é
+> `https://iaschools.com.br/universidade/`. `workshop` continua sendo uma LP normal deste repo.
 
 ## Fatos canônicos
 - **Repo:** `IASchools/LPS` (privado). Conta GitHub `IASchools` (User). Nunca `matheustomoto`.
@@ -16,6 +20,10 @@ push no GitHub → a Cloudflare publica em `https://lp.iaschools.com.br/<slug>/`
 ## Publicar uma LP
 `Publicar-LP.command` → arrasta a pasta/zip → digita o slug → ele copia pra `public/<slug>`, commita e dá push.
 Molde em `public/_exemplo/`.
+
+O publicador e o hook `pre-push` chamam o guard fail-closed
+`/Users/visitante/.codex/scripts/project_infra_guard.py`. Divergência de projeto, GitHub,
+conta Cloudflare, Worker, rota ou slug reservado bloqueia a operação.
 
 ## Regras de cada LP
 - HTML/CSS/JS puro (sem React/Vite/npm/build).

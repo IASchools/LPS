@@ -54,6 +54,21 @@ SLUG="$(printf '%s' "$SLUG" \
 echo "→ URL final: /$SLUG/"
 
 DEST="public/$SLUG"
+GUARD="/Users/visitante/.codex/scripts/project_infra_guard.py"
+REMOTE_URL="$(git remote get-url --push origin 2>/dev/null)" || {
+  echo "❌ O GitHub canônico deste projeto não está configurado."
+  [ -n "$TMP" ] && rm -rf "$TMP"
+  exit 1
+}
+if ! /usr/bin/python3 "$GUARD" check-push \
+  --project "$REPO_DIR" \
+  --remote-url "$REMOTE_URL" \
+  --changed-file "$DEST/index.html"; then
+  echo "❌ Publicação bloqueada: projeto, GitHub ou rota não correspondem."
+  [ -n "$TMP" ] && rm -rf "$TMP"
+  exit 1
+fi
+
 if [ -d "$DEST" ]; then
   read -r -p "⚠️  '$SLUG' já existe. Substituir? (s/N): " OK
   case "$OK" in [sS]) rm -rf "$DEST" ;; *) echo "Cancelado."; [ -n "$TMP" ] && rm -rf "$TMP"; exit 0 ;; esac
@@ -71,6 +86,14 @@ git add "$DEST"
 if git diff --cached --quiet; then
   echo "ℹ️  Nada mudou — já estava idêntica no ar. Fim."
   read -r -p "Enter para fechar." _; exit 0
+fi
+if ! /usr/bin/python3 "$GUARD" check-push \
+  --project "$REPO_DIR" \
+  --remote-url "$REMOTE_URL" \
+  --changed-file "$DEST/index.html"; then
+  echo "❌ Commit bloqueado pela separação obrigatória de projetos."
+  git restore --staged "$DEST" 2>/dev/null || true
+  exit 1
 fi
 git commit -m "LP: publica /$SLUG" >/dev/null
 echo "⬆️  Enviando para o GitHub..."

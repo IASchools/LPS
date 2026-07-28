@@ -1,0 +1,15 @@
+#!/bin/sh
+set -eu
+
+REMOTE_NAME="${1:-}"
+REMOTE_URL="${2:-}"
+
+if [ -z "$REMOTE_NAME" ] || [ -z "$REMOTE_URL" ]; then
+  echo "Bloqueado: o destino GitHub do push não foi informado." >&2
+  exit 1
+fi
+
+/usr/bin/python3 /Users/visitante/.codex/scripts/project_infra_guard.py pre-push \
+  --project "/Users/visitante/projects/iaschools-lps" \
+  --remote-name "$REMOTE_NAME" \
+  --remote-url "$REMOTE_URL"
