@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Prepare o Claude para o workshop | IA Schools</title>
+  <meta name="description" content="Passo a passo para instalar, acessar e testar o Claude antes do Workshop Gestão de IA na Prática Escolar.">
+  <meta name="theme-color" content="#17124c">
+  <link rel="canonical" href="https://lp.iaschools.com.br/workshopday/">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:site_name" content="IA Schools">
+  <meta property="og:title" content="Deixe o Claude pronto para o workshop">
+  <meta property="og:description" content="Instale o aplicativo, acesse sua conta gratuita e faça um teste rápido antes do workshop.">
+  <meta property="og:url" content="https://lp.iaschools.com.br/workshopday/">
+  <meta property="og:image" content="https://lp.iaschools.com.br/workshopday/assets/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Deixe o Claude pronto para o workshop da IA Schools">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
+  <style>
+    @font-face{font-family:Neulis;src:url('./assets/neulis-sans-400.woff2') format('woff2');font-style:normal;font-weight:400;font-display:swap}
+    @font-face{font-family:Neulis;src:url('./assets/neulis-sans-500.woff2') format('woff2');font-style:normal;font-weight:500;font-display:swap}
+    @font-face{font-family:Neulis;src:url('./assets/neulis-sans-600.woff2') format('woff2');font-style:normal;font-weight:600;font-display:swap}
+    @font-face{font-family:Neulis;src:url('./assets/neulis-sans-700.woff2') format('woff2');font-style:normal;font-weight:700;font-display:swap}
+
+    :root{
+      --ink:#17124c;
+      --ink-soft:#4e4a68;
+      --purple:#6739f5;
+      --purple-dark:#4d24d5;
+      --orange:#ff9b52;
+      --orange-soft:#fff0e4;
+      --paper:#fbfaf7;
+      --white:#fff;
+      --line:#dedce8;
+      --line-strong:#c8c4d8;
+      --success:#127755;
+      --success-soft:#e7f7f0;
+      --warning:#8a4d13;
+      --warning-soft:#fff6dc;
+      --shadow:0 24px 70px rgba(23,18,76,.12),0 3px 12px rgba(23,18,76,.05);
+      --radius:30px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;min-height:100vh;color:var(--ink);background:var(--paper);font-family:Neulis,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+    body::before,body::after{content:"";position:fixed;z-index:-1;border-radius:999px;filter:blur(2px);pointer-events:none}
+    body::before{width:34rem;height:34rem;right:-15rem;top:-16rem;background:radial-gradient(circle at 35% 65%,rgba(255,155,82,.5),rgba(255,155,82,0) 69%)}
+    body::after{width:37rem;height:37rem;left:-21rem;bottom:-19rem;background:radial-gradient(circle at 70% 30%,rgba(103,57,245,.24),rgba(103,57,245,0) 69%)}
+    button,a{font:inherit}
+    button{color:inherit}
+    a{color:var(--purple-dark)}
+    :focus-visible{outline:3px solid var(--orange);outline-offset:3px}
+
+    .topbar{width:min(1120px,calc(100% - 48px));min-height:92px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:28px}
+    .brand{display:block;width:190px;height:auto}
+    .event-chip{max-width:420px;padding:10px 16px;border:1px solid rgba(23,18,76,.14);border-radius:999px;background:rgba(255,255,255,.72);font-size:.78rem;font-weight:700;letter-spacing:.055em;text-transform:uppercase;text-align:center;backdrop-filter:blur(8px)}
+
+    main{width:min(920px,calc(100% - 48px));margin:22px auto 0}
+    .progress-wrap{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:18px;width:min(760px,calc(100% - 56px));margin:0 auto 18px}
+    .progress-label{font-size:.82rem;font-weight:700;color:var(--ink-soft);white-space:nowrap}
+    .progress{width:100%;height:6px;border:0;border-radius:99px;overflow:hidden;background:#d8d5e3;appearance:none}
+    .progress::-webkit-progress-bar{border-radius:99px;background:#d8d5e3}
+    .progress::-webkit-progress-value{border-radius:99px;background:var(--purple);transition:width .18s ease}
+    .progress::-moz-progress-bar{border-radius:99px;background:var(--purple)}
+
+    .screen{display:none}
+    .screen.active{display:block}
+    .panel{padding:clamp(34px,6vw,64px);border:1px solid rgba(23,18,76,.1);border-radius:var(--radius);background:rgba(255,255,255,.94);box-shadow:var(--shadow)}
+    .eyebrow{margin:0 0 12px;color:var(--purple);font-size:.8rem;font-weight:700;letter-spacing:.105em;text-transform:uppercase}
+    h1,h2,h3,p{overflow-wrap:break-word}
+    h1,h2{max-width:760px;margin:0;letter-spacing:-.045em;line-height:1.02;text-wrap:balance}
+    h1{font-size:clamp(2.7rem,6vw,4.4rem)}
+    h2{font-size:clamp(2.25rem,5vw,3.65rem)}
+    h3{margin:0;font-size:1.05rem;letter-spacing:-.015em}
+    .lead{max-width:710px;margin:20px 0 0;color:var(--ink-soft);font-size:clamp(1.02rem,2vw,1.2rem);line-height:1.55}
+    .time-note{display:inline-flex;align-items:center;gap:8px;margin-top:22px;padding:9px 14px;border-radius:999px;background:var(--orange-soft);color:#743c10;font-size:.9rem;font-weight:700}
+    .time-note::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--orange)}
+
+    .requirements{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:32px 0 0;padding:0;list-style:none}
+    .requirement{display:flex;align-items:center;gap:14px;padding:17px;border:1px solid var(--line);border-radius:18px;background:#fff}
+    .requirement-number{display:grid;flex:0 0 42px;width:42px;height:42px;place-items:center;border-radius:13px;background:var(--ink);color:#fff;font-weight:700}
+    .requirement strong,.requirement span span{display:block}
+    .requirement strong{font-size:.97rem;line-height:1.25}
+    .requirement span span{margin-top:4px;color:var(--ink-soft);font-size:.85rem;line-height:1.35}
+    .choice-prompt{margin:34px 0 12px;font-size:.95rem;font-weight:700}
+    .choices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+    .choices.two{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:30px}
+    .choice{min-height:132px;padding:18px;border:1px solid var(--line);border-radius:20px;background:#fff;text-align:left;cursor:pointer;transition:transform .16s ease,border-color .16s ease,box-shadow .16s ease}
+    .choice:hover{transform:translateY(-2px);border-color:var(--purple);box-shadow:0 12px 28px rgba(58,37,146,.1)}
+    .choice-icon{display:grid;width:48px;height:48px;place-items:center;margin-bottom:17px;border-radius:15px;background:#f0ecff;color:var(--purple);font-size:.73rem;font-weight:700;letter-spacing:-.02em}
+    .choice-icon svg{width:27px;height:27px;fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.8}
+    .choice strong,.choice small{display:block}
+    .choice strong{font-size:.98rem;line-height:1.25}
+    .choice small{margin-top:5px;color:var(--ink-soft);font-size:.81rem;line-height:1.35}
+
+    .back{display:inline-flex;min-height:44px;align-items:center;margin:0 0 30px;padding:0 4px;border:0;background:none;color:var(--ink-soft);font-size:.92rem;font-weight:600;cursor:pointer}
+    .back:hover{color:var(--purple)}
+    .steps{display:grid;gap:12px;margin:32px 0 0;padding:0;list-style:none;counter-reset:step}
+    .steps li{display:grid;grid-template-columns:42px 1fr;gap:14px;align-items:start;padding:17px;border:1px solid var(--line);border-radius:17px;background:#fff;counter-increment:step}
+    .steps li::before{content:counter(step);display:grid;width:42px;height:42px;place-items:center;border-radius:13px;background:var(--ink);color:#fff;font-weight:700}
+    .steps strong,.steps span{display:block}
+    .steps strong{padding-top:2px;font-size:1rem;line-height:1.3}
+    .steps span{margin-top:4px;color:var(--ink-soft);font-size:.91rem;line-height:1.45}
+    .download-guide{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-top:14px;padding:20px;border-radius:18px;background:linear-gradient(120deg,#f2efff,#fff4ea);border:1px solid #ddd5fb}
+    .download-guide p{margin:0;color:var(--ink-soft);font-size:.9rem;line-height:1.45}
+    .download-guide strong{display:block;margin-bottom:4px;color:var(--ink);font-size:1rem}
+    .download-pill{flex:none;padding:11px 16px;border-radius:12px;background:var(--purple);color:#fff;font-size:.82rem;font-weight:700;white-space:nowrap}
+    .tip,.warning,.fallback{margin-top:18px;padding:16px 18px;border-radius:16px;font-size:.92rem;line-height:1.5}
+    .tip{border-left:4px solid var(--purple);background:#f2efff}
+    .warning{border-left:4px solid var(--orange);background:var(--warning-soft);color:#6d431d}
+    .fallback{border:1px solid var(--line);background:#f8f7fb}
+    .button-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+    .button{display:inline-flex;min-height:50px;align-items:center;justify-content:center;padding:13px 19px;border:1px solid var(--ink);border-radius:14px;background:var(--ink);color:#fff;text-decoration:none;text-align:center;font-size:.92rem;font-weight:700;line-height:1.3;cursor:pointer;transition:transform .16s ease,background-color .16s ease,border-color .16s ease}
+    .button:hover{transform:translateY(-1px);background:#282165}
+    .button.accent{border-color:var(--purple);background:var(--purple)}
+    .button.accent:hover{border-color:var(--purple-dark);background:var(--purple-dark)}
+    .button.secondary{border-color:var(--line-strong);background:#fff;color:var(--ink)}
+    .button.secondary:hover{border-color:var(--ink);background:#fff}
+    a.button[target="_blank"]::after{content:"↗";margin-left:8px;font-size:.9em}
+
+    .account-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:30px}
+    .account-card{padding:22px;border:1px solid var(--line);border-radius:18px;background:#fff}
+    .account-card h2{margin:0;font-size:1.05rem;letter-spacing:-.015em;line-height:1.2}
+    .account-card p{margin:8px 0 0;color:var(--ink-soft);font-size:.91rem;line-height:1.5}
+    .prompt-box{margin-top:28px;padding:20px;border:1px solid #d8d1fa;border-radius:18px;background:#f7f5ff}
+    .prompt-box code{display:block;color:var(--ink);font-family:Neulis,Arial,sans-serif;font-size:1rem;font-weight:600;line-height:1.55;white-space:normal}
+    .copy-button{min-height:44px;margin-top:15px;padding:10px 14px;border:1px solid var(--purple);border-radius:11px;background:#fff;color:var(--purple-dark);font-size:.86rem;font-weight:700;cursor:pointer}
+    .copy-button:hover{background:#eeeaff}
+    .copy-status{min-height:1.3em;margin-top:8px;color:var(--success);font-size:.82rem;font-weight:600}
+    .ready-mark{display:grid;width:64px;height:64px;place-items:center;margin-bottom:24px;border-radius:21px;background:var(--success-soft);color:var(--success);font-size:2rem;font-weight:700}
+    .checklist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:30px 0 0;padding:0;list-style:none}
+    .checklist li{position:relative;padding:15px 15px 15px 44px;border:1px solid var(--line);border-radius:15px;background:#fff;font-size:.91rem;line-height:1.4}
+    .checklist li::before{content:"✓";position:absolute;left:15px;top:14px;color:var(--success);font-weight:700}
+    #ready-word{font-size:1.35rem;letter-spacing:.1em}
+    .ready-return{margin-top:22px}
+
+    .sources{width:min(920px,calc(100% - 48px));margin:24px auto 0;padding:0 20px 34px;color:#6c687d;font-size:.78rem;line-height:1.5;text-align:center}
+    .sources a{font-weight:600}
+    .toast{position:fixed;z-index:10;right:22px;bottom:22px;max-width:min(350px,calc(100% - 44px));padding:12px 16px;border-radius:12px;background:var(--ink);color:#fff;box-shadow:0 14px 36px rgba(23,18,76,.25);font-size:.88rem;font-weight:600;opacity:0;transform:translateY(10px);pointer-events:none;transition:opacity .18s ease,transform .18s ease}
+    .toast.show{opacity:1;transform:translateY(0)}
+
+    @media (max-width:720px){
+      .topbar{width:calc(100% - 32px);min-height:78px;align-items:center;gap:16px}
+      .brand{width:146px}
+      .event-chip{max-width:170px;padding:7px 10px;font-size:.61rem;line-height:1.25}
+      main{width:calc(100% - 24px);margin-top:12px}
+      .progress-wrap{width:calc(100% - 24px);grid-template-columns:1fr;gap:8px;margin-bottom:12px}
+      .progress-label{font-size:.75rem}
+      .panel{padding:28px 22px;border-radius:23px}
+      h1{font-size:clamp(2.15rem,11vw,3rem)}
+      h2{font-size:clamp(2rem,10vw,2.7rem)}
+      .lead{margin-top:16px;font-size:1rem}
+      .requirements,.choices,.choices.two,.account-options,.checklist{grid-template-columns:1fr}
+      .requirements{margin-top:24px}
+      .choice-prompt{margin-top:28px}
+      .choice{display:grid;grid-template-columns:46px 1fr;gap:14px;align-items:center;min-height:90px;padding:16px}
+      .choice-icon{width:46px;height:46px;margin:0;border-radius:14px}
+      .back{margin-bottom:24px}
+      .steps{margin-top:26px}
+      .steps li{grid-template-columns:38px 1fr;padding:15px}
+      .steps li::before{width:38px;height:38px}
+      .download-guide{align-items:flex-start;flex-direction:column}
+      .button-row{display:grid;grid-template-columns:1fr}
+      .button{width:100%}
+      .sources{width:calc(100% - 24px);padding-bottom:26px}
+    }
+
+    @media (max-width:410px){
+      .event-chip{max-width:148px;font-size:.65rem}
+      .panel{padding:26px 19px}
+      h1{font-size:2.12rem}
+      h2{font-size:1.95rem}
+      .requirement{padding:14px}
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      html{scroll-behavior:auto}
+      *,*::before,*::after{scroll-behavior:auto!important;transition-duration:.01ms!important}
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <img class="brand" src="./assets/logo.svg" alt="IA Schools" width="667" height="195">
+    <div class="event-chip">Workshop Gestão de IA na Prática Escolar</div>
+  </header>
+
+  <main>
+    <div class="progress-wrap">
+      <label class="progress-label" for="preparation-progress">Etapa 1 de 5</label>
+      <progress class="progress" id="preparation-progress" max="5" value="1">Etapa 1 de 5</progress>
+    </div>
+
+    <section class="screen active" id="home" data-step="1" aria-labelledby="home-title">
+      <div class="panel">
+        <p class="eyebrow">Prepare-se antes de chegar</p>
+        <h1 id="home-title" tabindex="-1">Deixe o Claude pronto para o workshop</h1>
+        <p class="lead">Para chegar pronto, você precisa concluir duas coisas. Só baixar o aplicativo não basta.</p>
+        <div class="time-note">Cerca de 10 minutos</div>
+        <ul class="requirements" aria-label="O que precisa estar pronto">
+          <li class="requirement"><span class="requirement-number">1</span><span><strong>Aplicativo instalado</strong><span>No celular, tablet ou computador</span></span></li>
+          <li class="requirement"><span class="requirement-number">2</span><span><strong>Conta gratuita criada e acessada</strong><span>Com Google ou e-mail</span></span></li>
+        </ul>
+        <p class="choice-prompt">Primeiro, escolha seu equipamento:</p>
+        <div class="choices">
+          <button class="choice" type="button" data-go="phone-choice"><span class="choice-icon" aria-hidden="true"><svg viewBox="0 0 32 32"><rect x="8" y="3" width="16" height="26" rx="3"/><path d="M13 7h6M15 25h2"/></svg></span><span><strong>Estou no celular</strong><small>iPhone ou Android</small></span></button>
+          <button class="choice" type="button" data-go="tablet-choice"><span class="choice-icon" aria-hidden="true"><svg viewBox="0 0 32 32"><rect x="5" y="3" width="22" height="26" rx="3"/><path d="M15 25h2"/></svg></span><span><strong>Estou no iPad ou tablet</strong><small>iPad ou tablet Android</small></span></button>
+          <button class="choice" type="button" data-go="computer-choice"><span class="choice-icon" aria-hidden="true"><svg viewBox="0 0 32 32"><rect x="5" y="5" width="22" height="16" rx="2"/><path d="M2 26h28M12 21l-1 5m9-5 1 5"/></svg></span><span><strong>Estou no computador</strong><small>Mac ou Windows</small></span></button>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" id="phone-choice" data-step="1" aria-labelledby="phone-choice-title">
+      <div class="panel"><button class="back" type="button" data-back>← Voltar</button><p class="eyebrow">Celular</p><h1 id="phone-choice-title" tabindex="-1">Qual é o seu celular?</h1><p class="lead">Escolha a opção certa para abrir a loja oficial.</p><div class="choices two">
+        <button class="choice" type="button" data-go="iphone"><span class="choice-icon" aria-hidden="true">iOS</span><span><strong>Tenho iPhone</strong><small>Usa a App Store</small></span></button>
+        <button class="choice" type="button" data-go="android-phone"><span class="choice-icon" aria-hidden="true">AND</span><span><strong>Tenho Android</strong><small>Samsung, Motorola, Xiaomi e outros</small></span></button>
+      </div></div>
+    </section>
+
+    <section class="screen" id="tablet-choice" data-step="1" aria-labelledby="tablet-choice-title">
+      <div class="panel"><button class="back" type="button" data-back>← Voltar</button><p class="eyebrow">iPad ou tablet</p><h1 id="tablet-choice-title" tabindex="-1">Qual é o seu aparelho?</h1><p class="lead">Escolha a opção certa para abrir a loja oficial.</p><div class="choices two">
+        <button class="choice" type="button" data-go="ipad"><span class="choice-icon" aria-hidden="true">iPad</span><span><strong>Tenho iPad</strong><small>Usa a App Store</small></span></button>
+        <button class="choice" type="button" data-go="android-tablet"><span class="choice-icon" aria-hidden="true">AND</span><span><strong>Tenho tablet Android</strong><small>Samsung, Lenovo e outros</small></span></button>
+      </div></div>
+    </section>
+
+    <section class="screen" id="computer-choice" data-step="1" aria-labelledby="computer-choice-title">
+      <div class="panel"><button class="back" type="button" data-back>← Voltar</button><p class="eyebrow">Computador</p><h1 id="computer-choice-title" tabindex="-1">Qual é o seu computador?</h1><p class="lead">Se você vê o símbolo da maçã, escolha Mac. Nos demais casos, normalmente é Windows.</p><div class="choices two">
+        <button class="choice" type="button" data-go="mac"><span class="choice-icon" aria-hidden="true">macOS</span><span><strong>Uso Mac</strong><small>MacBook, iMac ou Mac mini</small></span></button>
+        <button class="choice" type="button" data-go="windows"><span class="choice-icon" aria-hidden="true">WIN</span><span><strong>Uso Windows</strong><small>Dell, Lenovo, HP, Samsung e outros</small></span></button>
+      </div></div>
+    </section>
+
+    <section class="screen" id="iphone" data-step="2" aria-label="Instalação no iPhone">
+      <div class="panel"><button class="back" type="button" data-back>← Voltar</button><p class="eyebrow">iPhone</p><h1 id="iphone-title" tabindex="-1">Baixe o Claude na App Store</h1>
+        <ol class="steps"><li><div><strong>Abra a página oficial</strong><span>Toque no botão abaixo para abrir o aplicativo correto.</span></div></li><li><div><strong>Toque em Obter</strong><span>O aplicativo se chama Claude by Anthropic.</span></div></li><li><div><strong>Abra o Claude</strong><span>Quando o download terminar, toque em Abrir.</span></div></li></ol>
+        <div class="tip"><strong>Próxima etapa obrigatória:</strong> criar ou acessar uma conta gratuita no Claude.</div><div class="button-row"><a class="button accent" href="https://apps.apple.com/app/claude-by-anthropic/id6473753684" target="_blank" rel="noopener">Abrir App Store oficial</a><button class="button" type="button" data-go="account">Aplicativo instalado. Criar ou acessar conta</button></div>
+      </div>
+    </section>
+
+    <section class="screen" id="android-phone" data-step="2" aria-label="Instalação no celular Android">
+      <div class="panel"><button class="back" type="button" data-back>← Voltar</button><p class="eyebrow">Celular Android</p><h1 id="android-phone-title" tabindex="-1">Baixe o Claude no Google Play</h1>
+        <ol class="steps"><li><div><strong>Abra a página oficial</strong><span>Toque no botão abaixo para abrir o aplicativo correto.</span></div></li><li><div><strong>Toque em Instalar</strong><span>O aplicativo se chama Claude by Anthropic.</span></div></li><li><div><strong>Abra o Claude</strong><span>Quando o download terminar, toque em Abrir.</span></div></li></ol>
+        <div class="tip"><strong>Próxima etapa obrigatória:</strong> criar ou acessar uma conta gratuita no Claude.</div><div class="button-row"><a class="button accent" href="https://play.google.com/store/apps/details?id=com.anthropic.claude" target="_blank" rel="noopener">Abrir Google Play oficial</a><button class="button" type="button" data-go="account">Aplicativo instalado. Criar ou acessar conta</button></div>
+      </div>
+    </section>
+
+    <section class="screen" id="ipad" data-step="2" aria-label="Instalação no iPad">
+      <div class="panel"><button class="back" type="button" data-back>← Voltar</button><p class="eyebrow">iPad</p><h1 id="ipad-title" tabindex="-1">Baixe o Claude na App Store</h1>
+        <ol class="steps"><li><div><strong>Abra a página oficial</strong><span>Toque no botão abaixo.</span></div></li><li><div><strong>Toque em Obter</strong><span>O aplicativo funciona em iPhone e iPad.</span></div></li><li><div><strong>Abra o Claude</strong><span>Quando a instalação terminar, toque em Abrir.</span></div></li></ol>
+        <div class="tip"><strong>Próxima etapa obrigatória:</strong> criar ou acessar uma conta gratuita no Claude.</div><div class="button-row"><a class="button accent" href="https://apps.apple.com/app/claude-by-anthropic/id6473753684" target="_blank" rel="noopener">Abrir App Store oficial</a><button class="button" type="button" data-go="account">Aplicativo instalado. Criar ou acessar conta</button></div>
+      </div>
+    </section>
+
+    <section class="screen" id="android-tablet" data-step="2" aria-label="Instalação no tablet Android">
+      <div class="panel"><button class="back" type="button" data-back>← Voltar</button><p class="eyebrow">Tablet Android</p><h1 id="android-tablet-title" tabindex="-1">Baixe o Claude no Google Play</h1>
+        <ol class="steps"><li><div><strong>Abra a página oficial</strong><span>Toque no botão abaixo.</span></div></li><li><div><strong>Toque em Instalar</strong><span>O aplicativo se chama Claude by Anthropic.</span></div></li><li><div><strong>Abra o Claude</strong><span>Quando a instalação terminar, toque em Abrir.</span></div></li></ol>
+        <div class="tip"><strong>Próxima etapa obrigatória:</strong> criar ou acessar uma conta gratuita no Claude.</div><div class="button-row"><a class="button accent" href="https://play.google.com/store/apps/details?id=com.anthropic.claude" target="_blank" rel="noopener">Abrir Google Play oficial</a><button class="button" type="button" data-go="account">Aplicativo instalado. Criar ou acessar conta</button></div>
+      </div>
+    </section>
+
+    <section class="screen" id="mac" data-step="2" aria-labelledby="mac-title">
+      <div class="panel"><button class="back" type="button" data-back>← Voltar</button><p class="eyebrow">Computador Mac</p><h1 id="mac-title" tabindex="-1">Instale o Claude no Mac</h1>
+        <ol class="steps"><li><div><strong>Abra a página oficial</strong><span>O site identifica o Mac e mostra o botão de download.</span></div></li><li><div><strong>Clique em Download for macOS</strong><span>Aguarde o arquivo terminar de baixar.</span></div></li><li><div><strong>Abra o arquivo baixado</strong><span>Siga as instruções e depois abra o Claude em Aplicativos.</span></div></li></ol>
+        <div class="download-guide"><p><strong>Na página da Anthropic</strong>Procure a opção para macOS. O visual pode mudar com atualizações.</p><span class="download-pill">Download para macOS</span></div>
+        <div class="tip"><strong>Próxima etapa obrigatória:</strong> criar ou acessar uma conta gratuita no Claude.</div><div class="button-row"><a class="button accent" href="https://claude.com/download" target="_blank" rel="noopener">Abrir download oficial</a><button class="button" type="button" data-go="account">Aplicativo instalado. Criar ou acessar conta</button></div>
+        <div class="tip"><strong>Requisito:</strong> macOS 11 ou mais recente.</div><div class="fallback"><strong>Não conseguiu instalar?</strong> Você ainda pode participar usando o navegador.<div class="button-row"><a class="button secondary" href="https://claude.ai" target="_blank" rel="noopener">Abrir Claude no navegador</a></div></div>
+      </div>
+    </section>
+
+    <section class="screen" id="windows" data-step="2" aria-labelledby="windows-title">
+      <div class="panel"><button class="back" type="button" data-back>← Voltar</button><p class="eyebrow">Computador Windows</p><h1 id="windows-title" tabindex="-1">Instale o Claude no Windows</h1>
+        <ol class="steps"><li><div><strong>Abra a página oficial</strong><span>O site identifica o Windows e mostra o botão de download.</span></div></li><li><div><strong>Clique em Download for Windows</strong><span>Aguarde o arquivo terminar de baixar.</span></div></li><li><div><strong>Abra o arquivo baixado</strong><span>Conclua a instalação e abra o Claude pelo menu Iniciar.</span></div></li></ol>
+        <div class="download-guide"><p><strong>Na página da Anthropic</strong>Procure a opção para Windows. O visual pode mudar com atualizações.</p><span class="download-pill">Download para Windows</span></div>
+        <div class="tip"><strong>Próxima etapa obrigatória:</strong> criar ou acessar uma conta gratuita no Claude.</div><div class="button-row"><a class="button accent" href="https://claude.com/download" target="_blank" rel="noopener">Abrir download oficial</a><button class="button" type="button" data-go="account">Aplicativo instalado. Criar ou acessar conta</button></div>
+        <div class="tip"><strong>Requisito:</strong> Windows 10 ou mais recente.</div><div class="fallback"><strong>Não conseguiu instalar?</strong> Você ainda pode participar usando o navegador.<div class="button-row"><a class="button secondary" href="https://claude.ai" target="_blank" rel="noopener">Abrir Claude no navegador</a></div></div>
+      </div>
+    </section>
+
+    <section class="screen" id="account" data-step="3" aria-labelledby="account-title">
+      <div class="panel"><button class="back" type="button" data-back>← Voltar</button><p class="eyebrow">Etapa obrigatória 2 de 2</p><h1 id="account-title" tabindex="-1">Crie ou acesse sua conta gratuita</h1><p class="lead">O aplicativo sozinho não basta. Ao abrir o Claude, conclua o cadastro ou entre em uma conta que você já possui.</p>
+        <div class="account-options"><div class="account-card"><h2>Continuar com Google</h2><p>Use a conta Google que você já utiliza e siga as instruções na tela.</p></div><div class="account-card"><h2>Continuar com e-mail</h2><p>Digite seu e-mail e abra o link seguro que o Claude enviar para sua caixa de entrada.</p></div></div>
+        <div class="tip"><strong>Primeiro acesso:</strong> o Claude pode pedir uma confirmação adicional, como telefone e código por SMS. Siga as instruções mostradas na tela.</div><div class="warning"><strong>Importante:</strong> o plano gratuito é suficiente para o workshop. Não é necessário informar cartão nem contratar assinatura.</div><div class="button-row"><button class="button accent" type="button" data-go="test">Conta criada e acessada. Fazer o teste</button></div>
+      </div>
+    </section>
+
+    <section class="screen" id="test" data-step="4" aria-labelledby="test-title">
+      <div class="panel"><button class="back" type="button" data-back>← Voltar</button><p class="eyebrow">Teste final</p><h1 id="test-title" tabindex="-1">Confirme que o Claude está funcionando</h1><p class="lead">Copie a mensagem abaixo, cole no Claude e envie.</p>
+        <div class="prompt-box"><code id="test-prompt">Estou preparando o Claude para o Workshop Gestão de IA na Prática Escolar. Responda apenas: Claude pronto para o workshop.</code><button class="copy-button" type="button" data-copy-target="test-prompt">Copiar mensagem de teste</button><div class="copy-status" aria-live="polite"></div></div>
+        <div class="tip"><strong>Deu certo?</strong> Se o Claude respondeu, sua preparação está concluída.</div><div class="button-row"><button class="button accent" type="button" data-go="ready">O Claude respondeu</button></div>
+      </div>
+    </section>
+
+    <section class="screen" id="ready" data-step="5" aria-labelledby="ready-title">
+      <div class="panel"><div class="ready-mark" aria-hidden="true">✓</div><p class="eyebrow">Tudo pronto</p><h1 id="ready-title" tabindex="-1">Você está preparado para o workshop</h1>
+        <ul class="checklist"><li>Aplicativo instalado ou navegador funcionando</li><li>Conta gratuita criada e acessada</li><li>Mensagem de teste respondida</li><li>Equipamento carregado</li><li>Carregador separado</li></ul>
+        <div class="warning"><strong>Proteção de dados:</strong> durante o workshop, não use nomes, documentos ou dados reais de alunos, famílias ou colaboradores.</div>
+        <div class="prompt-box"><code id="ready-word">PRONTO</code><button class="copy-button" type="button" data-copy-target="ready-word">Copiar PRONTO</button><div class="copy-status" aria-live="polite"></div></div>
+        <p class="lead ready-return">Agora volte à conversa da IA Schools no WhatsApp e responda <strong>PRONTO</strong>.</p><div class="button-row"><button class="button secondary" type="button" data-reset>Refazer o passo a passo</button></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="sources">Links oficiais da <a href="https://claude.com/download" target="_blank" rel="noopener">Anthropic</a>. Aplicativos disponíveis para contas gratuitas. IA Schools, 2026.</footer>
+  <div class="toast" aria-hidden="true"></div>
+
+  <script>
+    (() => {
+      const screens = [...document.querySelectorAll('.screen')];
+      const progress = document.querySelector('.progress');
+      const progressLabel = document.querySelector('.progress-label');
+      const toast = document.querySelector('.toast');
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      let toastTimer;
+
+      function showScreen(id, options = {}) {
+        const next = document.getElementById(id);
+        if (!next || !next.classList.contains('screen')) return;
+        screens.forEach((screen) => screen.classList.toggle('active', screen === next));
+        const step = Number(next.dataset.step || 1);
+        progress.value = step;
+        progress.textContent = `Etapa ${step} de 5`;
+        progressLabel.textContent = `Etapa ${step} de 5`;
+        if (options.push !== false) history.pushState({ screen: id }, '', `#${id}`);
+        document.querySelectorAll('.copy-status').forEach((status) => { status.textContent = ''; });
+        clearTimeout(toastTimer);
+        toast.classList.remove('show');
+        toast.textContent = '';
+        window.scrollTo({ top: 0, behavior: reducedMotion ? 'auto' : 'smooth' });
+        if (options.focus !== false) requestAnimationFrame(() => next.querySelector('h1,h2')?.focus({ preventScroll: true }));
+      }
+
+      document.addEventListener('click', (event) => {
+        const go = event.target.closest('[data-go]');
+        if (go) showScreen(go.dataset.go);
+
+        const back = event.target.closest('[data-back]');
+        if (back) history.back();
+
+        const reset = event.target.closest('[data-reset]');
+        if (reset) {
+          showScreen('home');
+        }
+
+        const copy = event.target.closest('[data-copy-target]');
+        if (copy) copyText(copy);
+      });
+
+      async function copyText(button) {
+        const source = document.getElementById(button.dataset.copyTarget);
+        const text = source?.textContent.trim();
+        if (!text) return;
+        try {
+          await navigator.clipboard.writeText(text);
+        } catch (_) {
+          const textarea = document.createElement('textarea');
+          textarea.value = text;
+          textarea.style.position = 'fixed';
+          textarea.style.opacity = '0';
+          document.body.appendChild(textarea);
+          textarea.select();
+          document.execCommand('copy');
+          textarea.remove();
+        }
+        const status = button.parentElement.querySelector('.copy-status');
+        if (status) status.textContent = 'Copiado para a área de transferência.';
+        clearTimeout(toastTimer);
+        toast.textContent = 'Texto copiado.';
+        toast.classList.add('show');
+        toastTimer = setTimeout(() => toast.classList.remove('show'), 2200);
+      }
+
+      history.replaceState({ screen: 'home' }, '', `${location.pathname}${location.search}`);
+      window.addEventListener('popstate', (event) => {
+        showScreen(event.state?.screen || 'home', { push: false });
+      });
+    })();
+  </script>
+</body>
+</html>
