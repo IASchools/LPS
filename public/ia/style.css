@@ -1,0 +1,1606 @@
+/* ============================================================
+   Conselheiro IA Schools — front estático
+   Paleta oficial do deck (build/deck_kit.py) + linguagem do produto
+   ============================================================ */
+
+:root {
+  --creme: #FAF7F0;
+  --indigo: #1A1444;
+  --indigo-2: #2C2060;      /* topo do gradiente do header */
+  --indigo-3: #231A52;
+  --faixa: #161147;
+  --titulo: #1B1640;
+  --roxo: #6D35FB;
+  --roxo-vivo: #7C3AFF;
+  --roxo-claro: #9B7BFF;
+  --kicker-claro: #A99BFF;  /* kicker sobre índigo (AA 7:1) */
+  --lavanda-texto: #C9C4DC; /* subtítulo sobre índigo */
+  --corpo: #58536E;
+  --label: #6E6885;
+  --rodape: #A39CB5;
+  --borda: #EFEAE0;
+  --trilho: #EDE9E1;
+  --branco: #FFFFFF;
+  --lavanda: #EFE9FE;       /* pill clara */
+  --lavanda-2: #E7DDFE;
+  --menta: #E9F7EF;
+  --verde: #2E8B57;
+  --laranja: #E8833A;
+  --blob1: #EBDBDE;
+  --blob2: #E1DCF2;
+  --blob-escuro: #2E2352;
+  --sombra-card: 0 3px 10px rgba(27, 22, 64, 0.07);
+  --sombra-forte: 0 18px 60px rgba(10, 6, 40, 0.55);
+  --fonte: ui-rounded, -apple-system, "SF Pro Rounded", "SF Pro Text",
+           BlinkMacSystemFont, "Segoe UI", Arial, Helvetica, sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+}
+html.telao { font-size: 200%; }
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+body {
+  font-family: var(--fonte);
+  background: var(--creme);
+  color: var(--corpo);
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- blobs orgânicos nas bordas (identidade do deck) ---------- */
+.blob {
+  position: fixed;
+  border-radius: 50%;
+  z-index: 0;
+  pointer-events: none;
+}
+.blob-a { left: -14rem; top: -16rem; width: 28rem; height: 28rem; background: var(--blob1); }
+.blob-b { right: -12rem; bottom: -13rem; width: 24rem; height: 24rem; background: var(--blob2); }
+
+/* ---------- casca do app: só o chat rola ---------- */
+.app {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  margin: 0 auto;
+  height: 100vh;
+  height: 100dvh;
+  height: var(--vvh, 100dvh);
+  max-width: 720px;
+  display: flex;
+  flex-direction: column;
+  z-index: 1;
+  padding: 0.75rem 0.75rem 0;
+  transition: height 0.18s ease-out;
+}
+html.telao .app { max-width: 900px; }
+
+/* ============================================================
+   PONTO DE LUZ (símbolo da vinheta) — três camadas radiais
+   ============================================================ */
+.luz {
+  position: relative;
+  display: inline-block;
+  flex: none;
+}
+.luz i {
+  position: absolute;
+  left: 50%; top: 50%;
+  translate: -50% -50%;
+  border-radius: 50%;
+  display: block;
+}
+.l-nucleo {
+  width: 74%; height: 74%;
+  background: radial-gradient(circle at 50% 40%,
+    #FFFFFF 0%, #EFE6FF 24%, #B893FF 56%, #6D35FB 100%);
+  box-shadow: 0 0 1.1em 0.1em rgba(124, 74, 255, 0.75);
+  animation: luz-nucleo 2.6s ease-in-out infinite alternate;
+}
+.l-medio {
+  width: 165%; height: 165%;
+  background: radial-gradient(circle,
+    rgba(155, 123, 255, 0.50) 0%, rgba(109, 53, 251, 0.22) 45%,
+    rgba(109, 53, 251, 0) 72%);
+  animation: luz-medio 2.6s ease-in-out infinite alternate;
+}
+.l-halo {
+  width: 290%; height: 290%;
+  background: radial-gradient(circle,
+    rgba(109, 53, 251, 0.30) 0%, rgba(109, 53, 251, 0.10) 46%,
+    rgba(109, 53, 251, 0) 70%);
+  animation: luz-halo 4s ease-in-out infinite alternate;
+}
+@keyframes luz-nucleo { from { transform: scale(1);    opacity: 0.96; } to { transform: scale(1.09); opacity: 1; } }
+@keyframes luz-medio  { from { transform: scale(0.94); opacity: 0.70; } to { transform: scale(1.22); opacity: 1; } }
+@keyframes luz-halo   { from { transform: scale(0.90); opacity: 0.55; } to { transform: scale(1.30); opacity: 0.95; } }
+
+/* avatar do Conselheiro: pulsa só enquanto pensa */
+.avatar { width: 1.7rem; height: 1.7rem; margin: 0.35rem 0.15rem 0 0.1rem; }
+.avatar i { animation-play-state: paused; }
+.avatar.pensando i { animation-play-state: running; }
+.avatar.pensando .l-nucleo { animation-duration: 1.15s; }
+.avatar.pensando .l-medio  { animation-duration: 1.15s; }
+.avatar.pensando .l-halo   { animation-duration: 1.8s; }
+
+/* ============================================================
+   HERO — card índigo com gradiente (linguagem do produto)
+   ============================================================ */
+.hero {
+  position: relative;
+  flex: none;
+  border-radius: 1.25rem;
+  background:
+    radial-gradient(120% 140% at 88% -20%, rgba(124, 74, 255, 0.42) 0%, rgba(124, 74, 255, 0) 52%),
+    linear-gradient(140deg, var(--indigo-2) 0%, var(--indigo) 58%, var(--indigo-3) 100%);
+  color: var(--branco);
+  overflow: hidden;
+  box-shadow: 0 10px 34px rgba(26, 20, 68, 0.22);
+}
+
+.hero-badge {
+  position: absolute;
+  top: 0.85rem; right: 0.9rem;
+  font-size: 0.66rem;
+  letter-spacing: 0.02em;
+  color: #E8E4F5;
+  background: rgba(255, 255, 255, 0.09);
+  border: 1px solid rgba(255, 255, 255, 0.30);
+  border-radius: 999px;
+  padding: 0.28em 0.85em;
+  white-space: nowrap;
+}
+
+.hero-kicker {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--kicker-claro);
+}
+
+.hero-titulo {
+  font-size: 1.85rem;
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  line-height: 1.12;
+  color: var(--branco);
+}
+
+.hero-sub {
+  font-size: 1.02rem;
+  line-height: 1.45;
+  color: var(--lavanda-texto);
+}
+
+/* --- estado ENTRADA: hero grande, centrado, com o ponto de luz --- */
+.estado-entrada .hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.55rem;
+  padding: 2.6rem 1.4rem 2.1rem;
+}
+.luz-hero {
+  width: 4.6rem; height: 4.6rem;
+  margin: 0.4rem 0 1.15rem;
+}
+.estado-entrada .hero-sub { margin-top: 0.15rem; max-width: 26rem; }
+
+/* --- estado CONVERSA: hero compacto em linha --- */
+.estado-conversa .hero {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.62rem 0.95rem;
+}
+.estado-conversa .luz-hero { width: 1.45rem; height: 1.45rem; margin: 0 0.1rem 0 0.2rem; }
+.estado-conversa .hero-kicker { display: none; }
+.estado-conversa .hero-titulo { font-size: 1.02rem; letter-spacing: 0; line-height: 1.2; }
+.estado-conversa .hero-sub { display: none; }
+.estado-conversa .hero-badge {
+  position: static;
+  order: 10;
+  margin-left: auto;
+  font-size: 0.6rem;
+}
+@media (max-width: 419px) {
+  .estado-conversa .hero-badge { display: none; }
+}
+
+/* ============================================================
+   CHAT — única área com rolagem
+   ============================================================ */
+.chat {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  padding: 1rem 0.15rem 0.9rem;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(109, 53, 251, 0.25) transparent;
+}
+.chat::-webkit-scrollbar { width: 5px; }
+.chat::-webkit-scrollbar-thumb { background: rgba(109, 53, 251, 0.22); border-radius: 999px; }
+.chat::-webkit-scrollbar-track { background: transparent; }
+
+/* na entrada, os chips centram no espaço livre entre hero e composer */
+.estado-entrada .chat { display: flex; flex-direction: column; }
+
+/* ---------- chips de entrada ---------- */
+.chips {
+  display: grid;
+  gap: 0.6rem;
+  margin: auto;
+  width: 100%;
+  max-width: 27rem;
+}
+.chips[hidden] { display: none; }
+.chip {
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--titulo);
+  text-align: left;
+  background: var(--branco);
+  border: 1px solid var(--borda);
+  border-radius: 1rem;
+  box-shadow: var(--sombra-card);
+  padding: 0.85rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease;
+}
+.chip:hover { transform: translateY(-1px); border-color: #E3D8FB; box-shadow: 0 6px 18px rgba(27, 22, 64, 0.10); }
+.chip:active { transform: translateY(0) scale(0.99); }
+.chip-ic {
+  flex: none;
+  width: 1.65rem; height: 1.65rem;
+  border-radius: 50%;
+  background: #FDEFE2;
+  color: var(--laranja);
+  display: grid;
+  place-items: center;
+}
+.chip-ic svg { width: 0.85rem; height: 0.85rem; display: block; }
+
+/* ---------- mensagens ---------- */
+.mensagens { display: flex; flex-direction: column; gap: 0.65rem; }
+
+.msg { display: flex; align-items: flex-start; }
+.msg.user { justify-content: flex-end; }
+
+.balao {
+  max-width: 84%;
+  border-radius: 1.15rem;
+  padding: 0.72rem 1rem 0.78rem;
+  font-size: 0.98rem;
+  line-height: 1.5;
+  overflow-wrap: break-word;
+}
+.msg.user .balao {
+  background: var(--indigo);
+  color: var(--branco);
+  border-bottom-right-radius: 0.35rem;
+  box-shadow: 0 4px 14px rgba(26, 20, 68, 0.18);
+  white-space: pre-wrap;
+}
+.msg.bot .balao {
+  background: var(--branco);
+  color: var(--corpo);
+  border: 1px solid var(--borda);
+  border-bottom-left-radius: 0.35rem;
+  box-shadow: var(--sombra-card);
+}
+.msg.bot .balao:empty { display: none; }
+.msg.bot.pensando-vazio .balao { display: none; }
+
+.conteudo p { margin: 0.35em 0; }
+.conteudo p:first-child { margin-top: 0; }
+.conteudo p:last-child { margin-bottom: 0; }
+.conteudo strong { color: var(--titulo); font-weight: 700; }
+
+/* lista com check verde em círculo menta (linguagem do produto) */
+.conteudo ul { list-style: none; margin: 0.4em 0; }
+.conteudo ul li {
+  position: relative;
+  padding-left: 1.7em;
+  margin: 0.34em 0;
+}
+.conteudo ul li::before {
+  content: "✓";
+  position: absolute;
+  left: 0; top: 0.12em;
+  width: 1.22em; height: 1.22em;
+  border-radius: 50%;
+  background: var(--menta);
+  color: var(--verde);
+  font-size: 0.86em;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+}
+
+/* chips de área [[AREA: …]] — kicker roxo */
+.areas { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.45rem; }
+.areas:empty { display: none; }
+.area-pill {
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--roxo);
+  background: var(--lavanda);
+  border-radius: 999px;
+  padding: 0.3em 0.9em;
+}
+
+/* botão "ver cartão" dentro da bolha */
+.acoes { margin-top: 0.55rem; }
+.acoes:empty { display: none; }
+.btn-cartao {
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--roxo);
+  background: var(--lavanda);
+  border: 1px solid var(--lavanda-2);
+  border-radius: 999px;
+  padding: 0.5em 1.05em;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+  transition: transform 0.12s ease, background 0.12s ease;
+}
+.btn-cartao:hover { transform: translateY(-1px); background: var(--lavanda-2); }
+.btn-cartao svg { width: 0.9em; height: 0.9em; }
+
+.msg-erro { color: #C0392B; }
+
+/* ============================================================
+   COMPOSER — campo grande + botão roxo
+   ============================================================ */
+.composer { flex: none; padding: 0.35rem 0 0.45rem; }
+.composer form {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.55rem;
+  background: var(--branco);
+  border: 1px solid var(--borda);
+  border-radius: 1.55rem;
+  box-shadow: 0 6px 22px rgba(27, 22, 64, 0.09);
+  padding: 0.38rem 0.38rem 0.38rem 1.05rem;
+}
+.composer form:focus-within { border-color: #D9CBFA; box-shadow: 0 6px 24px rgba(109, 53, 251, 0.13); }
+#entrada {
+  flex: 1 1 auto;
+  min-width: 0;
+  border: none;
+  outline: none;
+  resize: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 1rem;            /* >=16px: iOS não dá zoom no foco */
+  line-height: 1.45;
+  color: var(--titulo);
+  caret-color: var(--roxo);
+  padding: 0.62rem 0;
+  max-height: 7.2rem;
+}
+#entrada::placeholder { color: var(--label); opacity: 0.75; }
+#enviar {
+  flex: none;
+  width: 2.8rem; height: 2.8rem;
+  border: none;
+  border-radius: 50%;
+  background: var(--roxo);
+  color: var(--branco);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: transform 0.12s ease, opacity 0.15s ease, background 0.12s ease;
+}
+#enviar svg { width: 1.15rem; height: 1.15rem; }
+#enviar:hover { background: var(--roxo-vivo); }
+#enviar:active { transform: scale(0.93); }
+#enviar:disabled { opacity: 0.4; cursor: default; }
+
+/* rodapé fino fixo — o aviso inteiro precisa aparecer (LGPD) */
+.aviso {
+  flex: none;
+  font-size: 0.67rem;
+  line-height: 1.3;
+  letter-spacing: 0.01em;
+  color: var(--label);
+  text-align: center;
+  padding: 0.28rem 0.5rem calc(0.5rem + env(safe-area-inset-bottom, 0px));
+}
+
+/* foco visível AA */
+.chip:focus-visible, #enviar:focus-visible, .btn-cartao:focus-visible,
+.c-botao:focus-visible, .fechar-x:focus-visible {
+  outline: 2px solid var(--roxo);
+  outline-offset: 2px;
+}
+
+/* ============================================================
+   OVERLAY DO CARTÃO-RESUMO — índigo profundo
+   ============================================================ */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background:
+    radial-gradient(90% 70% at 110% 108%, rgba(46, 35, 82, 0.95) 0%, rgba(46, 35, 82, 0) 58%),
+    radial-gradient(80% 60% at -10% -8%, rgba(124, 74, 255, 0.20) 0%, rgba(124, 74, 255, 0) 55%),
+    var(--indigo);
+  display: flex;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+.overlay[hidden] { display: none; }
+.overlay-scroll {
+  margin: auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.05rem;
+  padding: 3.4rem 1rem 2rem;
+}
+.overlay.aberta .cartao { animation: cartao-entra 0.34s cubic-bezier(0.2, 0.8, 0.3, 1) both; }
+@keyframes cartao-entra {
+  from { opacity: 0; transform: translateY(1.6rem) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.fechar-x {
+  position: absolute;
+  top: 0.85rem; right: 0.95rem;
+  width: 2.5rem; height: 2.5rem;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  background: rgba(255, 255, 255, 0.08);
+  color: #EDEAF8;
+  font-size: 1.35rem;
+  line-height: 1;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  font-family: inherit;
+}
+.fechar-x:hover { background: rgba(255, 255, 255, 0.16); }
+
+/* ---------- o cartão 9:16 (mini "plano personalizado") ---------- */
+.cartao {
+  width: min(88vw, 23.5rem, calc((100dvh - 12.5rem) * 0.5625));
+  aspect-ratio: 9 / 16;
+  background: var(--branco);
+  border-radius: 1.35rem;
+  box-shadow: var(--sombra-forte);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+.cartao::after { /* blob suave no rodapé do cartão */
+  content: "";
+  position: absolute;
+  right: -3.4rem; bottom: -4rem;
+  width: 8.5rem; height: 8.5rem;
+  border-radius: 50%;
+  background: var(--blob2);
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.c-header {
+  flex: none;
+  position: relative;
+  margin: 0.6rem 0.6rem 0;
+  border-radius: 1rem;
+  background:
+    radial-gradient(130% 150% at 92% -30%, rgba(124, 74, 255, 0.45) 0%, rgba(124, 74, 255, 0) 55%),
+    linear-gradient(140deg, var(--indigo-2) 0%, var(--indigo) 58%, var(--indigo-3) 100%);
+  color: var(--branco);
+  padding: 0.85rem 0.95rem 0.95rem;
+  overflow: hidden;
+}
+.c-header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.85rem;
+}
+.c-kicker {
+  font-size: 0.56rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--kicker-claro);
+  white-space: nowrap;
+}
+.c-badge {
+  font-size: 0.54rem;
+  color: #E8E4F5;
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  padding: 0.22em 0.7em;
+  white-space: nowrap;
+}
+.c-luz {
+  position: absolute;
+  right: 1.35rem; top: 2.9rem;
+  width: 1.8rem; height: 1.8rem;
+}
+.c-titulo {
+  font-size: 1.18rem;
+  font-weight: 800;
+  line-height: 1.18;
+  letter-spacing: -0.01em;
+  padding-right: 3rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.c-sub {
+  margin-top: 0.3rem;
+  font-size: 0.7rem;
+  line-height: 1.35;
+  color: var(--lavanda-texto);
+  padding-right: 2.4rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.c-corpo {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;   /* distribui a folga do 9:16 */
+  gap: 0.42rem;
+  padding: 0.5rem 0.6rem 0;
+  position: relative;
+  z-index: 1;
+}
+.c-item {
+  background: var(--branco);
+  border: 1px solid var(--borda);
+  border-radius: 0.85rem;
+  box-shadow: var(--sombra-card);
+  padding: 0.5rem 0.62rem 0.55rem;
+}
+.c-pill {
+  display: inline-block;
+  font-size: 0.56rem;
+  font-weight: 700;
+  color: var(--roxo);
+  background: var(--lavanda);
+  border-radius: 999px;
+  padding: 0.26em 0.85em;
+}
+.c-item h3 {
+  margin: 0.32rem 0 0.14rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--titulo);
+  line-height: 1.22;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.c-item p {
+  font-size: 0.68rem;
+  line-height: 1.38;
+  color: var(--corpo);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.c-callout {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  background: linear-gradient(135deg, #F1EBFF 0%, var(--lavanda-2) 100%);
+  border-radius: 0.85rem;
+  padding: 0.5rem 0.6rem;
+}
+.c-callout-ic {
+  flex: none;
+  width: 1.75rem; height: 1.75rem;
+  border-radius: 0.55rem;
+  background: var(--roxo-vivo);
+  color: var(--branco);
+  display: grid;
+  place-items: center;
+}
+.c-callout-ic svg { width: 1rem; height: 1rem; }
+.c-callout p {
+  font-size: 0.66rem;
+  line-height: 1.38;
+  color: #45356B;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.c-footer {
+  flex: none;
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.22rem;
+  padding: 0.55rem 0 0.75rem;
+  position: relative;
+  z-index: 1;
+}
+.c-footer img { height: 0.95rem; width: auto; display: block; }
+.c-footer span { font-size: 0.58rem; color: var(--label); }
+
+/* ---------- botões do overlay ---------- */
+.cartao-acoes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.6rem;
+}
+.c-botao {
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 0.72em 1.5em;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  transition: transform 0.12s ease, background 0.12s ease;
+}
+.c-botao svg { width: 1em; height: 1em; }
+.c-botao:active { transform: scale(0.97); }
+.c-botao-primario {
+  background: var(--roxo);
+  color: var(--branco);
+  border: 1px solid transparent;
+}
+.c-botao-primario:hover { background: var(--roxo-vivo); }
+.c-botao-secundario {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--branco);
+  border: 1px solid rgba(255, 255, 255, 0.40);
+}
+.c-botao-secundario:hover { background: rgba(255, 255, 255, 0.16); }
+.c-botao-ghost {
+  background: transparent;
+  color: var(--lavanda-texto);
+  border: 1px solid transparent;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.c-botao-ghost:hover { color: var(--branco); }
+
+/* ---------- toast ---------- */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 5.6rem;
+  translate: -50% 0;
+  z-index: 80;
+  background: var(--titulo);
+  color: var(--branco);
+  font-size: 0.82rem;
+  border-radius: 999px;
+  padding: 0.6em 1.25em;
+  box-shadow: 0 8px 26px rgba(26, 20, 68, 0.35);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease, translate 0.25s ease;
+  max-width: min(92vw, 30rem);
+  text-align: center;
+}
+.toast.visivel { opacity: 1; translate: -50% -0.4rem; }
+
+/* ============================================================
+   Responsivo / telão / acessibilidade
+   ============================================================ */
+@media (min-width: 720px) {
+  .app { padding: 1.1rem 1.25rem 0; }
+  .estado-entrada .hero { padding: 3.2rem 2rem 2.6rem; }
+  .hero-titulo { font-size: 2.2rem; }
+  .luz-hero { width: 5.4rem; height: 5.4rem; }
+  .chips { max-width: none; grid-template-columns: repeat(3, 1fr); }
+  .chip { flex-direction: column; align-items: flex-start; gap: 0.55rem; padding: 1rem 1.05rem; }
+  .balao { max-width: 78%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .luz i { animation: none !important; }
+  .overlay.aberta .cartao { animation: none; }
+  .app { transition: none; }
+}
+
+/* ============================================================
+   V2 — composição da entrada: ritmo vertical, marca e atalhos
+   ============================================================ */
+
+/* a entrada vira uma composição única, centrada verticalmente */
+.estado-entrada .chat {
+  justify-content: center;
+  padding-bottom: 0.5rem;
+}
+.estado-entrada .app { padding-top: 0.5rem; }
+
+/* --- hero mais enxuto e mais nobre --- */
+.estado-entrada .hero {
+  padding: 1.5rem 1.4rem 1.35rem;
+  border-radius: 22px;
+  background:
+    radial-gradient(120% 130% at 50% -10%, #3B2A7E 0%, var(--indigo-2) 42%, var(--indigo) 100%);
+  box-shadow: 0 20px 44px -22px rgba(20, 12, 66, 0.55);
+  margin-bottom: 0.9rem;
+  overflow: hidden;
+  position: relative;
+}
+/* brilho difuso atrás do ponto de luz */
+.estado-entrada .hero::after {
+  content: "";
+  position: absolute;
+  left: 50%; top: -32%;
+  width: 22rem; height: 22rem;
+  translate: -50% 0;
+  background: radial-gradient(circle, rgba(124,58,255,0.30) 0%, rgba(124,58,255,0) 62%);
+  pointer-events: none;
+}
+.estado-entrada .hero > * { position: relative; z-index: 1; }
+
+.estado-entrada .luz-hero { width: 3.1rem; height: 3.1rem; margin-bottom: 0.85rem; }
+.estado-entrada .hero-titulo { font-size: 1.62rem; letter-spacing: -0.015em; }
+.estado-entrada .hero-kicker { font-size: 0.63rem; letter-spacing: 0.16em; }
+.estado-entrada .hero-sub {
+  margin-top: 0.3rem;
+  font-size: 1rem;
+  color: #DCD7EE;
+}
+.hero-cred {
+  margin-top: 0.8rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid rgba(255,255,255,0.10);
+  font-size: 0.7rem;
+  line-height: 1.45;
+  color: #9C93C4;
+  max-width: 22rem;
+}
+.estado-conversa .hero-cred { display: none; }
+
+/* --- atalhos: cartões com significado --- */
+.chips { gap: 0.5rem; }
+.chips-label {
+  font-size: 0.63rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--label);
+  margin: 0.1rem 0 0.15rem 0.15rem;
+}
+.chip {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.72rem 0.8rem;
+  border-radius: 15px;
+  text-align: left;
+  transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+}
+.chip-ic {
+  width: 2.1rem; height: 2.1rem;
+  border-radius: 11px;
+  background: var(--lavanda);
+  color: var(--roxo);
+  display: grid; place-items: center;
+}
+.chip-ic svg { width: 1.05rem; height: 1.05rem; }
+.chip-txt { display: flex; flex-direction: column; gap: 0.1rem; min-width: 0; }
+.chip-txt b {
+  font-size: 0.93rem;
+  font-weight: 700;
+  color: var(--titulo);
+  line-height: 1.25;
+}
+.chip-txt i {
+  font-style: normal;
+  font-size: 0.76rem;
+  color: var(--label);
+  line-height: 1.3;
+}
+.chip-seta {
+  width: 1.55rem; height: 1.55rem;
+  border-radius: 50%;
+  background: #FBF2E9;
+  color: var(--laranja);
+  display: grid; place-items: center;
+  transition: transform 0.16s ease, background 0.16s ease;
+}
+.chip-seta svg { width: 0.8rem; height: 0.8rem; }
+.chip:hover .chip-seta { transform: translateX(2px); background: #F6E5D4; }
+.chip:hover { box-shadow: 0 10px 26px -12px rgba(27, 22, 64, 0.30); }
+
+/* --- composer com foco visível --- */
+.composer form:focus-within {
+  box-shadow: 0 0 0 3px rgba(109, 53, 251, 0.14), 0 8px 24px -14px rgba(27,22,64,0.35);
+}
+
+/* --- desktop: composição centrada, sem buracos --- */
+@media (min-width: 700px) {
+  .estado-entrada .hero { padding: 2.1rem 2rem 1.8rem; border-radius: 26px; }
+  .estado-entrada .luz-hero { width: 3.6rem; height: 3.6rem; }
+  .estado-entrada .hero-titulo { font-size: 2rem; }
+  .estado-entrada .chips { max-width: 30rem; margin: 0 auto; }
+  .estado-entrada .hero { max-width: 34rem; margin-left: auto; margin-right: auto; }
+}
+
+/* ============================================================
+   V3 — ritmo vertical, marca no hero, hero mais baixo
+   ============================================================ */
+.estado-entrada .app { justify-content: center; }
+.estado-entrada .chat { flex: 0 0 auto; justify-content: flex-start; overflow: visible; }
+
+.estado-entrada .hero { padding: 1.15rem 1.3rem 1.15rem; }
+.estado-entrada .luz-hero { width: 2.5rem; height: 2.5rem; margin-bottom: 0.6rem; }
+.estado-entrada .hero-titulo { font-size: 1.5rem; }
+.estado-entrada .hero-sub { font-size: 0.95rem; }
+.hero-cred { margin-top: 0.65rem; padding-top: 0.6rem; font-size: 0.68rem; }
+
+/* selo de demonstração: pílula discreta no canto */
+.estado-entrada .hero-badge {
+  position: absolute;
+  top: 0.75rem; right: 0.85rem;
+  z-index: 2;
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.22rem 0.55rem;
+  background: rgba(255,255,255,0.10);
+  border: 1px solid rgba(255,255,255,0.16);
+  color: #B9B0DE;
+}
+/* marca no canto oposto, em pílula clara para o logo respirar */
+.hero-marca {
+  position: absolute;
+  top: 0.7rem; left: 0.8rem;
+  z-index: 2;
+  background: #fff;
+  border-radius: 8px;
+  padding: 0.28rem 0.45rem;
+  display: grid; place-items: center;
+  box-shadow: 0 2px 10px rgba(10,6,40,0.25);
+}
+.hero-marca img { height: 0.85rem; display: block; }
+.estado-conversa .hero-marca { display: none; }
+
+.chips-label { margin-top: 0.35rem; }
+.aviso { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+@media (min-width: 700px) {
+  .estado-entrada .hero { padding: 1.7rem 1.9rem 1.6rem; }
+  .estado-entrada .luz-hero { width: 3rem; height: 3rem; }
+  .estado-entrada .hero-titulo { font-size: 1.9rem; }
+}
+
+/* V3.1 — correção: não centralizar a casca (empurrava o composer para fora) */
+.estado-entrada .app { justify-content: flex-start; }
+.estado-entrada .chat {
+  flex: 1 1 auto;
+  justify-content: flex-start;
+  overflow-y: auto;
+  padding-top: 0.15rem;
+}
+
+/* ============================================================
+   V4 — correções cirúrgicas de layout
+   ============================================================ */
+/* 1. matar o margin-top:auto que abria 100px de buraco */
+.estado-entrada .chat .chips { margin-top: 0.55rem; }
+/* 2. marca volta ao canto (a regra de z-index do hero anulava o absolute) */
+.estado-entrada .hero .hero-marca { position: absolute; }
+.estado-entrada .hero .hero-badge { position: absolute; }
+/* 3. hero mais baixo: sobra mais respiro para a conversa */
+.estado-entrada .hero { padding: 2.15rem 1.3rem 1.05rem; }
+.estado-entrada .luz-hero { width: 2.15rem; height: 2.15rem; margin-bottom: 0.5rem; }
+.estado-entrada .hero-kicker { font-size: 0.6rem; }
+.estado-entrada .hero-titulo { font-size: 1.42rem; }
+.estado-entrada .hero-sub { font-size: 0.92rem; margin-top: 0.22rem; }
+.hero-cred { margin-top: 0.55rem; padding-top: 0.5rem; font-size: 0.66rem; }
+.hero-marca img { height: 0.78rem; }
+
+/* ============================================================
+   V5 — selos de confiança ocupam o vazio da entrada
+   ============================================================ */
+.selos {
+  margin-top: auto;
+  padding: 0.9rem 0.15rem 0.35rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.42rem;
+  border-top: 1px solid var(--borda);
+}
+.estado-conversa .selos { display: none; }
+.selo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.74rem;
+  color: var(--label);
+  line-height: 1.2;
+}
+.selo svg { width: 0.95rem; height: 0.95rem; color: var(--roxo); flex: none; opacity: 0.85; }
+
+/* selo de demonstração menor e mais discreto */
+.estado-entrada .hero-badge {
+  font-size: 0.53rem;
+  padding: 0.18rem 0.45rem;
+  color: #A79DD0;
+  background: rgba(255,255,255,0.07);
+}
+
+@media (min-width: 700px) {
+  .selos {
+    flex-direction: row;
+    justify-content: center;
+    gap: 1.4rem;
+    max-width: 34rem;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* ============================================================
+   V6 — atalhos das 8 áreas (preenchem o vazio com utilidade)
+   ============================================================ */
+.areas-atalho { margin-top: 1.05rem; }
+.estado-conversa .areas-atalho { display: none; }
+.areas-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+}
+.area-btn {
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--titulo);
+  background: var(--branco);
+  border: 1px solid var(--borda);
+  border-radius: 999px;
+  padding: 0.4rem 0.75rem;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+}
+.area-btn:hover {
+  background: var(--lavanda);
+  border-color: #E3D8FB;
+  color: var(--roxo);
+  transform: translateY(-1px);
+}
+.area-btn:active { transform: translateY(0); }
+.selos { padding-top: 1rem; }
+
+/* ============================================================
+   V9 — polimento da conversa
+   ============================================================ */
+.balao { font-size: 0.95rem; line-height: 1.52; }
+.msg.bot .balao { padding: 0.8rem 0.9rem; border-radius: 16px; }
+.msg.user .balao { padding: 0.72rem 0.9rem; border-radius: 16px; }
+.mensagens { gap: 0.55rem; }
+.conteudo p { margin: 0.5em 0; }
+
+/* véu suave no topo da rolagem: o texto cortado parece intencional */
+.estado-conversa .chat {
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 14px);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 14px);
+  padding-top: 0.35rem;
+}
+
+/* chip de área um pouco mais contido */
+.area-pill { font-size: 0.6rem; letter-spacing: 0.1em; }
+
+@media (min-width: 700px) {
+  .balao { font-size: 1rem; }
+  .msg.bot .balao, .msg.user .balao { max-width: 33rem; }
+}
+
+/* ============================================================
+   V11 — ACABAMENTO FINO
+   ============================================================ */
+
+/* 1. fundo: manchas viram luz difusa, não círculos chapados */
+.blob { filter: blur(46px); opacity: 0.62; }
+.blob-a { width: 30rem; height: 30rem; left: -15rem; top: -17rem; }
+.blob-b { width: 27rem; height: 27rem; right: -13rem; bottom: -14rem; }
+
+/* 2. hero: sem o kicker redundante (o logo já diz IA Schools) */
+.estado-entrada .hero-kicker { display: none; }
+.estado-entrada .hero { padding-top: 2.6rem; }
+.estado-entrada .hero-titulo {
+  font-size: 1.5rem;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+.estado-entrada .hero-sub { color: #CFC8E6; }
+
+/* 3. ponto de luz com anel externo sutil (menos "bola", mais símbolo) */
+.luz-hero::after {
+  content: "";
+  position: absolute;
+  inset: -34%;
+  border-radius: 50%;
+  border: 1px solid rgba(167, 139, 255, 0.28);
+  pointer-events: none;
+}
+.estado-conversa .luz-hero::after { display: none; }
+
+/* 4. cartões de atalho: sombra mais fina, seta neutra que acende no toque */
+.chip {
+  border-color: #F0ECE4;
+  box-shadow: 0 1px 2px rgba(27,22,64,0.04), 0 6px 16px -12px rgba(27,22,64,0.22);
+}
+.chip-seta { background: #F5F2EC; color: #B4AEC4; }
+.chip:hover .chip-seta,
+.chip:active .chip-seta { background: #FBF0E4; color: var(--laranja); }
+.chip:focus-visible {
+  outline: none;
+  border-color: #D9C9FC;
+  box-shadow: 0 0 0 3px rgba(109,53,251,0.16);
+}
+
+/* 5. rótulos de seção com hierarquia consistente */
+.chips-label {
+  font-size: 0.6rem;
+  letter-spacing: 0.16em;
+  color: #8F89A3;
+  margin-bottom: 0.1rem;
+}
+
+/* 6. pílulas de área: mesma família visual dos chips */
+.area-btn {
+  font-size: 0.76rem;
+  padding: 0.38rem 0.72rem;
+  border-color: #F0ECE4;
+  box-shadow: 0 1px 2px rgba(27,22,64,0.03);
+}
+.area-btn:focus-visible {
+  outline: none;
+  border-color: #D9C9FC;
+  box-shadow: 0 0 0 3px rgba(109,53,251,0.14);
+}
+
+/* 7. selos: ícones menores e mais discretos */
+.selo { font-size: 0.72rem; color: #8A8499; }
+.selo svg { width: 0.85rem; height: 0.85rem; opacity: 0.7; }
+.selos { border-top-color: #F0ECE4; }
+
+/* 8. entrada em cena: sobe suave, escalonado (só na abertura) */
+@keyframes surgir {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .estado-entrada .hero { animation: surgir 0.5s cubic-bezier(.22,.9,.3,1) both; }
+  .estado-entrada .chips { animation: surgir 0.5s cubic-bezier(.22,.9,.3,1) 0.07s both; }
+  .estado-entrada .areas-atalho { animation: surgir 0.5s cubic-bezier(.22,.9,.3,1) 0.13s both; }
+  .estado-entrada .selos { animation: surgir 0.5s cubic-bezier(.22,.9,.3,1) 0.19s both; }
+}
+
+/* 9. composer: borda viva no foco, botão com peso certo */
+.composer form { border: 1px solid #F0ECE4; }
+#enviar { box-shadow: 0 6px 16px -8px rgba(109,53,251,0.65); }
+#enviar:active { transform: scale(0.96); }
+
+/* 10. rodapé mais leve */
+.aviso { font-size: 0.66rem; color: #A8A2B6; }
+
+/* V11.1 — o desfoque das manchas estava lavando o creme do fundo */
+.blob { opacity: 0.38; filter: blur(60px); }
+.blob-a { width: 26rem; height: 26rem; left: -14rem; top: -15rem; }
+.blob-b { width: 22rem; height: 22rem; right: -12rem; bottom: -12rem; }
+
+/* ============================================================
+   V13 — estado "digitando": a espera precisa parecer viva
+   ============================================================ */
+.msg.bot.pensando-vazio .balao {
+  display: inline-block;
+  padding: 0.85rem 0.95rem;
+  min-width: 0;
+}
+.digitando { display: none; }
+.msg.bot.pensando-vazio .digitando {
+  display: flex;
+  align-items: center;
+  gap: 0.28rem;
+  height: 0.6rem;
+}
+.digitando i {
+  width: 0.38rem; height: 0.38rem;
+  border-radius: 50%;
+  background: #C3B9E8;
+  animation: pontinho 1.15s ease-in-out infinite;
+}
+.digitando i:nth-child(2) { animation-delay: 0.16s; }
+.digitando i:nth-child(3) { animation-delay: 0.32s; }
+@keyframes pontinho {
+  0%, 70%, 100% { opacity: 0.35; transform: translateY(0); }
+  35%           { opacity: 1;    transform: translateY(-3px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .digitando i { animation: none; opacity: 0.6; }
+}
+
+/* V14 — convite ao cartão, acima do campo de escrita */
+.convite-cartao {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  width: 100%;
+  margin: 0 0 0.5rem;
+  padding: 0.6rem 0.8rem;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--roxo);
+  background: var(--lavanda);
+  border: 1px solid #E3D8FB;
+  border-radius: 13px;
+  cursor: pointer;
+  animation: surgir 0.4s ease both;
+}
+.convite-cartao svg { width: 0.95rem; height: 0.95rem; }
+.convite-cartao:hover { background: var(--lavanda-2); }
+.convite-cartao:active { transform: scale(0.99); }
+
+/* V15 — o cartão é para guardar: descrição não pode vir cortada */
+.c-item p {
+  -webkit-line-clamp: initial;
+  display: block;
+  overflow: visible;
+  font-size: 0.83rem;
+  line-height: 1.45;
+}
+
+/* ============================================================
+   V16 — REDESENHO DA CONVERSA (fora o balão pesado e o orbe)
+   ============================================================ */
+
+/* cabeçalho da conversa: plano, claro, com fio embaixo */
+.estado-conversa .hero {
+  background: rgba(250,247,240,0.92);
+  backdrop-filter: saturate(140%) blur(8px);
+  -webkit-backdrop-filter: saturate(140%) blur(8px);
+  border: 0;
+  border-bottom: 1px solid var(--borda);
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0.55rem 0.15rem 0.7rem;
+  margin: 0 -0.75rem;
+  padding-left: 0.9rem;
+  padding-right: 0.9rem;
+}
+.estado-conversa .hero::after { display: none; }
+.estado-conversa .hero-titulo { color: var(--titulo); font-size: 0.98rem; font-weight: 700; }
+.estado-conversa .hero-marca { display: flex; position: static; box-shadow: none; padding: 0; background: none; }
+.estado-conversa .hero-marca img { height: 0.95rem; }
+.estado-conversa .hero-badge {
+  position: static; order: 10; margin-left: auto;
+  background: var(--branco); border: 1px solid var(--borda);
+  color: var(--label); font-size: 0.55rem;
+}
+
+/* fala do Conselheiro: texto no papel, sem balão */
+.msg.bot .balao {
+  background: none;
+  border: 0;
+  box-shadow: none;
+  padding: 0.1rem 0 0.2rem;
+  max-width: 100%;
+  border-radius: 0;
+}
+.msg.bot { padding-bottom: 0.1rem; }
+.msg.bot .conteudo { font-size: 1rem; line-height: 1.58; color: #3D3856; }
+.msg.bot .conteudo p { margin: 0.62em 0; }
+.msg.bot .conteudo p:first-child { margin-top: 0; }
+
+/* etiqueta de área: rótulo discreto, não pílula roxa */
+.areas { margin-bottom: 0.3rem; }
+.area-pill {
+  background: none;
+  border: 0;
+  padding: 0;
+  color: #9C95AE;
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  font-weight: 700;
+}
+
+/* fala do gestor: contida, clara, discreta */
+.msg.user .balao {
+  background: #F1ECE2;
+  color: var(--titulo);
+  border: 1px solid #E9E2D5;
+  border-radius: 14px;
+  padding: 0.6rem 0.8rem;
+  font-size: 0.95rem;
+  max-width: 86%;
+  box-shadow: none;
+}
+
+/* ritmo entre turnos: fio fino, não bolha */
+.mensagens { gap: 0; }
+.msg.user { margin-top: 1.5rem; }
+.msg.bot { margin-top: 0.9rem; padding-bottom: 1.3rem; border-bottom: 1px solid #F1ECE3; }
+.msg.bot:last-child { border-bottom: 0; }
+
+/* avatar antigo (orbe) sai de cena */
+.avatar { display: none !important; }
+.msg.bot.pensando-vazio .balao { padding: 0.25rem 0; display: block; }
+
+/* véu do topo mais curto (o texto não fica "mordido") */
+.estado-conversa .chat {
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 8px);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 8px);
+}
+
+/* capa: sem orbe, tipografia manda */
+.estado-entrada .hero { padding-top: 3.1rem; padding-bottom: 1.25rem; }
+.hero-selo {
+  display: block;
+  width: 2.1rem; height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--roxo), rgba(109,53,251,0));
+  margin: 0 auto 0.85rem;
+}
+.estado-conversa .hero-selo { display: none; }
+.estado-entrada .hero-titulo { font-size: 1.6rem; }
+
+/* ============================================================
+   V17 — cabeçalho enxuto, campo de escrita plano
+   ============================================================ */
+.estado-conversa .hero { padding-top: 0.7rem; padding-bottom: 0.75rem; gap: 0.55rem; }
+.estado-conversa .hero-titulo { font-size: 0.92rem; font-weight: 600; letter-spacing: -0.01em; }
+.estado-conversa .hero-marca img { height: 0.85rem; opacity: 0.95; }
+.estado-conversa .hero-marca::after {
+  content: "";
+  width: 1px; height: 0.85rem;
+  background: var(--borda);
+  margin-left: 0.55rem;
+}
+.estado-conversa .hero-marca { align-items: center; gap: 0; }
+
+/* campo de escrita: plano, com fio, sem pílula flutuante */
+.composer form {
+  border-radius: 16px;
+  border: 1px solid #E7E1D6;
+  box-shadow: none;
+  background: var(--branco);
+}
+.composer form:focus-within {
+  border-color: #D4C4FA;
+  box-shadow: 0 0 0 3px rgba(109,53,251,0.10);
+}
+#enviar { border-radius: 12px; width: 2.2rem; height: 2.2rem; box-shadow: none; }
+.composer { padding-bottom: 0.15rem; }
+
+/* fala do gestor: tom neutro frio, mais limpo que o bege */
+.msg.user .balao {
+  background: #F2F1F7;
+  border-color: #E8E6F0;
+  color: #2A2547;
+}
+
+/* rótulo de área com um pingo de cor da marca */
+.area-pill { color: #8E86A6; }
+.area-pill::before {
+  content: "";
+  display: inline-block;
+  width: 0.28rem; height: 0.28rem;
+  border-radius: 50%;
+  background: var(--roxo);
+  margin-right: 0.4rem;
+  vertical-align: 0.12rem;
+  opacity: 0.65;
+}
+
+/* ============================================================
+   V18 — capa: respiro correto e brilho contido
+   ============================================================ */
+.hero-selo { display: none; }                     /* traço solto parecia sobra */
+.estado-entrada .hero { padding-top: 2.5rem; }
+.estado-entrada .hero::after {
+  width: 26rem; height: 20rem;
+  top: -46%;
+  background: radial-gradient(circle, rgba(124,58,255,0.22) 0%, rgba(124,58,255,0) 60%);
+}
+.areas-atalho { margin-top: 0.75rem; }            /* era 1.05rem + vazio grande */
+.estado-entrada .chat .chips { margin-top: 0.45rem; }
+.selos { padding-top: 0.85rem; margin-top: 0.9rem; }
+.estado-entrada .hero-titulo { font-size: 1.52rem; }
+.estado-entrada .hero-sub { font-size: 0.93rem; }
+
+/* conversa: respiro no fim para o texto não colar no campo */
+.mensagens { padding-bottom: 0.4rem; }
+.estado-conversa .chat { padding-top: 0.55rem; }
+
+/* V18.1 — matar a margem inferior automática dos atalhos (87px de buraco) */
+.estado-entrada .chat .chips { margin-bottom: 0.6rem; }
+.estado-entrada .chat .selos { margin-top: auto; }
+
+/* ============================================================
+   V20 — fim do brilho: o roxo luminoso lia como "orbe"
+   ============================================================ */
+.estado-entrada .hero::after { display: none !important; }
+.estado-entrada .hero {
+  background: linear-gradient(168deg, #241A57 0%, #1A1444 62%, #191340 100%);
+}
+.blob { display: none; }                 /* manchas coloridas de fundo saem */
+body { background: #FBF8F2; }
+.luz, .luz i, .luz-hero, .c-luz { display: none !important; }
+
+/* ============================================================
+   V21 · LOOP 1 — superfície premium e escala tipográfica
+   ============================================================ */
+
+/* grão finíssimo no papel: tira o "chapado de template" */
+body::before {
+  content: "";
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* cabeçalho escuro: fio de luz no topo + malha discreta nos cantos */
+.estado-entrada .hero {
+  background-color: #1A1444;
+  background-image:
+    radial-gradient(120% 90% at 12% 0%, rgba(124,74,255,0.16) 0%, rgba(124,74,255,0) 55%),
+    radial-gradient(90% 80% at 100% 100%, rgba(232,131,58,0.07) 0%, rgba(232,131,58,0) 60%),
+    linear-gradient(168deg, #241A57 0%, #1A1444 62%, #191340 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.09),
+    0 26px 54px -34px rgba(16, 9, 54, 0.65);
+  border-radius: 24px;
+}
+
+/* fio divisor do cabeçalho: degradê, não linha dura */
+.hero-cred {
+  border-top: 0;
+  position: relative;
+  padding-top: 0.75rem;
+}
+.hero-cred::before {
+  content: "";
+  position: absolute; top: 0; left: 50%; translate: -50% 0;
+  width: 62%; height: 1px;
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.16) 50%, rgba(255,255,255,0) 100%);
+}
+
+/* escala tipográfica mais firme */
+.estado-entrada .hero-titulo {
+  font-size: 1.66rem;
+  letter-spacing: -0.028em;
+  line-height: 1.08;
+}
+.estado-entrada .hero-sub { color: #CEC7E4; font-size: 0.94rem; letter-spacing: -0.004em; }
+.hero-cred { color: #9A92BF; font-size: 0.665rem; letter-spacing: 0.01em; }
+
+/* selo de demonstração: vidro fino em vez de caixa */
+.estado-entrada .hero-badge {
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.13);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  letter-spacing: 0.13em;
+}
+
+/* cartões claros: fio de luz interno (profundidade sem sombra pesada) */
+.chip, .area-btn, .composer form {
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.9),
+    0 1px 2px rgba(27,22,64,0.035),
+    0 8px 20px -14px rgba(27,22,64,0.22);
+}
+.chip-txt b { letter-spacing: -0.012em; }
+
+/* rótulos de seção: mais finos e mais claros */
+.chips-label { color: #9A93A8; font-weight: 800; }
+
+/* ============================================================
+   V22 · LOOP 2 — o comparador (prova de superioridade na mão)
+   ============================================================ */
+.btn-generico {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.7rem;
+  padding: 0.42rem 0.72rem;
+  font: inherit;
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: #7A7391;
+  background: var(--branco);
+  border: 1px solid #EAE4D9;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: color .15s, border-color .15s, background .15s;
+}
+.btn-generico svg { width: 0.85rem; height: 0.85rem; }
+.btn-generico:hover { color: var(--roxo); border-color: #DECFFB; background: #FBF9FF; }
+.btn-generico:disabled { opacity: 0.6; cursor: default; }
+
+.comparador {
+  margin-top: 0.75rem;
+  padding: 0.8rem 0.9rem;
+  background: #F5F3EE;
+  border: 1px dashed #DFD8CA;
+  border-radius: 14px;
+}
+.cmp-tit {
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 800;
+  color: #9A9280;
+  margin-bottom: 0.45rem;
+}
+.cmp-texto { font-size: 0.88rem; line-height: 1.5; color: #6B6580; white-space: pre-wrap; }
+.cmp-nota {
+  margin-top: 0.65rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid #E4DDCF;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: #3D3856;
+}
+.cmp-nota b { color: var(--titulo); }
+
+/* ============================================================
+   V23 · LOOP 3 — vida na resposta e resposta ao toque
+   ============================================================ */
+
+/* cursor de digitação no fim do texto que está chegando */
+.msg.bot.streaming .conteudo p:last-child::after,
+.msg.bot.streaming .conteudo li:last-child::after {
+  content: "";
+  display: inline-block;
+  width: 0.5em; height: 1.05em;
+  margin-left: 0.1em;
+  vertical-align: -0.18em;
+  border-radius: 1px;
+  background: var(--roxo);
+  opacity: 0.55;
+  animation: cursorPisca 1s steps(1) infinite;
+}
+@keyframes cursorPisca { 0%,49%{opacity:.55} 50%,100%{opacity:0} }
+@media (prefers-reduced-motion: reduce) {
+  .msg.bot.streaming .conteudo p:last-child::after { animation: none; opacity: .35; }
+}
+
+/* resposta ao toque em tudo que é clicável */
+.chip:active { transform: scale(0.994); }
+.area-btn:active { transform: scale(0.97); }
+.btn-generico:active { transform: scale(0.98); }
+.c-botao:active { transform: scale(0.985); }
+.chip, .area-btn, .btn-generico, .c-botao, #enviar { -webkit-tap-highlight-color: transparent; }
+
+/* entrada da mensagem: sobe suave em vez de aparecer seco */
+@keyframes msgEntra { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: no-preference) {
+  .msg.user { animation: msgEntra 0.26s cubic-bezier(.22,.9,.3,1) both; }
+  .comparador { animation: msgEntra 0.3s cubic-bezier(.22,.9,.3,1) both; }
+}
+
+/* ============================================================
+   V25 — a ficha da escola: ele mostra que escutou
+   ============================================================ */
+.ficha {
+  display: flex; align-items: center; justify-content: center; flex-wrap: wrap;
+  gap: 0.3rem;
+  margin: 0.75rem auto 0;
+  padding: 0.32rem 0.7rem;
+  width: fit-content; max-width: 100%;
+  font-size: 0.72rem;
+  color: #CFC8E6;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 999px;
+}
+.ficha b { color: #fff; font-weight: 700; }
+.ficha-ic { display: flex; color: #A99BFF; }
+.ficha-ic svg { width: 0.8rem; height: 0.8rem; }
+.ficha-sep { font-style: normal; opacity: 0.4; margin: 0 0.15rem; }
+
+.estado-conversa .ficha {
+  margin: 0; order: 20; width: 100%;
+  justify-content: flex-start;
+  background: none; border: 0;
+  padding: 0.2rem 0 0;
+  font-size: 0.68rem; color: #8E86A6;
+}
+.estado-conversa .ficha b { color: var(--titulo); }
+.estado-conversa .ficha-ic { color: var(--roxo); opacity: .7; }
+.estado-conversa .hero { flex-wrap: wrap; }
+
+/* ============================================================
+   V27 — a espera fala: frase girando ao lado dos pontinhos
+   ============================================================ */
+.msg.bot.pensando-vazio .digitando {
+  align-items: center;
+  gap: 0.5rem;
+  height: auto;
+}
+.dg-pontos { display: flex; align-items: center; gap: 0.28rem; }
+.dg-txt {
+  font-size: 0.78rem;
+  color: #9A93AB;
+  transition: opacity 0.18s ease;
+}
+.dg-txt::after { content: "…"; }
+
+/* botão de recomeçar: só no modo conversa, discreto */
+.btn-recomecar {
+  display: none;
+  order: 30;
+  margin-left: 0.5rem;
+  width: 1.85rem; height: 1.85rem;
+  border-radius: 10px;
+  background: var(--branco);
+  border: 1px solid var(--borda);
+  color: #8E86A6;
+  cursor: pointer;
+  align-items: center; justify-content: center;
+  flex: none;
+  transition: color .15s, border-color .15s;
+}
+.estado-conversa .btn-recomecar { display: flex; }
+.btn-recomecar svg { width: 0.9rem; height: 0.9rem; }
+.btn-recomecar:hover { color: var(--roxo); border-color: #DECFFB; }
+.btn-recomecar:active { transform: scale(0.94); }
+.estado-conversa .hero-badge { margin-left: auto; }
+
+/* V27.1 — ordem do cabeçalho: tudo na primeira linha, ficha embaixo */
+.estado-conversa .hero-badge { order: 14; margin-left: auto; }
+.estado-conversa .btn-recomecar { order: 15; margin-left: 0.45rem; }
+.estado-conversa .ficha { order: 20; }
+@media (max-width: 419px) {
+  .estado-conversa .btn-recomecar { margin-left: auto; }
+}
