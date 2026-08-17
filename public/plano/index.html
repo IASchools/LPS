@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Plano de Ação · IA Schools</title>
+  <meta name="description" content="Transforme o diagnóstico do workshop em um plano de ação de 90 dias para sua escola.">
+  <meta property="og:title" content="Seu Plano de Ação · IA Schools">
+  <meta property="og:description" content="Um diagnóstico guiado para transformar uma prioridade em um plano de 90 dias.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://lp.iaschools.com.br/plano/">
+  <meta property="og:image" content="https://lp.iaschools.com.br/plano/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Plano de Ação IA Schools: da prioridade ao primeiro passo concreto.">
+  <meta name="theme-color" content="#5138c9">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <div class="ambient ambient-one" aria-hidden="true"></div>
+  <div class="ambient ambient-two" aria-hidden="true"></div>
+  <header class="site-header">
+    <a class="brand" href="https://iaschools.com.br" aria-label="IA Schools">
+      <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span>IA <strong>Schools</strong></span>
+    </a>
+    <span class="header-label">Plano de ação</span>
+  </header>
+
+  <main id="app" class="app-shell">
+    <section id="intro" class="intro panel" aria-labelledby="intro-title">
+      <p class="eyebrow">Workshop · Gestão de IA na prática escolar</p>
+      <h1 id="intro-title">Da prioridade ao primeiro passo concreto.</h1>
+      <p class="lead">Responda ao diagnóstico e receba um plano orientativo de 90 dias para a realidade da sua escola.</p>
+      <div class="intro-meta">
+        <span><b>28</b> perguntas</span>
+        <span><b>8–10</b> minutos</span>
+        <span><b>1</b> plano para salvar em PDF</span>
+      </div>
+      <div class="privacy-note">
+        <strong>Como seus dados são tratados nesta versão</strong>
+        <p>As respostas ficam somente nesta aba do seu navegador. A IA Schools não as recebe automaticamente. Ao final, você poderá baixar uma cópia em CSV e salvar seu plano em PDF.</p>
+      </div>
+      <button id="start-button" class="button primary" type="button">Criar meu plano <span aria-hidden="true">→</span></button>
+      <p class="microcopy">Não substitui análise jurídica, pedagógica ou de segurança da informação.</p>
+    </section>
+
+    <section id="form-view" class="form-view" hidden aria-label="Questionário do plano de ação">
+      <div class="progress-wrap" aria-label="Progresso">
+        <div class="progress-copy"><span id="progress-label">Pergunta 1 de 28</span><span id="progress-percent">4%</span></div>
+        <div class="progress-track"><div id="progress-bar" class="progress-bar"></div></div>
+      </div>
+      <form id="plan-form" novalidate>
+        <div id="question-host" class="panel question-card"></div>
+        <p id="form-error" class="form-error" role="alert" aria-live="polite"></p>
+        <div class="form-actions">
+          <button id="back-button" class="button ghost" type="button">← Voltar</button>
+          <button id="next-button" class="button primary" type="submit">Continuar →</button>
+        </div>
+      </form>
+      <p class="keyboard-hint">Pressione <kbd>Enter</kbd> para continuar</p>
+    </section>
+
+    <section id="report-view" class="report-view" hidden aria-live="polite">
+      <div class="report-toolbar no-print">
+        <div><p class="eyebrow">Plano concluído</p><h2>Seu próximo passo já tem forma.</h2></div>
+        <div class="toolbar-actions">
+          <button id="csv-button" class="button ghost" type="button">Baixar respostas (.csv)</button>
+          <button id="print-button" class="button primary" type="button">Imprimir ou salvar em PDF</button>
+        </div>
+      </div>
+      <article id="report" class="report-paper"></article>
+      <div class="report-footer-actions no-print">
+        <button id="edit-button" class="button ghost" type="button">Revisar respostas</button>
+        <button id="reset-button" class="text-button" type="button">Começar novamente</button>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer no-print"><span>IA Schools</span><span>Educação, gestão e inteligência artificial com método.</span></footer>
+  <noscript>Ative o JavaScript para preencher o diagnóstico e gerar seu plano.</noscript>
+  <script src="./app.js" defer></script>
+</body>
+</html>
