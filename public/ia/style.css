@@ -1720,3 +1720,12 @@ body::before {
   .estado-conversa .mensagens { max-width: 32rem; }
   .estado-conversa .chat { padding-left: 0; padding-right: 0; }
 }
+
+/* V32.3 — o cabeçalho da conversa encolhia por shrink-to-fit (370px)
+   enquanto mensagens e campo tinham 512px; e os selos quebravam em 2 linhas */
+@media (min-width: 700px) {
+  .estado-conversa .hero { width: 100%; }
+  .selos { flex-wrap: nowrap; gap: 0.85rem; justify-content: space-between; }
+  .selo { font-size: 0.67rem; }
+  .selo svg { width: 0.78rem; height: 0.78rem; }
+}
