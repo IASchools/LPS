@@ -333,7 +333,28 @@
 
   function showReport() {
     formView.hidden = true; intro.hidden = true; reportView.hidden = false;
-    $("#report").innerHTML = buildReport();
+    // O plano vem do motor testado, com as nove seções da Parte 3. Se por qualquer razão ele
+    // não estiver disponível, a geração antiga continua servindo: melhor um plano mais simples
+    // do que uma tela vazia no meio de um workshop.
+    let html = null;
+    let motivoDaReserva = "";
+    if (!window.IASchoolsPlano) motivoDaReserva = "motor.js não carregou ou não pôde ser interpretado neste navegador";
+    else if (!window.IASchoolsRelatorio) motivoDaReserva = "relatorio.js não carregou";
+    else {
+      try {
+        html = window.IASchoolsRelatorio.montar(state.answers);
+        if (!html) motivoDaReserva = "o motor não devolveu um plano para estas respostas";
+      } catch (erro) {
+        motivoDaReserva = `o motor lançou: ${erro && erro.message ? erro.message : erro}`;
+      }
+    }
+    if (!html) console.error(`PLANO EM MODO DE RESERVA (seis seções, não nove): ${motivoDaReserva}`);
+    const alvo = $("#report");
+    // A marca fica no DOM para a verificação automática conseguir enxergar a queda: sem isso,
+    // uma falha de implantação serviria o plano antigo a todo mundo, em silêncio.
+    alvo.setAttribute("data-plano-motor", html ? "completo" : "reserva");
+    if (!html) alvo.setAttribute("data-plano-reserva-motivo", motivoDaReserva);
+    alvo.innerHTML = html || buildReport();
     sessionStorage.setItem(`${storageKey}-complete`, "true");
     document.title = `Plano de Ação · ${state.answers.q2 || "IA Schools"}`;
     window.scrollTo({ top: 0, behavior: "smooth" });

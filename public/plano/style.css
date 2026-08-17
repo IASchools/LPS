@@ -85,6 +85,35 @@ h1 { max-width: 690px; margin: 0; font-family: Georgia, "Times New Roman", serif
    dobra, e o percurso volta ao topo a cada pergunta, então a pessoa rolaria 28 vezes.
    O cartão encolhe, o respiro interno diminui e o título desce de corpo. Acima de 380px nada
    disso vale: lá só as perguntas de lista longa exigem rolagem, o que é normal. */
+/* Blocos das nove seções da Parte 3, gerados por relatorio.js. Reaproveitam a linguagem
+   visual que a página já tinha: mesma tipografia, mesmas cores, mesmos cantos. */
+.plano-duo { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: start; margin-top: 18px; }
+.plano-duo article { padding: 18px 20px; border: 1px solid var(--line); border-radius: 14px; background: #fff; }
+.plano-duo article small, .plano-ficha small { display: block; margin-bottom: 7px; color: var(--purple); font-size: 10px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+.plano-duo article h3 { margin: 0 0 4px; font-size: 19px; }
+.plano-duo article p, .plano-ficha p { margin: 0; font-size: 14px; line-height: 1.55; color: #4f495a; }
+.plano-duo article p + p { margin-top: 9px; }
+.plano-detalhe { display: block; margin-bottom: 9px; color: var(--muted); font-size: 12px; }
+.plano-borda { padding-top: 9px; border-top: 1px solid var(--line); }
+.plano-ficha { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: start; margin-top: 18px; }
+.plano-ficha-tres { grid-template-columns: repeat(3, 1fr); margin-top: 16px; }
+.plano-ficha > div { padding: 15px 17px; border-left: 2.4px solid #e3dbcd; border-radius: 4px 12px 12px 4px; background: #faf9fc; }
+.plano-ficha ul { margin: 0; padding-left: 17px; font-size: 14px; line-height: 1.55; color: #4f495a; }
+.plano-nota { margin-top: 14px; padding: 13px 16px; border-radius: 12px; background: var(--lavender); font-size: 13px; }
+.plano-citacao { margin: 16px 0 0; padding: 4px 0 4px 16px; border-left: 3px solid var(--orange, #fda75f); color: var(--purple-dark); font-style: normal; font-size: 15px; }
+.plano-lista { margin-top: 16px; }
+.plano-linha { display: grid; grid-template-columns: 118px 1fr; gap: 14px; padding: 11px 0 9px; border-top: 1px solid var(--line); }
+.plano-linha > span { color: #a85b1c; font-size: 10px; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; padding-top: 3px; }
+.plano-linha p { margin: 0; font-size: 14px; line-height: 1.5; }
+.plano-linha em { display: block; margin-top: 4px; color: var(--muted); font-size: 12.5px; font-style: normal; }
+.safety ol { padding-left: 20px; }
+.safety ol li { margin-bottom: 7px; }
+
+@media (max-width: 700px) {
+  .plano-duo, .plano-ficha, .plano-ficha-tres { grid-template-columns: 1fr; }
+  .plano-linha { grid-template-columns: 1fr; gap: 4px; }
+}
+
 @media (max-width: 380px) {
   .question-card { min-height: 300px; padding: 20px 16px; }
   .question-card h2 { font-size: 25px; }
@@ -94,4 +123,4 @@ h1 { max-width: 690px; margin: 0; font-family: Georgia, "Times New Roman", serif
   .options { gap: 8px; }
 }
 
-@media print { @page { size: A4; margin: 14mm; } body { background: #fff; }.ambient, .site-header, .site-footer, .no-print { display: none !important; }.app-shell { width: 100%; min-height: 0; margin: 0; }.report-paper { padding: 0; border: 0; box-shadow: none; }.report-cover { page-break-after: avoid; }.report-section, .cycle, .safety { break-inside: avoid; }.report-paper h1 { font-size: 42px; }.report-section { padding: 22px 0; }.cycles { grid-template-columns: repeat(3, 1fr); }.report-disclaimer { margin-bottom: 0; } }
+@media print { @page { size: A4; margin: 14mm; } body { background: #fff; }.ambient, .site-header, .site-footer, .no-print { display: none !important; }.app-shell { width: 100%; min-height: 0; margin: 0; }.report-paper { padding: 0; border: 0; box-shadow: none; }.report-cover { page-break-after: avoid; }.report-section, .cycle, .safety { break-inside: avoid; }.report-paper h1 { font-size: 42px; }.report-section { padding: 22px 0; }.cycles { grid-template-columns: 1fr; gap: 10px; }.cycle { break-inside: auto; }.report-disclaimer { margin-bottom: 0; } }
