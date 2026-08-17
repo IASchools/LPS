@@ -6,17 +6,14 @@
 <meta name="robots" content="noindex, nofollow" />
 <title>IA Schools — Demonstração</title>
 <!--
-  O redirecionamento foi removido em 17/08/2026, no dia do workshop.
+  Porta de entrada da demonstração.
 
-  Motivo, medido no navegador: servido pelo túnel, o app não hidratava. Os 26
-  pacotes chegavam com 200, mas nenhum handler era ligado e o login não respondia
-  ao clique — é o servidor de DESENVOLVIMENTO do Next, que depende de um
-  WebSocket que não sobrevive ao túnel. Mandar alguém para lá era entregar uma
-  tela morta.
+  A aplicação roda no executor (build de PRODUÇÃO, servido por túnel). A primeira
+  tentativa apontava para o servidor de desenvolvimento e não funcionava: os
+  pacotes chegavam, mas o React não hidratava e nenhum botão respondia. Medido no
+  navegador, não suposto.
 
-  Para reativar: subir a aplicação em modo de produção (next build + next start),
-  com AUTH_SESSION_SECRET e um provedor de IA alcançável, e então devolver o
-  redirecionamento.
+  Se a URL do túnel mudar, troque DEMO_URL abaixo e publique de novo.
 -->
 <style>
   :root { color-scheme: light; }
@@ -27,24 +24,33 @@
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     padding: 24px;
   }
-  main { max-width: 470px; }
-  .marca { color: #6d35fb; font-size: 12px; font-weight: 800; letter-spacing: .12em; margin-bottom: 16px; text-align: center; }
-  .aviso { background: #fffaf0; border: 1px solid #e6dcc8; border-left: 4px solid #d8a54a; border-radius: 14px; padding: 22px 24px; }
-  .aviso strong { display: block; font-size: 17px; margin-bottom: 10px; }
-  .aviso p { color: #6f6a85; font-size: 14.5px; line-height: 1.6; margin: 0; }
+  main { max-width: 460px; text-align: center; }
+  .marca { color: #6d35fb; font-size: 12px; font-weight: 800; letter-spacing: .12em; margin-bottom: 14px; }
+  h1 { font-size: clamp(24px, 5vw, 31px); letter-spacing: -.02em; line-height: 1.15; margin: 0 0 10px; }
+  p { color: #6f6a85; font-size: 15px; line-height: 1.6; margin: 0 0 22px; }
+  .pontos { display: inline-flex; gap: 6px; }
+  .pontos i { animation: pulsa 1.1s ease-in-out infinite; background: #6d35fb; border-radius: 50%; display: block; height: 8px; width: 8px; }
+  .pontos i:nth-child(2) { animation-delay: .15s; }
+  .pontos i:nth-child(3) { animation-delay: .3s; }
+  @keyframes pulsa { 0%,100% { opacity: .25; transform: translateY(0); } 50% { opacity: 1; transform: translateY(-3px); } }
+  a.botao { background: #6d35fb; border-radius: 10px; color: #fff; display: inline-block; font-size: 15px; font-weight: 600; padding: 13px 22px; text-decoration: none; }
 </style>
 </head>
 <body>
 <main>
   <div class="marca">IA SCHOOLS</div>
-  <div class="aviso">
-    <strong>A demonstração ainda não está disponível por este endereço.</strong>
-    <p>
-      Ela roda hoje apenas na rede interna. Publicar aqui exige uma versão de
-      produção da aplicação — o ambiente de desenvolvimento não funciona por este
-      caminho: a página carrega, mas os botões não respondem.
-    </p>
-  </div>
+  <h1>Abrindo a demonstração</h1>
+  <p>Se a página não abrir sozinha em alguns segundos, use o botão.</p>
+  <span class="pontos" aria-hidden="true"><i></i><i></i><i></i></span>
+  <p style="margin-top:22px"><a class="botao" id="entrar" href="#">Abrir a demonstração</a></p>
 </main>
+<script>
+  // Trocar aqui se a URL do túnel mudar.
+  var DEMO_URL = "https://joint-receivers-hiking-beach.trycloudflare.com";
+  document.getElementById("entrar").href = DEMO_URL + "/";
+  // Sem checagem de saúde: ela sai de outra origem, pode ser barrada pelo
+  // navegador e já declarou "fora do ar" uma demonstração que estava de pé.
+  window.location.replace(DEMO_URL + "/");
+</script>
 </body>
 </html>
