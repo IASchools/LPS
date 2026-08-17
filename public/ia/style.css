@@ -1604,3 +1604,19 @@ body::before {
 @media (max-width: 419px) {
   .estado-conversa .btn-recomecar { margin-left: auto; }
 }
+
+/* mensagem de queda: séria, sem drama */
+.msg-erro {
+  color: var(--titulo);
+  font-weight: 700;
+  margin-bottom: 0.35em !important;
+}
+
+/* ============================================================
+   V29 — contraste AA em tudo (auditoria reprovou 3 elementos)
+   ============================================================ */
+.chips-label { color: #6B6580; }     /* era 2.79 */
+.selo { color: #5F5A72; }            /* era 3.39 */
+.aviso { color: #6E6885; }           /* era 2.33 */
+.cmp-tit { color: #7C7460; }
+.dg-txt { color: #6E6885; }

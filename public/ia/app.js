@@ -243,8 +243,10 @@
     if (m.erro && !m.bruto.trim()) {
       m.linha.classList.remove('pensando-vazio');
       m.conteudoEl.innerHTML =
-        '<p class="msg-erro">Não consegui falar com o servidor agora.</p>' +
-        '<p>Respira comigo e tenta de novo em alguns segundos — a conversa continua daqui.</p>';
+        '<p class="msg-erro">O Conselheiro está sendo religado.</p>' +
+        '<p>Isso costuma levar menos de um minuto — toca em <b>enviar</b> de novo e a ' +
+        'conversa continua daqui. Se persistir, chama alguém da equipe IA Schools aqui ' +
+        'no evento: eles têm o mesmo conteúdo na mão.</p>';
     }
     renderBot(m);
     if (!m.erro && m.bruto.trim()) { trocasBot++; talvezConvidar(); }
