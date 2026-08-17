@@ -240,7 +240,9 @@
     m.avatar.classList.remove('pensando');
     m.linha.classList.remove('streaming');
     if (m.girar) clearInterval(m.girar);
+    renderBot(m);
     if (m.erro && !m.bruto.trim()) {
+      // depois do renderBot: antes ele apagava esta mensagem e sobrava tela em branco
       m.linha.classList.remove('pensando-vazio');
       m.conteudoEl.innerHTML =
         '<p class="msg-erro">O Conselheiro está sendo religado.</p>' +
@@ -248,7 +250,6 @@
         'conversa continua daqui. Se persistir, chama alguém da equipe IA Schools aqui ' +
         'no evento: eles têm o mesmo conteúdo na mão.</p>';
     }
-    renderBot(m);
     if (!m.erro && m.bruto.trim()) { trocasBot++; talvezConvidar(); }
     if (!m.erro && m.bruto.trim() && !m.cartao && m.pergunta) adicionarComparador(m);
     if (m.cartao) {
@@ -358,6 +359,11 @@
   form.addEventListener('submit', function (ev) {
     ev.preventDefault();
     var t = entrada.value;
+    if (!t.trim()) return;
+    if (ocupado) {            // antes o texto era apagado em silêncio
+      toast('Só um instante — estou terminando a resposta anterior.');
+      return;
+    }
     entrada.value = '';
     autoAltura();
     conversar(t);

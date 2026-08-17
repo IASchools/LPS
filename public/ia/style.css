@@ -1620,3 +1620,45 @@ body::before {
 .aviso { color: #6E6885; }           /* era 2.33 */
 .cmp-tit { color: #7C7460; }
 .dg-txt { color: #6E6885; }
+
+/* ============================================================
+   V30 — cartão em tela curta: overlay que rola de verdade
+   (auditoria: em 320x568 sobrava 1 dos 3 passos e o botão
+   "Salvar imagem" ficava abaixo da dobra, sem rolagem)
+   ============================================================ */
+.overlay {
+  display: block;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.overlay-scroll {
+  margin: 0 auto;
+  min-height: 100%;
+  justify-content: center;
+  padding: 3.4rem 1rem 2.2rem;
+  max-width: 30rem;
+}
+.cartao { width: 100%; }
+.fechar-x { position: fixed; }
+@media (max-height: 700px) {
+  .overlay-scroll { padding-top: 3rem; justify-content: flex-start; }
+  .c-item { padding: 0.62rem 0.8rem; }
+  .c-item h3 { font-size: 0.92rem; }
+  .c-item p { font-size: 0.78rem; }
+  .c-header { padding: 0.9rem 1rem; }
+}
+
+/* V30.1 — o cartão tinha proporção fixa 9:16 + overflow:hidden: em tela curta
+   ele encolhia e cortava o 3º passo por baixo do rodapé. Agora a proporção é
+   um piso, não uma prisão: o conteúdo manda. */
+.cartao {
+  width: min(88vw, 23.5rem);
+  aspect-ratio: auto;
+  min-height: min(calc(23.5rem * 16 / 9), 78vh);
+  overflow: visible;
+}
+.c-corpo { flex: 1 1 auto; }
+.c-footer { margin-top: auto; }
+
+/* V30.2 — com a proporção livre, o recorte volta sem cortar conteúdo */
+.cartao { overflow: hidden; }
