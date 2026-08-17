@@ -81,7 +81,7 @@
     }
     if (question.type === "grid") {
       const values = answer || {};
-      return `<div class="grid-wrap"><table class="priority-grid"><thead><tr><th>Área</th>${question.columns.map((column) => `<th>${escapeHtml(column)}</th>`).join("")}</tr></thead><tbody>${question.rows.map((row, rowIndex) => `<tr><td>${escapeHtml(row)}</td>${question.columns.map((column) => `<td><input aria-label="${escapeHtml(row)}: ${escapeHtml(column)}" type="radio" name="grid-${rowIndex}" value="${escapeHtml(column)}" data-row="${escapeHtml(row)}" ${values[row] === column ? "checked" : ""}></td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+      return `<div class="grid-wrap"><table class="priority-grid"><thead><tr><th>Área</th>${question.columns.map((column) => `<th>${escapeHtml(column)}</th>`).join("")}</tr></thead><tbody>${question.rows.map((row, rowIndex) => `<tr><td class="grid-area">${escapeHtml(row)}</td>${question.columns.map((column) => `<td data-col="${escapeHtml(column)}"><label class="grid-cell"><input aria-label="${escapeHtml(row)}: ${escapeHtml(column)}" type="radio" name="grid-${rowIndex}" value="${escapeHtml(column)}" data-row="${escapeHtml(row)}" ${values[row] === column ? "checked" : ""}><span class="grid-cell-text">${escapeHtml(column)}</span></label></td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
     }
     return "";
   }
@@ -162,6 +162,10 @@
     else if (!answer) return "Preencha esta resposta para continuar.";
     if (question.type === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(answer)) return "Informe um e-mail válido.";
     if (question.id === "q10" && state.answers.q9?.[answer] !== "Agora") return "Escolha uma área que você marcou como ‘Agora’ na pergunta anterior.";
+    // A decisão humana da q18 vira o eixo de responsabilidade do plano e é citada em duas
+    // seções. Uma palavra solta não sustenta isso, e o plano imprimia a garantia em cima dela.
+    if (question.id === "q18" && String(answer).trim().length < 12) return "Descreva em uma frase qual decisão continua sendo de uma pessoa, e quem a assina.";
+    if (question.id === "q12" && String(answer).trim().length < 12) return "Descreva o problema em uma frase, para o plano poder se organizar em torno dele.";
     return true;
   }
 
@@ -198,8 +202,38 @@
   }
 
   function dateLabel(date) { return new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "long", year: "numeric" }).format(date); }
+  // Minusculizar a resposta inteira destruía siglas ("IA" virava "ia") e nomes próprios no meio
+  // da frase. Só a primeira letra desce, e apenas quando a palavra não é toda maiúscula.
+  // A resposta livre costuma vir com ponto final. Inserida antes de outro ponto, produzia
+  // "antes do envio..". Tira a pontuação final antes de emendar.
+  function semPontoFinal(value) {
+    return String(value ?? "").trim().replace(/[.;,:]+$/u, "");
+  }
+  function lowerFirst(value) {
+    const text = String(value ?? "").trim();
+    if (!text) return text;
+    const first = text.split(/\s+/)[0];
+    if (first.length > 1 && first === first.toUpperCase()) return text;
+    return text.charAt(0).toLowerCase() + text.slice(1);
+  }
   function addDays(date, amount) { const result = new Date(date); result.setDate(result.getDate() + amount); return result; }
   function list(values, fallback = "o resultado escolhido") { const items = Array.isArray(values) ? values : []; return items.length > 1 ? `${items.slice(0, -1).join(", ")} e ${items.at(-1)}` : items[0] || fallback; }
+
+  // Cada item desce de caixa por si. Rebaixar a lista inteira só afetava a primeira palavra e
+  // deixava "tempo economizado e Conversão de matrícula" no meio da frase.
+  function listaNaFrase(values, fallback = "o resultado escolhido") {
+    const items = (Array.isArray(values) ? values : []).map((item) => lowerFirst(item));
+    return items.length > 1 ? `${items.slice(0, -1).join(", ")} e ${items.at(-1)}` : items[0] || fallback;
+  }
+
+  // A manchete precisa concordar com a ambição declarada logo abaixo: dizer "pede foco antes de
+  // escala" para uma escola Fase 4 nega a própria orientação de escalar que vem na sequência.
+  const phaseHeadline = {
+    "1": "Começar pequeno pede processo antes de ferramenta.",
+    "2": "Padronizar o que já funciona vem antes de abrir frente nova.",
+    "3": "Conectar o piloto aos indicadores é o passo que falta.",
+    "4": "Escalar com auditoria é diferente de escalar por impulso.",
+  };
 
   const phaseGuidance = {
     "1": ["Início da jornada", "organizar o processo e definir critérios antes de automatizar"],
@@ -229,8 +263,8 @@
     const profileNumber = String(a.q7 || "1").match(/\d/)?.[0] || "1";
     const phase = phaseGuidance[phaseNumber];
     const start = daysFromStart(a.q26);
-    const metrics = list(a.q23);
-    const tasks = list(a.q17, "apoiar a tarefa escolhida").toLowerCase();
+    const metricsFrase = listaNaFrase(a.q23);
+    const tasks = listaNaFrase(a.q17, "apoiar a tarefa escolhida");
     const data = Array.isArray(a.q19) ? a.q19 : [];
     const sensitive = data.filter((item) => /identificáveis|colaboradores|financeiras|saúde|laudos|vulnerabilidade/i.test(item));
     const open = String(a.q20).startsWith("Ferramenta aberta") || a.q20 === "Ainda não sei";
@@ -239,13 +273,45 @@
     const governanceMissing = governance.includes("Nenhum dos anteriores");
     const obstacle = obstacleGuidance[a.q27] || ["Defina uma ação preventiva com responsável e prazo.", "Revise o obstáculo ao final da primeira semana."];
     const firstAction = a.q13 === "Não existe processo definido, cada um faz de um jeito"
-      ? `Mapear com ${String(a.q15).toLowerCase()} como a tarefa acontece hoje, sem idealizar, e registrar entradas, decisões e saídas.`
+      ? `Mapear com ${lowerFirst(a.q15)} como a tarefa acontece hoje, sem idealizar, e registrar entradas, decisões e saídas.`
       : a.q13 === "Existe processo, mas não está escrito"
-        ? `Escrever com ${String(a.q15).toLowerCase()} o processo atual e escolher uma amostra pequena para o primeiro teste.`
+        ? `Escrever com ${lowerFirst(a.q15)} o processo atual e escolher uma amostra pequena para o primeiro teste.`
         : a.q13 === "Está escrito, mas nem sempre é seguido"
-          ? `Revisar com ${String(a.q15).toLowerCase()} por que o processo escrito não se sustenta e ajustar o trecho que será pilotado.`
+          ? `Revisar com ${lowerFirst(a.q15)} por que o processo escrito não se sustenta e ajustar o trecho que será pilotado.`
           : `Registrar o critério já seguido pela equipe e executar uma primeira amostra controlada.`;
-    const owner = a.q22 === "Eu mesmo(a)" ? a.q1 : a.q22 === "Ainda não sei quem" ? "Responsável a definir antes do início" : a.q22;
+    const owner = a.q22 === "Eu mesmo(a)" ? a.q1 : a.q22 === "Ainda não sei quem" ? "ainda não definido, a nomear antes do início" : a.q22;
+    const cicloUm = [
+      firstAction,
+      safety
+        ? "Trocar o ambiente do piloto, ou retirar o dado sensível dele, antes de qualquer teste: enquanto isso não estiver resolvido, o piloto não começa."
+        : a.q20 === "Ainda não sei"
+          ? "Definir e aprovar com a direção onde o piloto vai rodar, antes de qualquer teste com conteúdo real."
+          : `Registrar o que pode e o que não pode entrar no ambiente escolhido: ${lowerFirst(a.q20)}.`,
+      a.q22 === "Ainda não sei quem"
+        ? "Nomear quem responde pela implantação, com nome e prazo."
+        : a.q22 === "Eu mesmo(a)"
+          ? "Registrar por escrito que a condução é sua, com a cadência de acompanhamento que você vai manter."
+          : `Combinar com ${lowerFirst(owner)} o papel de condução e a cadência de acompanhamento.`,
+      a.q24 === "Não, preciso criar a medição"
+        ? `Criar a medição do indicador escolhido, com o critério escrito antes do primeiro teste: ${metricsFrase}.`
+        : `Registrar a linha de base, com a fonte e a data, para o indicador escolhido: ${metricsFrase}.`,
+      "Executar uma amostra pequena, sem ampliar o escopo.",
+    ];
+    const cicloDois = [
+      `Comparar com a linha de base, usando o mesmo critério de antes, o indicador escolhido: ${metricsFrase}.`,
+      "Registrar erros, retrabalho, exceções e ajustes necessários.",
+      `Manter a revisão humana declarada: ${semPontoFinal(a.q18) || "uma pessoa aprova cada resultado antes do uso"}.`,
+      "Escrever o processo em uma página, com o critério de exceção definido.",
+    ];
+    const cicloTres = [
+      safety
+        ? "Consolidar o que funcionou e registrar por escrito se a pendência de dado e ambiente foi resolvida, ou se o piloto seguiu sem ela."
+        : "Consolidar o que funcionou, o que falhou e o que deve ser interrompido.",
+      "Transformar o que comprovou valor em um padrão escrito, com responsável nomeado.",
+      "Revisar acessos, informações usadas e decisões que continuam humanas.",
+      "Decidir e registrar: escalar, ajustar ou encerrar.",
+    ];
+    const itens = (lista) => lista.map((item) => `<li>${escapeHtml(item)}</li>`).join("");
     const baseline = a.q24 === "Sim, tenho o número" ? "Registrar o número atual antes do primeiro teste." : a.q24 === "Consigo estimar" ? "Registrar uma estimativa explícita e o método usado para calculá-la." : "Criar uma medição simples antes de testar; sem linha de base não existe comparação.";
     return `
       <header class="report-cover">
@@ -254,12 +320,12 @@
         <p class="report-subtitle">Plano orientativo construído a partir das respostas de ${escapeHtml(a.q1)} para enfrentar: “${escapeHtml(a.q12)}”</p>
         <div class="report-meta"><div><small>Escola</small><strong>${escapeHtml(a.q2)}</strong></div><div><small>Responsável</small><strong>${escapeHtml(owner)}</strong></div><div><small>Início previsto</small><strong>${escapeHtml(dateLabel(start))}</strong></div></div>
       </header>
-      <section class="report-section"><span class="section-label">01 · Leitura do diagnóstico</span><h2>${escapeHtml(phase[0])} pede foco antes de escala.</h2><p>A sua escola declarou a fase <strong>${escapeHtml(a.q6)}</strong> e o perfil <strong>${escapeHtml(a.q7)}</strong>. Neste ciclo, a ambição adequada é ${escapeHtml(phase[1])}. A prioridade é <strong>${escapeHtml(a.q10)}</strong>, porque ${escapeHtml(String(a.q11).toLowerCase())}.</p><div class="highlight"><strong>Desenvolvimento do líder:</strong> ${escapeHtml(profileGuidance[profileNumber])}</div></section>
-      ${safety ? `<section class="report-section"><div class="safety"><span class="section-label">Ponto de parada</span><h2>O piloto não deve começar com dados reais no ambiente descrito.</h2><p>Você marcou ${escapeHtml(list(sensitive).toLowerCase())} e “${escapeHtml(a.q20)}”. Retire dados sensíveis e identificáveis do teste ou use dados fictícios/agregados. Caso individual só entra depois de ambiente contratado, cláusulas adequadas e validação da escola.</p></div></section>` : ""}
-      <section class="report-section"><span class="section-label">02 · Resultado do ciclo</span><h2>Testar pequeno e comparar com o processo atual.</h2><p>Em 90 dias, o piloto deve usar IA para <strong>${escapeHtml(tasks)}</strong> na área de ${escapeHtml(a.q10)}, preservando como decisão humana: <strong>${escapeHtml(a.q18)}</strong>.</p><p>A evidência principal será ${escapeHtml(metrics.toLowerCase())}. ${escapeHtml(baseline)} Considere também o esforço atual declarado: ${escapeHtml(a.q16)} por semana.</p></section>
-      <section class="report-section"><span class="section-label">03 · Primeira ação</span><h2>Começar pelo processo, não pela ferramenta.</h2><p><strong>Ação:</strong> ${escapeHtml(firstAction)}</p><p><strong>Responsável:</strong> ${escapeHtml(owner)} · <strong>Equipe do piloto:</strong> ${escapeHtml(a.q25)} · <strong>Data:</strong> ${escapeHtml(dateLabel(start))}.</p></section>
-      <section class="report-section"><span class="section-label">04 · Três ciclos</span><h2>90 dias com pontos claros de decisão.</h2><div class="cycles"><div class="cycle"><b>0–30 dias · até ${escapeHtml(dateLabel(addDays(start, 30)))}</b><h3>Organizar e pilotar</h3><p>${escapeHtml(firstAction)} Executar uma amostra sem ampliar o escopo.</p></div><div class="cycle"><b>31–60 dias · até ${escapeHtml(dateLabel(addDays(start, 60)))}</b><h3>Medir e ajustar</h3><p>Comparar ${escapeHtml(metrics.toLowerCase())} com a linha de base, registrar falhas e revisar cada saída antes de uso.</p></div><div class="cycle"><b>61–90 dias · até ${escapeHtml(dateLabel(addDays(start, 90)))}</b><h3>Decidir</h3><p>Padronizar o que comprovou valor, ajustar o que ainda tem hipótese útil ou encerrar o que não produziu evidência.</p></div></div></section>
-      <section class="report-section"><span class="section-label">05 · Governança mínima</span><h2>Escala só depois de segurança e responsabilidade.</h2><ul><li>${safety ? "Manter dados reais fora do piloto até a validação do ambiente e das regras de tratamento." : "Usar somente as informações necessárias, no ambiente declarado e aprovado pela escola."}</li><li>Registrar quem prepara, quem revisa e quem autoriza o resultado antes de qualquer uso.</li><li>${governanceMissing ? "Criar uma regra de uma página: usos permitidos, usos proibidos, ferramentas aprovadas e responsável por exceções." : `Usar como base o que a escola já declarou ter: ${escapeHtml(list(governance).toLowerCase())}.`}</li><li>Agendar a revisão final para ${escapeHtml(dateLabel(addDays(start, 90)))} e registrar a decisão: escalar, ajustar ou encerrar.</li></ul></section>
+      <section class="report-section"><span class="section-label">01 · Leitura do diagnóstico</span><h2>${escapeHtml(phaseHeadline[phaseNumber] || "Foco antes de escala.")}</h2><p>A sua escola se declarou em <strong>${escapeHtml(a.q6)}</strong>, e você, em <strong>${escapeHtml(a.q7)}</strong>. Neste ciclo, a ambição adequada é ${escapeHtml(phase[1])}. A prioridade é <strong>${escapeHtml(a.q10)}</strong>${/outro motivo/i.test(String(a.q11)) ? ", e o motivo não está entre as opções da lista" : `, porque ${escapeHtml(lowerFirst(a.q11))}`}.</p><div class="highlight"><strong>Desenvolvimento do líder:</strong> ${escapeHtml(profileGuidance[profileNumber])}</div></section>
+      ${safety ? `<section class="report-section"><div class="safety"><span class="section-label">Ponto de parada</span><h2>O piloto não deve começar com dados reais no ambiente descrito.</h2><p>Você marcou ${escapeHtml(listaNaFrase(sensitive))} entre as informações usadas, e ${/ainda não sei/i.test(String(a.q20)) ? "ainda não definiu onde o piloto vai rodar" : `informou que o piloto roda em ${escapeHtml(lowerFirst(a.q20))}`}. Retire dados sensíveis e identificáveis do teste ou use dados fictícios/agregados. Caso individual só entra depois de ambiente contratado, cláusulas adequadas e validação da escola.</p></div></section>` : ""}
+      <section class="report-section"><span class="section-label">02 · Resultado do ciclo</span><h2>Testar pequeno e comparar com o processo atual.</h2><p>Em 90 dias, o piloto deve usar IA para <strong>${escapeHtml(tasks)}</strong> na área de ${escapeHtml(a.q10)}, preservando como decisão humana: <strong>${escapeHtml(semPontoFinal(a.q18))}</strong>.</p><p>A evidência principal será ${escapeHtml(metricsFrase)}. ${escapeHtml(baseline)} ${/não sei estimar/i.test(String(a.q16)) ? "O tempo consumido hoje não é conhecido, então medir vem antes de comparar." : `Considere também o esforço atual declarado: ${escapeHtml(lowerFirst(a.q16))} por semana.`}</p></section>
+      <section class="report-section"><span class="section-label">03 · Primeira ação</span><h2>Começar pelo processo, não pela ferramenta.</h2><p><strong>Ação:</strong> ${escapeHtml(firstAction)}</p><p><strong>Responsável:</strong> ${escapeHtml(owner)} · <strong>Equipe do piloto:</strong> ${escapeHtml(a.q25)} · <strong>Prazo:</strong> até ${escapeHtml(dateLabel(addDays(start, 7)))} (7 dias a partir do início previsto).</p></section>
+      <section class="report-section"><span class="section-label">04 · Três ciclos</span><h2>90 dias com pontos claros de decisão.</h2><div class="cycles"><div class="cycle"><b>0–30 dias · até ${escapeHtml(dateLabel(addDays(start, 30)))}</b><h3>Organizar e pilotar</h3><ul>${itens(cicloUm)}</ul></div><div class="cycle"><b>31–60 dias · até ${escapeHtml(dateLabel(addDays(start, 60)))}</b><h3>Medir e ajustar</h3><ul>${itens(cicloDois)}</ul></div><div class="cycle"><b>61–90 dias · até ${escapeHtml(dateLabel(addDays(start, 90)))}</b><h3>Decidir</h3><ul>${itens(cicloTres)}</ul></div></div></section>
+      <section class="report-section"><span class="section-label">05 · Governança mínima</span><h2>Escala só depois de segurança e responsabilidade.</h2><ul><li>${safety ? "Manter dados reais fora do piloto até a validação do ambiente e das regras de tratamento." : "Usar somente as informações necessárias, no ambiente declarado e aprovado pela escola."}</li><li>Registrar quem prepara, quem revisa e quem autoriza o resultado antes de qualquer uso.</li><li>${governanceMissing ? "Criar uma regra de uma página: usos permitidos, usos proibidos, ferramentas aprovadas e responsável por exceções." : `Usar como base o que a escola já declarou ter: ${escapeHtml(listaNaFrase(governance))}.`}</li><li>Agendar a revisão final para ${escapeHtml(dateLabel(addDays(start, 90)))} e registrar a decisão: escalar, ajustar ou encerrar.</li></ul></section>
       <section class="report-section"><span class="section-label">06 · Obstáculo previsto</span><h2>${escapeHtml(a.q27)}</h2><ul><li>${escapeHtml(obstacle[0])}</li><li>${escapeHtml(obstacle[1])}</li></ul></section>
       <p class="report-signoff">Comece por uma dor. Organize o processo. Teste pequeno. Meça. Só então escale.</p>
       <p class="report-disclaimer">Este documento é um apoio orientativo gerado localmente a partir das respostas fornecidas. A escola deve revisar o plano e validar aspectos pedagógicos, jurídicos, contratuais, de privacidade e de segurança antes da implantação. Nenhuma resposta foi enviada automaticamente à IA Schools.</p>`;
