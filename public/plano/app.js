@@ -92,7 +92,7 @@
     $("#progress-label").textContent = `Pergunta ${state.step + 1} de ${questions.length}`;
     $("#progress-percent").textContent = `${percent}%`;
     $("#progress-bar").style.width = `${percent}%`;
-    $("#back-button").disabled = state.step === 0;
+    $("#back-button").disabled = false;
     $("#next-button").textContent = state.step === questions.length - 1 ? "Gerar meu plano →" : "Continuar →";
     error.textContent = "";
     host.innerHTML = `<p class="question-number">${state.step + 1}<span aria-hidden="true">→</span></p><h2 id="question-title">${escapeHtml(question.title)}</h2>${question.description ? `<p class="question-description">${escapeHtml(question.description)}</p>` : ""}<span class="required-label">${question.required ? "Resposta obrigatória" : "Opcional"}</span>${renderField(question)}`;
@@ -168,6 +168,14 @@
   function showForm() {
     intro.hidden = true; reportView.hidden = true; formView.hidden = false;
     state.started = true; saveState(); renderQuestion();
+  }
+
+  function showIntro() {
+    formView.hidden = true; reportView.hidden = true; intro.hidden = false;
+    state.started = false; saveState();
+    document.title = "Plano de Ação · IA Schools";
+    requestAnimationFrame(() => $("#start-button").focus({ preventScroll: true }));
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   function next(event) {
@@ -282,10 +290,22 @@
 
   $("#start-button").addEventListener("click", showForm);
   $("#plan-form").addEventListener("submit", next);
-  $("#back-button").addEventListener("click", () => { if (state.step > 0) { capture(questions[state.step]); state.step -= 1; saveState(); renderQuestion(); } });
+  $("#back-button").addEventListener("click", (event) => {
+    event.preventDefault();
+    capture(questions[state.step]);
+    if (state.step > 0) {
+      state.step -= 1;
+      saveState();
+      renderQuestion();
+    } else showIntro();
+  });
   $("#print-button").addEventListener("click", () => window.print());
   $("#csv-button").addEventListener("click", downloadCsv);
-  $("#edit-button").addEventListener("click", () => { reportView.hidden = true; formView.hidden = false; state.step = questions.length - 1; renderQuestion(); });
+  $("#edit-button").addEventListener("click", () => {
+    sessionStorage.removeItem(`${storageKey}-complete`);
+    reportView.hidden = true; formView.hidden = false;
+    state.step = questions.length - 1; state.started = true; saveState(); renderQuestion();
+  });
   $("#reset-button").addEventListener("click", () => { if (!window.confirm("Apagar as respostas desta aba e começar novamente?")) return; sessionStorage.removeItem(storageKey); sessionStorage.removeItem(`${storageKey}-complete`); state.step = 0; state.answers = {}; state.started = false; reportView.hidden = true; formView.hidden = true; intro.hidden = false; document.title = "Plano de Ação · IA Schools"; });
   document.addEventListener("keydown", (event) => { if (event.key === "Enter" && !formView.hidden && !event.shiftKey && !event.target.matches("button")) { event.preventDefault(); $("#plan-form").requestSubmit(); } });
 
