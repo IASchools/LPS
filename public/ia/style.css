@@ -1662,3 +1662,61 @@ body::before {
 
 /* V30.2 — com a proporção livre, o recorte volta sem cortar conteúdo */
 .cartao { overflow: hidden; }
+
+/* ============================================================
+   V32 — CONSERTO DO COMPUTADOR
+   Achados: (1) a ficha vazia aparecia porque display:flex anula
+   o atributo hidden; (2) os atalhos viravam colunas apertadas e o
+   cabeçalho encolhia a 319px numa coluna de 720px.
+   ============================================================ */
+
+/* 1. hidden volta a valer em tudo que eu transformei em flex/grid */
+.ficha[hidden], .selos[hidden], .areas-atalho[hidden], .digitando[hidden] { display: none !important; }
+
+/* 2. uma só coluna de conteúdo, tudo alinhado no mesmo eixo */
+.estado-entrada .hero,
+.estado-entrada .chips,
+.estado-entrada .areas-atalho,
+.estado-entrada .selos {
+  width: 100%;
+  max-width: 30rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+.estado-entrada .chips { grid-template-columns: 1fr; }   /* nunca mais lado a lado */
+.estado-entrada .chip { grid-template-columns: auto 1fr auto; }
+
+@media (min-width: 700px) {
+  .estado-entrada .hero,
+  .estado-entrada .chips,
+  .estado-entrada .areas-atalho,
+  .estado-entrada .selos { max-width: 32rem; }
+  .estado-entrada .hero { padding: 1.9rem 2rem 1.7rem; }
+  .estado-entrada .hero-titulo { font-size: 1.78rem; }
+  .estado-entrada .chat { padding-bottom: 0.6rem; }
+  .composer form, .aviso { max-width: 32rem; margin-left: auto; margin-right: auto; }
+  .estado-conversa .mensagens { max-width: 34rem; margin: 0 auto; }
+  .estado-conversa .hero > * { max-width: none; }
+}
+
+/* V32.1 — no computador o rodapé de selos era empurrado para baixo,
+   abrindo 200px de vazio; e os selos quebravam em duas linhas */
+@media (min-width: 700px) {
+  .estado-entrada .chat .selos { margin-top: 1.3rem; }
+  .selos { gap: 1rem; }
+  .selo { font-size: 0.7rem; white-space: nowrap; }
+  .estado-entrada .chat { justify-content: flex-start; }
+}
+
+/* V32.2 — uma coluna só no computador: cabeçalho, mensagens e campo alinhados */
+@media (min-width: 700px) {
+  .estado-conversa .hero {
+    max-width: 32rem;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .estado-conversa .mensagens { max-width: 32rem; }
+  .estado-conversa .chat { padding-left: 0; padding-right: 0; }
+}
