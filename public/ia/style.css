@@ -1729,3 +1729,9 @@ body::before {
   .selo { font-size: 0.67rem; }
   .selo svg { width: 0.78rem; height: 0.78rem; }
 }
+
+/* V36 — selos numa linha só no computador (eram 2) */
+@media (min-width: 700px) {
+  .selos { gap: 0.7rem; }
+  .selo { font-size: 0.66rem; }
+}
