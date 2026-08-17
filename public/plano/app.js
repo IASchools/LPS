@@ -69,7 +69,7 @@
   function renderField(question) {
     const answer = state.answers[question.id];
     if (question.type === "short" || question.type === "email") {
-      return `<input class="field" id="${question.id}" name="${question.id}" type="${question.type === "email" ? "email" : "text"}" value="${escapeHtml(answer || "")}" maxlength="${question.maxLength}" placeholder="Digite sua resposta" autocomplete="${question.type === "email" ? "email" : question.id === "q1" ? "name" : "off"}"><p class="character-count"><span>${String(answer || "").length}</span>/${question.maxLength}</p>`;
+      return `<input class="field" id="${question.id}" name="${question.id}" type="${question.type === "email" ? "email" : "text"}" value="${escapeHtml(answer || "")}" maxlength="${question.maxLength}" placeholder="Digite sua resposta" autocomplete="${question.type === "email" ? "email" : question.id === "q1" ? "name" : "off"}" enterkeyhint="${state.step === questions.length - 1 ? "done" : "next"}"><p class="character-count">Máximo de ${question.maxLength} caracteres · <span>${String(answer || "").length}</span> usados</p>`;
     }
     if (question.type === "choice" || question.type === "multiple") {
       const selected = question.type === "multiple" ? (Array.isArray(answer) ? answer : []) : [answer];
@@ -113,6 +113,7 @@
           if (count) count.textContent = input.value.length;
         }
         capture(question);
+        if (error.textContent && validate(question) === true) error.textContent = "";
       });
       input.addEventListener("change", () => {
         if (question.type === "multiple") enforceMultipleRules(question, input);
@@ -165,7 +166,6 @@
     // A decisão humana da q18 vira o eixo de responsabilidade do plano e é citada em duas
     // seções. Uma palavra solta não sustenta isso, e o plano imprimia a garantia em cima dela.
     if (question.id === "q18" && String(answer).trim().length < 12) return "Descreva em uma frase qual decisão continua sendo de uma pessoa, e quem a assina.";
-    if (question.id === "q12" && String(answer).trim().length < 12) return "Descreva o problema em uma frase, para o plano poder se organizar em torno dele.";
     return true;
   }
 
@@ -185,7 +185,11 @@
   function next(event) {
     event.preventDefault();
     const result = validate(questions[state.step]);
-    if (result !== true) { error.textContent = result; return; }
+    if (result !== true) {
+      error.textContent = result;
+      error.scrollIntoView({ block: "nearest", behavior: "smooth" });
+      return;
+    }
     if (state.step < questions.length - 1) { state.step += 1; saveState(); renderQuestion(); }
     else showReport();
   }
