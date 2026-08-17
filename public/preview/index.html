@@ -63,9 +63,10 @@
 
   <div id="fora" hidden>
     <div class="aviso">
-      <strong>A demonstração está fora do ar agora.</strong>
-      <p>Ela roda em uma máquina que precisa estar ligada. Tente de novo em alguns minutos ou avise a equipe.</p>
+      <strong>Não consegui confirmar se a demonstração está de pé.</strong>
+      <p>Pode ser o ambiente fora do ar — ou só a checagem bloqueada pelo navegador. Tente abrir mesmo assim.</p>
     </div>
+    <p style="margin-top:18px"><a class="botao" id="entrar-assim-mesmo" href="#">Abrir a demonstração</a></p>
   </div>
 </main>
 
@@ -74,6 +75,7 @@
   var DEMO_URL = "https://always-sit-happened-ultimate.trycloudflare.com";
 
   document.getElementById("entrar").href = DEMO_URL + "/";
+  document.getElementById("entrar-assim-mesmo").href = DEMO_URL + "/";
 
   function mostrar(id) {
     ["conferindo", "pronto", "fora"].forEach(function (secao) {
@@ -81,8 +83,10 @@
     });
   }
 
-  // `/api/health` responde sem sessão e é barato. Se ele responder, a
-  // demonstração inteira está de pé — inclusive a IA.
+  // A checagem é CORTESIA, nunca veredito: ela roda de outra origem e pode ser
+  // barrada pelo navegador mesmo com o ambiente perfeito — foi o que aconteceu
+  // na primeira publicação, e a página declarou "fora do ar" uma demonstração
+  // que estava de pé. Agora qualquer caminho termina com o botão de abrir.
   var tempo = setTimeout(function () { mostrar("fora"); }, 9000);
   fetch(DEMO_URL + "/api/health", { cache: "no-store" })
     .then(function (r) { return r.ok ? r.json() : null; })
