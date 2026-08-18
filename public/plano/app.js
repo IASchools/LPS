@@ -58,7 +58,14 @@
   }
 
   function saveState() {
-    sessionStorage.setItem(storageKey, JSON.stringify({ step: state.step, answers: state.answers, started: state.started }));
+    // Armazenamento cheio, bloqueado ou aba anônima restrita fazem isto lançar. A exceção subia
+    // e interrompia a navegação entre perguntas: a pessoa ficava presa sem entender. Sem o
+    // rascunho ela ainda responde; só perde a recuperação se recarregar.
+    try {
+      sessionStorage.setItem(storageKey, JSON.stringify({ step: state.step, answers: state.answers, started: state.started }));
+    } catch (erro) {
+      console.warn("não consegui guardar o rascunho nesta aba", erro);
+    }
   }
 
   function optionMarkup(question, option, index, checked) {
@@ -366,18 +373,37 @@
 
   function csvCell(value) {
     const normalized = Array.isArray(value) ? value.join(" | ") : value && typeof value === "object" ? Object.entries(value).map(([key, item]) => `${key}: ${item}`).join(" | ") : value || "";
-    return `"${String(normalized).replace(/"/g, '""')}"`;
+    // Célula que começa com =, +, - ou @ é interpretada como fórmula por Excel, Numbers e
+    // Planilhas Google. Como o conteúdo vem de campo livre, isso é injeção de fórmula: um texto
+    // colado pela pessoa poderia executar na máquina de quem abre a planilha. A aspa simples à
+    // frente neutraliza, e é a convenção que as próprias planilhas entendem.
+    const seguro = /^[=+\-@\t\r]/.test(normalized) ? `'${normalized}` : String(normalized);
+    return `"${String(seguro).replace(/"/g, '""')}"`;
   }
 
   function downloadCsv() {
+    // O cabeçalho trazia só q1, q2, q3... Quem recebe o arquivo via códigos, não perguntas, e
+    // precisava cruzar tudo com uma legenda à mão. A primeira linha passa a trazer o enunciado,
+    // e a segunda mantém o id, para quem for processar por máquina.
+    const perguntas = ["Formulário", "Gerado em", ...questions.map((q) => q.title)];
     const headers = ["form_id", "data_geracao", ...questions.map((q) => q.id)];
     const row = ["plano-de-acao-ia-schools-2026", new Date().toISOString(), ...questions.map((q) => state.answers[q.id])];
-    const blob = new Blob(["\ufeff" + headers.map(csvCell).join(";") + "\r\n" + row.map(csvCell).join(";") + "\r\n"], { type: "text/csv;charset=utf-8" });
+    const linhas = [perguntas, headers, row].map((l) => l.map(csvCell).join(";")).join("\r\n");
+    const blob = new Blob(["\ufeff" + linhas + "\r\n"], { type: "text/csv;charset=utf-8" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
     link.download = `respostas-plano-${String(state.answers.q2 || "ia-schools").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "").toLowerCase()}.csv`;
     link.click(); URL.revokeObjectURL(link.href);
   }
+
+  // As respostas vivem só nesta aba: fechar sem baixar o CSV perde tudo, e o produto não tem
+  // como recuperar porque nada é enviado a servidor nenhum. O aviso nativo transforma a perda
+  // silenciosa em confirmação. Vale enquanto há resposta em andamento e some depois do envio.
+  window.addEventListener("beforeunload", (evento) => {
+    const respondendo = state.started && Object.keys(state.answers || {}).length > 0;
+    const jaConcluiu = sessionStorage.getItem(`${storageKey}-complete`) === "true";
+    if (respondendo && !jaConcluiu) evento.preventDefault();
+  });
 
   $("#start-button").addEventListener("click", showForm);
   $("#plan-form").addEventListener("submit", next);
