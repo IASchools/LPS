@@ -45,8 +45,16 @@
   <p style="margin-top:22px"><a class="botao" id="entrar" href="#">Abrir a demonstração</a></p>
 </main>
 <script>
-  // Trocar aqui se a URL do túnel mudar.
-  var DEMO_URL = "https://joint-receivers-hiking-beach.trycloudflare.com";
+  /*
+    ⛔ ESTE ENDEREÇO É DE TÚNEL RÁPIDO E MUDA SOZINHO.
+
+    Medido em 20/08: trocou cinco vezes no mesmo dia. Quando trocar, esta
+    página continua respondendo 200 e mandando o visitante para um endereço
+    morto — foi exatamente assim que /preview parou de funcionar sem ninguém
+    perceber. O endereço válido está sempre em
+    ia-schools-apps/.demo-url.txt, e publicar de novo é o que conserta.
+  */
+  var DEMO_URL = "https://riders-suffering-observed-students.trycloudflare.com";
   document.getElementById("entrar").href = DEMO_URL + "/";
   // Sem checagem de saúde: ela sai de outra origem, pode ser barrada pelo
   // navegador e já declarou "fora do ar" uma demonstração que estava de pé.
