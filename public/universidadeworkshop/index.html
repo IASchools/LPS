@@ -253,9 +253,9 @@
     }
 
     .requirement strong,
-    .requirement span { display: block; }
+    .requirement > span:last-child > span { display: block; }
 
-    .requirement span {
+    .requirement > span:last-child > span {
       margin-top: 2px;
       color: var(--muted);
       font-size: 0.82rem;
