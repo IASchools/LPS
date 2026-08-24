@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Prepare o Claude para a Masterclass | IA Schools</title>
+  <meta name="description" content="Passo a passo para acessar e testar o Claude antes da Masterclass Claude na Prática Escolar, ao vivo em 24 de agosto.">
+  <meta name="theme-color" content="#17124c">
+  <link rel="canonical" href="https://lp.iaschools.com.br/universidadeworkshop/">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:site_name" content="IA Schools">
+  <meta property="og:title" content="Prepare-se para a Masterclass Claude na Prática Escolar">
+  <meta property="og:description" content="Acesse sua conta gratuita e faça um teste rápido antes da Masterclass de 24 de agosto.">
+  <meta property="og:url" content="https://lp.iaschools.com.br/universidadeworkshop/">
+  <meta property="og:image" content="https://lp.iaschools.com.br/universidadeworkshop/assets/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Masterclass Claude na Prática Escolar, 24 de agosto, IA Schools">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
+  <style>
+    @font-face{font-family:"Neulis";src:url('./assets/neulis-800.otf') format('opentype');font-style:normal;font-weight:800;font-display:swap}
+    @font-face{font-family:"Neulis";src:url('./assets/neulis-600.otf') format('opentype');font-style:normal;font-weight:600;font-display:swap}
+    @font-face{font-family:"Neulis Alt";src:url('./assets/neulis-alt-400.otf') format('opentype');font-style:normal;font-weight:400;font-display:swap}
+    @font-face{font-family:"Neulis Alt";src:url('./assets/neulis-alt-600.otf') format('opentype');font-style:normal;font-weight:600;font-display:swap}
+    @font-face{font-family:"Neulis Alt";src:url('./assets/neulis-alt-800.otf') format('opentype');font-style:normal;font-weight:800;font-display:swap}
+    :root {
+      --navy: #161146;
+      --navy-2: #25205b;
+      --orange: #fda75f;
+      --purple: #6d35fb;
+      --cream: #e4ded3;
+      --paper: #fbf9f5;
+      --white: #ffffff;
+      --charcoal: #333333;
+      --muted: #6c6879;
+      --line: rgba(22, 17, 70, 0.13);
+      --success: #0f765c;
+      --danger: #a03c29;
+      --shadow: 0 20px 55px rgba(22, 17, 70, 0.12);
+      --radius-xl: 30px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      min-height: 100%;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100%;
+      margin: 0;
+      color: var(--charcoal);
+      background:
+        radial-gradient(circle at 92% 7%, rgba(253, 167, 95, 0.34), transparent 25rem),
+        radial-gradient(circle at 0% 84%, rgba(109, 53, 251, 0.13), transparent 30rem),
+        var(--paper);
+      font-family: "Neulis Alt", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 18px;
+      line-height: 1.55;
+    }
+
+    button, a { font: inherit; }
+
+    button:focus-visible,
+    a:focus-visible {
+      outline: 4px solid rgba(109, 53, 251, 0.28);
+      outline-offset: 3px;
+    }
+
+    .topbar {
+      width: min(1120px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 28px 0 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand {
+      width: 190px;
+      height: auto;
+      display: block;
+    }
+
+    .event-chip {
+      padding: 9px 14px;
+      color: var(--navy);
+      background: rgba(255,255,255,0.7);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 800;
+      text-align: center;
+    }
+
+    main {
+      width: min(920px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 24px 0 70px;
+    }
+
+    .progress {
+      margin: 0 auto 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .progress span {
+      width: 9px;
+      height: 9px;
+      background: rgba(22, 17, 70, 0.16);
+      border-radius: 50%;
+      transition: width .2s ease, background .2s ease;
+    }
+
+    .progress span.active {
+      width: 30px;
+      background: linear-gradient(90deg, var(--orange), var(--purple));
+      border-radius: 999px;
+    }
+
+    .screen {
+      display: none;
+      animation: enter .28s ease both;
+    }
+
+    .screen.active { display: block; }
+
+    @keyframes enter {
+      from { opacity: 0; transform: translateY(9px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .panel {
+      position: relative;
+      overflow: hidden;
+      padding: clamp(28px, 6vw, 62px);
+      background: rgba(255,255,255,0.9);
+      border: 1px solid rgba(255,255,255,0.92);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+    }
+
+    .panel::after {
+      content: "";
+      position: absolute;
+      top: -130px;
+      right: -135px;
+      width: 310px;
+      height: 220px;
+      background: linear-gradient(125deg, rgba(253,167,95,0.88), rgba(109,53,251,0.62));
+      border-radius: 48% 52% 48% 52%;
+      transform: rotate(-17deg);
+      opacity: 0.22;
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      margin: 0 0 12px;
+      color: var(--purple);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+
+    h1, h2, h3 {
+      margin-top: 0;
+      color: var(--navy);
+      font-family: "Neulis", sans-serif;
+      line-height: 1.04;
+    }
+
+    h1 {
+      max-width: 760px;
+      margin-bottom: 20px;
+      font-size: clamp(2.45rem, 7vw, 5.2rem);
+      letter-spacing: -0.045em;
+    }
+
+    h2 {
+      margin-bottom: 16px;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      letter-spacing: -0.035em;
+    }
+
+    h3 {
+      margin-bottom: 8px;
+      font-size: 1.3rem;
+    }
+
+    .lead {
+      max-width: 680px;
+      margin: 0;
+      color: var(--muted);
+      font-size: clamp(1.04rem, 2.3vw, 1.28rem);
+    }
+
+    .ready-return {
+      margin-top: 22px;
+    }
+
+    .time-note {
+      margin-top: 22px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      color: var(--navy);
+      background: rgba(253,167,95,0.2);
+      border: 1px solid rgba(253,167,95,0.45);
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 0.88rem;
+    }
+
+    .requirements {
+      margin-top: 26px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .requirement {
+      padding: 16px 17px;
+      display: grid;
+      grid-template-columns: 38px 1fr;
+      align-items: center;
+      gap: 12px;
+      color: var(--navy);
+      background: rgba(253,167,95,0.13);
+      border: 1px solid rgba(253,167,95,0.48);
+      border-radius: var(--radius-md);
+    }
+
+    .requirement-number {
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      color: var(--white);
+      background: var(--navy);
+      border-radius: 11px;
+      font-weight: 800;
+    }
+
+    .requirement strong,
+    .requirement span { display: block; }
+
+    .requirement span {
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .choice-prompt {
+      margin: 32px 0 -19px;
+      color: var(--navy);
+      font-weight: 800;
+    }
+
+    .choices {
+      margin-top: 34px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+    }
+
+    .choices.two { grid-template-columns: repeat(2, 1fr); }
+
+    .choice {
+      min-height: 165px;
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 20px;
+      color: var(--navy);
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      text-align: left;
+      cursor: pointer;
+      transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+    }
+
+    .choice:hover {
+      transform: translateY(-3px);
+      border-color: rgba(109,53,251,0.42);
+      box-shadow: 0 14px 30px rgba(22,17,70,0.1);
+    }
+
+    .choice-icon {
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      color: var(--white);
+      background: var(--navy);
+      border-radius: 15px;
+      font-size: 1.35rem;
+      font-weight: 800;
+    }
+
+    .choice strong {
+      display: block;
+      font-size: 1.06rem;
+    }
+
+    .choice small {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 0.84rem;
+      line-height: 1.35;
+    }
+
+    .back {
+      margin-bottom: 24px;
+      padding: 8px 0;
+      color: var(--navy);
+      background: none;
+      border: 0;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .back:hover { color: var(--purple); }
+
+    .steps {
+      margin: 30px 0 0;
+      padding: 0;
+      display: grid;
+      gap: 13px;
+      list-style: none;
+      counter-reset: steps;
+    }
+
+    .steps li {
+      counter-increment: steps;
+      padding: 16px 18px;
+      display: grid;
+      grid-template-columns: 40px 1fr;
+      align-items: start;
+      gap: 14px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+    }
+
+    .steps li::before {
+      content: counter(steps);
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      color: var(--navy);
+      background: var(--orange);
+      border-radius: 11px;
+      font-weight: 800;
+    }
+
+    .steps strong {
+      display: block;
+      color: var(--navy);
+    }
+
+    .steps span {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .button-row {
+      margin-top: 28px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .button {
+      min-height: 54px;
+      padding: 14px 20px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      color: var(--white);
+      background: var(--navy);
+      border: 1px solid var(--navy);
+      border-radius: 15px;
+      text-decoration: none;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform .18s ease, background .18s ease;
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+      background: var(--navy-2);
+    }
+
+    .button.accent {
+      color: var(--navy);
+      background: var(--orange);
+      border-color: var(--orange);
+    }
+
+    .button.secondary {
+      color: var(--navy);
+      background: transparent;
+      border-color: rgba(22,17,70,0.28);
+    }
+
+    .button.secondary:hover { background: rgba(22,17,70,0.05); }
+
+    .tip,
+    .warning,
+    .fallback {
+      margin-top: 22px;
+      padding: 17px 18px;
+      border-radius: var(--radius-md);
+      font-size: 0.93rem;
+    }
+
+    .tip {
+      color: var(--navy);
+      background: rgba(109,53,251,0.08);
+      border: 1px solid rgba(109,53,251,0.17);
+    }
+
+    .warning {
+      color: #6d2e1d;
+      background: #fff2e7;
+      border: 1px solid rgba(253,167,95,0.7);
+    }
+
+    .fallback {
+      background: rgba(22,17,70,0.045);
+      border: 1px solid var(--line);
+    }
+
+    .visual-guide {
+      margin: 26px 0 0;
+      overflow: hidden;
+      background: #f7f4ed;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+    }
+
+    .visual-guide img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .visual-guide figcaption {
+      padding: 13px 16px;
+      color: var(--muted);
+      background: var(--white);
+      font-size: 0.82rem;
+    }
+
+    .account-options {
+      margin-top: 28px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    .account-card {
+      padding: 20px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+    }
+
+    .account-card p {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .prompt-box {
+      margin-top: 28px;
+      padding: 22px;
+      color: var(--white);
+      background: var(--navy);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 16px 35px rgba(22,17,70,0.18);
+    }
+
+    .prompt-box code {
+      display: block;
+      color: var(--white);
+      font-family: "Neulis Alt", sans-serif;
+      font-size: 1rem;
+      line-height: 1.6;
+      white-space: normal;
+    }
+
+    .copy-button {
+      margin-top: 17px;
+      padding: 11px 15px;
+      color: var(--navy);
+      background: var(--orange);
+      border: 0;
+      border-radius: 12px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .copy-status {
+      min-height: 1.2em;
+      margin-top: 9px;
+      color: var(--cream);
+      font-size: 0.8rem;
+    }
+
+    .checklist {
+      margin: 28px 0 0;
+      padding: 0;
+      display: grid;
+      gap: 11px;
+      list-style: none;
+    }
+
+    .checklist li {
+      position: relative;
+      padding: 15px 16px 15px 52px;
+      color: var(--navy);
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      font-weight: 600;
+    }
+
+    .checklist li::before {
+      content: "✓";
+      position: absolute;
+      left: 16px;
+      top: 13px;
+      width: 26px;
+      height: 26px;
+      display: grid;
+      place-items: center;
+      color: var(--white);
+      background: var(--success);
+      border-radius: 50%;
+      font-size: 0.82rem;
+    }
+
+    .ready-mark {
+      width: 74px;
+      height: 74px;
+      margin-bottom: 22px;
+      display: grid;
+      place-items: center;
+      color: var(--navy);
+      background: var(--orange);
+      border-radius: 24px 24px 24px 8px;
+      font-family: "Neulis", sans-serif;
+      font-size: 2rem;
+    }
+
+    .sources {
+      width: min(920px, calc(100% - 32px));
+      margin: -36px auto 0;
+      padding: 0 0 45px;
+      color: var(--muted);
+      font-size: 0.74rem;
+      text-align: center;
+    }
+
+    .sources a { color: var(--navy); }
+
+    .toast {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 30;
+      max-width: 320px;
+      padding: 13px 16px;
+      color: var(--white);
+      background: var(--navy);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 13px;
+      box-shadow: var(--shadow);
+      opacity: 0;
+      transform: translateY(14px);
+      pointer-events: none;
+      transition: opacity .2s ease, transform .2s ease;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 760px) {
+      body { font-size: 17px; }
+      .topbar {
+        width: min(100% - 30px, 920px);
+        padding-top: 20px;
+      }
+      .brand { width: 160px; }
+      .event-chip { display: none; }
+      main {
+        width: min(100% - 22px, 920px);
+        padding-top: 12px;
+      }
+      .panel { padding: 27px 20px; }
+      .choices,
+      .choices.two,
+      .account-options,
+      .requirements { grid-template-columns: 1fr; }
+      .choice {
+        min-height: 118px;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+      }
+      .choice-icon { flex: 0 0 48px; }
+      .button-row { flex-direction: column; }
+      .button { width: 100%; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { scroll-behavior: auto !important; animation: none !important; transition: none !important; }
+    }
+    /* Adaptações sem efeito editorial: semântica de lista e foco programático. */
+    .requirements { padding: 0; list-style: none; }
+    h1[tabindex="-1"]:focus,
+    h2[tabindex="-1"]:focus { outline: none; }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <img class="brand" src="./assets/logo.svg" alt="IA Schools" width="667" height="195">
+    <div class="event-chip">Masterclass Claude na Prática Escolar · 24 de agosto</div>
+  </header>
+
+  <main>
+    <div class="progress" aria-label="Progresso">
+      <span class="progress-dot active"></span><span class="progress-dot"></span><span class="progress-dot"></span><span class="progress-dot"></span><span class="progress-dot"></span>
+    </div>
+    <section class="screen active" id="home" data-step="1" aria-labelledby="home-title">
+      <div class="panel">
+        <p class="eyebrow">Antes da aula ao vivo</p>
+        <h1 id="home-title" tabindex="-1">Deixe o Claude pronto para a Masterclass</h1>
+        <p class="lead">Você não precisa instalar nada. Faça este teste no navegador e, para acompanhar a prática, prefira um computador.</p>
+        <div class="time-note">Cerca de 5 minutos</div>
+        <ul class="requirements" aria-label="O que precisa estar pronto">
+          <li class="requirement"><span class="requirement-number">1</span><span><strong>Computador com navegador</strong><span>Chrome, Safari, Edge ou Firefox atualizado</span></span></li>
+          <li class="requirement"><span class="requirement-number">2</span><span><strong>Conta gratuita criada e acessada</strong><span>Com Google ou e-mail; sem cartão</span></span></li>
+        </ul>
+        <p class="choice-prompt">Onde você está fazendo esta preparação?</p>
+        <div class="choices two">
+          <button class="choice" type="button" data-go="access"><span class="choice-icon" aria-hidden="true">PC</span><span><strong>Estou no computador</strong><small>Equipamento recomendado</small></span></button>
+          <button class="choice" type="button" data-go="mobile"><span class="choice-icon" aria-hidden="true">C</span><span><strong>Estou no celular ou tablet</strong><small>Faça o teste e separe um computador</small></span></button>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" id="access" data-step="2" aria-labelledby="access-title">
+      <div class="panel"><button class="back" type="button" data-back>← Voltar</button><p class="eyebrow">Acesso pelo computador</p><h2 id="access-title" tabindex="-1">Abra o Claude no navegador</h2>
+        <ol class="steps"><li><div><strong>Use o botão abaixo</strong><span>Ele abre o endereço oficial do Claude em uma nova aba.</span></div></li><li><div><strong>Entre na sua conta</strong><span>Use Google ou e-mail. Se ainda não tiver uma conta, crie gratuitamente.</span></div></li><li><div><strong>Volte para esta página</strong><span>Depois do acesso, faremos uma mensagem de teste.</span></div></li></ol>
+        <div class="warning"><strong>Não precisa instalar:</strong> a Masterclass funciona no navegador do computador.</div><div class="button-row"><a class="button accent" href="https://claude.ai" target="_blank" rel="noopener">Abrir Claude no navegador</a><button class="button" type="button" data-go="account">Claude aberto. Continuar</button></div>
+      </div>
+    </section>
+
+    <section class="screen" id="mobile" data-step="2" aria-labelledby="mobile-title">
+      <div class="panel"><button class="back" type="button" data-back>← Voltar</button><p class="eyebrow">Celular ou tablet</p><h2 id="mobile-title" tabindex="-1">Faça o teste agora e separe um computador</h2><p class="lead">Você pode acessar a conta e testar pelo celular. Para construir os agentes durante a aula, recomendamos acompanhar em um computador.</p>
+        <div class="tip"><strong>Não precisa instalar:</strong> abra o Claude no navegador. Se você já usa o aplicativo oficial, também pode fazer o teste por ele.</div><div class="button-row"><a class="button accent" href="https://claude.ai" target="_blank" rel="noopener">Abrir Claude no navegador</a><button class="button" type="button" data-go="account">Claude aberto. Continuar</button></div>
+      </div>
+    </section>
+
+    <section class="screen" id="account" data-step="3" aria-labelledby="account-title">
+      <div class="panel"><button class="back" type="button" data-back>← Voltar</button><p class="eyebrow">Sua conta</p><h2 id="account-title" tabindex="-1">Crie ou acesse sua conta gratuita</h2><p class="lead">No Claude, conclua o cadastro ou entre em uma conta que você já possui.</p>
+        <div class="account-options"><div class="account-card"><h3>Continuar com Google</h3><p>Use a conta Google que você já utiliza e siga as instruções na tela.</p></div><div class="account-card"><h3>Continuar com e-mail</h3><p>Digite seu e-mail e abra o link seguro que o Claude enviar para sua caixa de entrada.</p></div></div>
+        <div class="tip"><strong>Primeiro acesso:</strong> siga as confirmações solicitadas na tela para concluir o cadastro.</div><div class="warning"><strong>Importante:</strong> o plano gratuito é suficiente para acompanhar a Masterclass. Não é necessário informar cartão nem contratar assinatura.</div><div class="button-row"><button class="button accent" type="button" data-go="test">Conta criada e acessada. Fazer o teste</button></div>
+      </div>
+    </section>
+
+    <section class="screen" id="test" data-step="4" aria-labelledby="test-title">
+      <div class="panel"><button class="back" type="button" data-back>← Voltar</button><p class="eyebrow">Teste final</p><h2 id="test-title" tabindex="-1">Confirme que o Claude está funcionando</h2><p class="lead">Copie a mensagem abaixo, cole no Claude e envie.</p>
+        <div class="prompt-box"><code id="test-prompt">Estou preparando o Claude para a Masterclass Claude na Prática Escolar da IA Schools. Responda apenas: Claude pronto para a Masterclass.</code><button class="copy-button" type="button" data-copy-target="test-prompt">Copiar mensagem de teste</button><div class="copy-status" aria-live="polite"></div></div>
+        <div class="tip"><strong>Deu certo?</strong> Se o Claude respondeu, sua preparação está concluída.</div><div class="button-row"><button class="button accent" type="button" data-go="ready">O Claude respondeu</button></div>
+      </div>
+    </section>
+
+    <section class="screen" id="ready" data-step="5" aria-labelledby="ready-title">
+      <div class="panel"><div class="ready-mark" aria-hidden="true">✓</div><p class="eyebrow">Tudo pronto</p><h2 id="ready-title" tabindex="-1">Você está preparado para a Masterclass</h2>
+        <ul class="checklist"><li>Computador separado para acompanhar a prática</li><li>Navegador funcionando</li><li>Conta gratuita criada e acessada</li><li>Mensagem de teste respondida</li><li>Carregador separado</li></ul>
+        <div class="warning"><strong>Proteção de dados:</strong> durante a Masterclass, use somente exemplos fictícios ou devidamente anonimizados. Não inclua nomes, documentos ou dados identificáveis de alunos, famílias ou colaboradores.</div>
+        <div class="prompt-box"><code id="ready-word">PRONTO</code><button class="copy-button" type="button" data-copy-target="ready-word">Copiar PRONTO</button><div class="copy-status" aria-live="polite"></div></div>
+        <p class="lead ready-return">Agora volte à conversa da IA Schools no WhatsApp e responda <strong>PRONTO</strong>.</p><div class="button-row"><button class="button secondary" type="button" data-reset>Refazer o passo a passo</button></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="sources">Acesso pelo site oficial do <a href="https://claude.ai" target="_blank" rel="noopener">Claude</a>. IA Schools, 2026.</footer>
+  <div class="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    (() => {
+      const screens = [...document.querySelectorAll('.screen')];
+      const progressDots = [...document.querySelectorAll('.progress-dot')];
+      const toast = document.querySelector('.toast');
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      let toastTimer;
+
+      function showScreen(id, options = {}) {
+        const next = document.getElementById(id);
+        if (!next || !next.classList.contains('screen')) return;
+        screens.forEach((screen) => screen.classList.toggle('active', screen === next));
+        const step = Math.max(1, Math.min(progressDots.length, Number(next.dataset.step) || 1));
+        progressDots.forEach((dot, index) => dot.classList.toggle('active', index === step - 1));
+        if (options.push !== false) history.pushState({ screen: id }, '', `#${id}`);
+        document.querySelectorAll('.copy-status').forEach((status) => { status.textContent = ''; });
+        clearTimeout(toastTimer);
+        toast.classList.remove('show');
+        toast.textContent = '';
+        window.scrollTo({ top: 0, behavior: reducedMotion ? 'auto' : 'smooth' });
+        if (options.focus !== false) requestAnimationFrame(() => next.querySelector('h1,h2')?.focus({ preventScroll: true }));
+      }
+
+      document.addEventListener('click', (event) => {
+        const go = event.target.closest('[data-go]');
+        if (go) showScreen(go.dataset.go);
+
+        const back = event.target.closest('[data-back]');
+        if (back) history.back();
+
+        const reset = event.target.closest('[data-reset]');
+        if (reset) {
+          showScreen('home');
+        }
+
+        const copy = event.target.closest('[data-copy-target]');
+        if (copy) copyText(copy);
+      });
+
+      async function copyText(button) {
+        const source = document.getElementById(button.dataset.copyTarget);
+        const text = source?.textContent.trim();
+        if (!text) return;
+        try {
+          await navigator.clipboard.writeText(text);
+        } catch (_) {
+          const textarea = document.createElement('textarea');
+          textarea.value = text;
+          textarea.style.position = 'fixed';
+          textarea.style.opacity = '0';
+          document.body.appendChild(textarea);
+          textarea.select();
+          document.execCommand('copy');
+          textarea.remove();
+        }
+        const status = button.parentElement.querySelector('.copy-status');
+        if (status) status.textContent = 'Copiado para a área de transferência.';
+        clearTimeout(toastTimer);
+        toast.textContent = 'Texto copiado.';
+        toast.classList.add('show');
+        toastTimer = setTimeout(() => toast.classList.remove('show'), 2200);
+      }
+
+      history.replaceState({ screen: 'home' }, '', `${location.pathname}${location.search}`);
+      window.addEventListener('popstate', (event) => {
+        showScreen(event.state?.screen || 'home', { push: false });
+      });
+    })();
+  </script>
+</body>
+</html>
