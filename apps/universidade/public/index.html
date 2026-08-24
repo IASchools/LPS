@@ -738,7 +738,7 @@ footer .finst{margin-top:14px;font-size:13px;color:rgba(255,255,255,.6)}
   function pad(n){return String(n).padStart(2,'0')}
   function expire(){expired=true;document.body.classList.add('expired');
     document.querySelectorAll('.new b,.ancA .v span,.ancA .price .big').forEach(function(e){e.textContent='R$ 197,00'});
-    document.querySelectorAll('.off,.old,.strip .de,.strip .flash,.strip .timer-lbl,.pcard .ct,.pcard .disc,.revert,#t1,#t2').forEach(function(e){e.style.display='none'});
+    document.querySelectorAll('.off,.old,.strip .flash,.pcard .ct,.pcard .disc,.revert,#t1,#t2').forEach(function(e){e.style.display='none'});
     document.querySelectorAll('.ancA .cash').forEach(function(e){e.textContent='Condição atual da matrícula'});
     if(stk)stk.textContent='inscrições abertas';
     var sl=document.querySelector('.sticky .txt');if(sl)sl.textContent='Matrícula aberta · Certificação em IA para Educadores';
