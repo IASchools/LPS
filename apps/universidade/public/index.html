@@ -500,7 +500,7 @@ footer .finst{margin-top:14px;font-size:13px;color:rgba(255,255,255,.6)}
     <div class="strip">
       <div>
         <div class="flash"><span class="pip"></span>Desconto de pré-matrícula · encerra 10/08</div>
-        <div class="pr"><span class="de">De <s>R$ 3.377,00</s> por</span><span class="new"><span class="lbl">12x de</span> <b>R$ 99</b></span><span class="off">65% OFF</span></div>
+        <div class="pr"><span class="de">De <s>R$ 3.377,00</s> por</span><span class="new"><span class="lbl">12x de</span> <b>R$ 197,00</b></span><span class="off">65% OFF</span></div>
       </div>
       <div>
         <div class="timer-lbl">Encerra em</div>
@@ -647,7 +647,7 @@ footer .finst{margin-top:14px;font-size:13px;color:rgba(255,255,255,.6)}
         <div class="ct">Desconto de pré-matrícula</div>
         <div class="ancA">
           <div class="disc"><span class="old">De R$ 3.377,00</span><span class="off">65% OFF</span></div>
-          <div class="price"><span class="pre">12x de</span><span class="big">R$ 99</span><span class="suf">por mês</span></div>
+          <div class="price"><span class="pre">12x de</span><span class="big">R$ 197,00</span><span class="suf">por mês</span></div>
           <ul class="incl-mini">
             <li>Certificação reconhecida pelo MEC</li>
             <li>Mentorias ao vivo e acesso vitalício</li>
@@ -729,7 +729,7 @@ footer .finst{margin-top:14px;font-size:13px;color:rgba(255,255,255,.6)}
 
 <script>
 // cronômetro (10/08 23h59 → zera 11/08 00:00). Fallback client-side: ao expirar,
-// reverte pro preço vigente (12x R$149) e esconde o desconto — o estado real deve
+// reverte pro preço vigente (12x R$ 197,00) e esconde o desconto — o estado real deve
 // vir do servidor/checkout; isto é só uma proteção contra vender oferta vencida.
 (function(){
   var alvo=new Date('2026-08-11T00:00:00-03:00').getTime();
@@ -737,8 +737,8 @@ footer .finst{margin-top:14px;font-size:13px;color:rgba(255,255,255,.6)}
   var expired=false;
   function pad(n){return String(n).padStart(2,'0')}
   function expire(){expired=true;document.body.classList.add('expired');
-    document.querySelectorAll('.new b,.ancA .v span,.ancA .price .big').forEach(function(e){e.textContent='R$ 149'});
-    document.querySelectorAll('.off,.old,.strip .flash,.pcard .ct,.pcard .disc,.revert,#t1,#t2').forEach(function(e){e.style.display='none'});
+    document.querySelectorAll('.new b,.ancA .v span,.ancA .price .big').forEach(function(e){e.textContent='R$ 197,00'});
+    document.querySelectorAll('.off,.old,.strip .de,.strip .flash,.strip .timer-lbl,.pcard .ct,.pcard .disc,.revert,#t1,#t2').forEach(function(e){e.style.display='none'});
     document.querySelectorAll('.ancA .cash').forEach(function(e){e.textContent='Condição atual da matrícula'});
     if(stk)stk.textContent='inscrições abertas';
     var sl=document.querySelector('.sticky .txt');if(sl)sl.textContent='Matrícula aberta · Certificação em IA para Educadores';
