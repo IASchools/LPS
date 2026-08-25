@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>IA Schools · Assistente pedagógica</title>
+<link rel="icon" href="./assets/personagem.png">
+<script>
+document.documentElement.dataset.modo = "avatar";
+</script>
+<link rel="stylesheet" href="./estilo.css">
+</head>
+<body>
+<!--
+  A tela é só ela.
+
+  Não há campo, painel nem texto visível: a conversa é por voz. Na composição
+  ficam apenas a personagem, o orbe animado e o pequeno botão de microfone.
+-->
+<main class="palco" data-estado="parada">
+
+  <div class="cenario" aria-hidden="true">
+    <div class="brilho"></div>
+    <div class="grade"></div>
+    <div class="vinheta"></div>
+  </div>
+
+  <!-- Ela, e o anel que respira junto. -->
+  <section class="cena" aria-hidden="true">
+    <svg class="anel" viewBox="0 0 200 200">
+      <circle class="anel-base" cx="100" cy="100" r="94"/>
+      <circle class="anel-progresso" cx="100" cy="100" r="94"/>
+      <circle class="anel-fino" cx="100" cy="100" r="86"/>
+    </svg>
+    <canvas id="avatar" class="avatar" role="img" aria-label="Assistente da IA Schools"></canvas>
+    <div class="chao"></div>
+  </section>
+
+  <!-- ⚠️ Antes do HUD de propósito. Medido em 22/08/2026: a ordem do teclado
+       era painel → microfone, e quem navega assim precisava tabular por uma
+       região rolável de telemetria antes de chegar ao ÚNICO controle de uma
+       interface só voz. Quem chega pelo teclado quer falar, não ler.
+       Nada muda visualmente: o botão é posicionado, fora do fluxo do grid. -->
+  <button class="microfone" id="microfone" type="button"
+          aria-label="Iniciar conversa" aria-pressed="false">
+    <span class="microfone-halo" aria-hidden="true"></span>
+    <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round">
+      <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/>
+      <path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v4"/>
+    </svg>
+  </button>
+
+  <!-- Ganchos internos de compatibilidade. Permanecem ocultos, inertes e fora
+       da árvore acessível; nenhum HUD aparece nesta rota. -->
+  <aside class="hud" hidden inert aria-hidden="true">
+
+    <header class="hud-topo">
+      <span class="hud-marca">IA Schools</span>
+      <span class="hud-divisor"></span>
+      <span class="hud-identidade" id="identidade">assistente pedagógica</span>
+    </header>
+
+    <div class="hud-estado">
+      <span class="pulso" aria-hidden="true"></span>
+      <p class="estado" id="estado">Toque para falar</p>
+      <span class="cronometro" id="cronometro"></span>
+    </div>
+
+    <!-- Voz: barras que sobem com a articulação, para a fala ter presença
+         visual mesmo de longe, sem som. -->
+    <div class="onda" id="onda" aria-hidden="true">
+      <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+      <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+    </div>
+
+    <!-- Em repouso, o sistema respirando. Some assim que ela começa a
+         trabalhar, para o painel de execução tomar o lugar. -->
+    <section class="bloco" id="bloco-sistema">
+      <h2 class="rotulo">Sistema</h2>
+      <dl class="medidas" id="sistema"></dl>
+    </section>
+
+    <section class="bloco" id="bloco-passos" hidden>
+      <h2 class="rotulo">Execução</h2>
+      <ol class="passos" id="atividade"></ol>
+    </section>
+
+    <section class="bloco" id="bloco-medidas" hidden>
+      <h2 class="rotulo">Medições</h2>
+      <dl class="medidas" id="medidas"></dl>
+    </section>
+
+    <section class="bloco" id="bloco-fontes" hidden>
+      <h2 class="rotulo">Evidências</h2>
+      <ul class="fontes" id="evidencias"></ul>
+    </section>
+
+    <!-- Sugestões do que dizer. São dicas de fala, não entrada por texto: não há
+         campo para digitar e clicar nelas não envia nada.
+         ⚠️ Ficavam soltas sobre a cena e passaram a cair em cima do corpo dela
+         quando a figura foi deslocada para a esquerda — ilegíveis sobre o
+         crachá. No HUD elas têm fundo próprio e ainda ocupam o vazio que
+         sobrava embaixo. -->
+    <section class="bloco dicas" id="dicas">
+      <h2 class="rotulo">Experimente dizer</h2>
+      <ul>
+        <li>“Como está a máquina agora?”</li>
+        <li>“Quais são as áreas da BNCC no ensino fundamental?”</li>
+        <li>“Pesquise na internet o que é o censo escolar”</li>
+      </ul>
+    </section>
+
+    <footer class="hud-rodape">
+      <span class="motor" id="motor">cérebro em espera</span>
+    </footer>
+  </aside>
+
+</main>
+
+<script src="./config.js"></script>
+<script type="module" src="./experiencia.js"></script>
+</body>
+</html>

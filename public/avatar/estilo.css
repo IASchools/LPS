@@ -1,0 +1,1275 @@
+/*
+  A tela da assistente.
+
+  Ela ocupa o palco e é a única figura. O resto é cenário e telemetria: mostra o
+  que ela está fazendo, nunca carrega a resposta, que é falada.
+
+  A régua visual vem do goal: profissional e visualmente impressionante. Na
+  prática isso significa três coisas — tipografia da marca com hierarquia de
+  verdade, números que existem porque foram medidos, e luz que sai do halo dela
+  e cai no chão, para a figura pertencer à cena em vez de estar colada por cima.
+*/
+
+@font-face { font-family: "Neulis"; src: url("./assets/neulis-sans-400.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Neulis"; src: url("./assets/neulis-sans-500.woff2") format("woff2"); font-weight: 500; font-display: swap; }
+@font-face { font-family: "Neulis"; src: url("./assets/neulis-sans-600.woff2") format("woff2"); font-weight: 600; font-display: swap; }
+@font-face { font-family: "Neulis"; src: url("./assets/neulis-sans-700.woff2") format("woff2"); font-weight: 700; font-display: swap; }
+
+:root {
+  --tinta-0: #05030f;
+  --tinta-1: #0a0722;
+  --tinta-2: #120d33;
+  --roxo: #6d35fb;
+  --roxo-claro: #9b7bff;
+  --laranja: #fda75f;
+  --verde: #4fd6b0;
+  --vermelho: #ef6b6b;
+
+  --texto: #f4f2ff;
+  --texto-2: #b6b0d8;
+  /* ⚠️ #6b6591 media 3.65:1 contra o fundo do HUD — reprovado para texto
+     pequeno, que exige 4.5:1 pela WCAG AA. Os rótulos de seção, o rodapé e a
+     identidade usam este tom em 10 e 11 px, o tamanho em que a régua é mais
+     dura. Medido em 22/08/2026. */
+  --texto-3: #9a93c4;
+  --linha: rgba(255, 255, 255, 0.07);
+  --linha-forte: rgba(255, 255, 255, 0.13);
+
+  /* Cor de acento do estado: um só ponto de verdade, para halo, anel, pulso e
+     onda mudarem juntos em vez de cada um ter sua regra. */
+  --acento: var(--roxo-claro);
+  --acento-suave: rgba(155, 123, 255, 0.30);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  background: var(--tinta-0);
+  color: var(--texto);
+  font-family: "Neulis", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  font-feature-settings: "ss01", "cv01";
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
+
+.palco {
+  position: relative;
+  height: 100dvh;
+  display: grid;
+  /* As cores de estado viajam aqui, no elemento que carrega `data-estado`, e os
+     descendentes herdam o valor já interpolado a cada quadro. 600 ms para casar
+     com a opacidade do anel: a cena inteira chega junto. */
+  transition: --acento 600ms ease, --acento-suave 600ms ease;
+  /* ⚠️ Três colunas, e a do meio tem teto. Medido em 22/08/2026 varrendo os
+     pixels do canvas: a figura é dimensionada pela ALTURA — o enquadramento
+     deriva a largura da proporção da arte —, então numa tela larga ela para de
+     crescer e fica presa à esquerda de uma coluna que cresce sem limite. O
+     vazio entre ela e o painel era de 325 px em 1440, 406 px em 1600 e 659 px
+     em 1920, onde já era mais largo que a própria figura (615 px). A coluna do
+     meio agora não passa da altura da tela, que é o que governa o tamanho
+     dela, e a sobra vai para a margem esquerda — borda de tela, já escurecida
+     pela vinheta, e não um buraco entre dois blocos de conteúdo. */
+  --hud-larg: clamp(320px, 32vw, 480px);
+  --cena-larg: min(100% - var(--hud-larg), 100dvh);
+  /* Centro horizontal da cena. Medido em 22/08/2026, ele acerta o centro da
+     figura com erro abaixo de 15 px em 1024, 1440, 1600 e 1920 — e é dele que
+     o cenário precisa, porque a luz tem de nascer ATRÁS dela. */
+  --foco-x: calc(100% - var(--hud-larg) - var(--cena-larg) / 2);
+  grid-template-columns: minmax(0, 1fr) var(--cena-larg) var(--hud-larg);
+  overflow: hidden;
+}
+
+/* ⚠️ REGISTRO DAS CORES DE ESTADO — MEDIDO EM 23/08/2026.
+   `.brilho` declarava `transition: background 700ms ease` e isso NUNCA
+   funcionou: amostrando `getComputedStyle` a cada quadro durante 900 ms numa
+   troca parada→ouvindo, o traço do anel deu 22 valores intermediários (transita)
+   e o halo deu UM SÓ, já na cor final desde o primeiro quadro (pula). O motivo é
+   que `--acento-suave` era propriedade personalizada NÃO registrada: ela é
+   substituída antes do valor computado, então o gradiente resultante troca de
+   uma vez e a transição de `background` não tem dois valores para interpolar.
+   O efeito na tela: o fundo — a maior área da cena — mudava de cor num único
+   quadro enquanto o anel levava meio segundo para chegar na mesma cor. A troca
+   de estado acontecia duas vezes, em tempos diferentes.
+   Registradas como `<color>`, elas passam a interpolar de verdade, e tudo que
+   depende do acento (halo, anel, onda, pulso, passos) viaja junto. */
+@property --acento {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #9b7bff;
+}
+
+@property --acento-suave {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: rgba(155, 123, 255, 0.30);
+}
+
+/* Estados: um bloco por estado, mudando só o acento e o que depende dele. */
+[data-estado="ouvindo"]    { --acento: var(--laranja); --acento-suave: rgba(253, 167, 95, 0.34); }
+[data-estado="pensando"]   { --acento: var(--roxo-claro); --acento-suave: rgba(155, 123, 255, 0.38); }
+[data-estado="falando"]    { --acento: var(--roxo-claro); --acento-suave: rgba(155, 123, 255, 0.42); }
+[data-estado="executando"] { --acento: var(--verde); --acento-suave: rgba(79, 214, 176, 0.32); }
+[data-estado="sucesso"]    { --acento: var(--verde); --acento-suave: rgba(79, 214, 176, 0.36); }
+[data-estado="erro"]       { --acento: var(--vermelho); --acento-suave: rgba(239, 107, 107, 0.30); }
+
+/* ---------- cenário ---------- */
+
+.cenario { position: absolute; inset: 0; pointer-events: none; }
+
+/* A luz nasce atrás dela e tinge a cena inteira: é o que faz a figura
+   pertencer ao fundo em vez de estar recortada por cima dele. */
+.brilho {
+  position: absolute;
+  /* ⚠️ Era `30%` da tela inteira. Quando a coluna da cena ganhou teto e a
+     figura andou para a direita, a luz ficou para trás: na captura de 1600 o
+     halo estava sobre a faixa vazia da esquerda e ela aparecia contra o escuro,
+     recortada em vez de pertencente ao fundo. */
+  left: var(--foco-x, 30%);
+  top: 46%;
+  width: 120vh;
+  height: 120vh;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--acento-suave) 0%, transparent 58%);
+  filter: blur(30px);
+  /* Sem `background` aqui: gradiente com propriedade personalizada não
+     interpola por esta via — quem carrega a cor agora é `--acento-suave`
+     registrada, transicionada em `.palco`. Ver a nota do @property. */
+  transition: scale 700ms cubic-bezier(.2,.8,.3,1);
+}
+
+/* O brilho pulsa junto com o acionamento: é o mesmo gesto do anel, um nível
+   abaixo, e sem ele a troca de estado acontece só no texto. */
+[data-estado="pensando"] .brilho,
+[data-estado="executando"] .brilho { scale: 1.08; }
+[data-estado="falando"] .brilho { scale: 1.05; }
+
+.grade {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(155, 123, 252, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(155, 123, 252, 0.05) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse 70% 60% at var(--foco-x, 32%) 58%, #000 0%, transparent 78%);
+}
+
+/* Escurece as bordas: o olho vai para ela, não para os cantos. */
+.vinheta {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 78% 78% at var(--foco-x, 34%) 52%, transparent 42%, rgba(5, 3, 15, 0.82) 100%);
+}
+
+/* ---------- ela ---------- */
+
+.cena {
+  position: relative;
+  grid-column: 2;
+  height: 100dvh;
+  display: grid;
+  /* Centrada na coluna — e agora isso é a coisa certa a fazer.
+     ⚠️ Encostar à esquerda foi a saída anterior, quando a coluna crescia sem
+     limite: centrada, ela deixava 365 px de vazio de um lado e 270 do outro.
+     Com o teto da coluna essa premissa caiu, e centrar passou a render o menor
+     vazio de todos. O ganho maior é outro: tudo que orbita a figura — anel,
+     chão e luz — passa a valer 50%, em vez de três valores mágicos em `vh` e
+     `vw` que se descolavam dela em cada largura de tela. No modo embutido esse
+     descolamento chegava a 118 px, com o anel visivelmente ao lado dela. */
+  place-items: end center;
+}
+
+.avatar {
+  position: relative;
+  z-index: 2;
+  /* A arte é quase quadrada: amarrar a altura à tela inteira faz a largura
+     estourar a coluna e o corpo sair cortado pelas laterais. Limitar pela
+     largura disponível mantém ela inteira.
+
+     ⚠️ Medido em 1600x1000 na versão anterior: 399 px de vazio à esquerda e
+     317 px entre a figura e o HUD, contra 484 px de figura — mais vazio que
+     assistente numa tela cujo assunto é ela. A arte traz margem transparente
+     em volta do corpo, então o valor aqui é sempre maior que a figura
+     aparente. */
+  width: min(86vh, 98%);
+  height: 92dvh;
+  filter: drop-shadow(0 26px 64px rgba(0, 0, 0, 0.58));
+  /* A arte termina na coxa — o recorte tirou o rodapé para eliminar um resto do
+     cenário original. Sem esta máscara sobra um corte reto atravessando a calça,
+     que é a primeira coisa que denuncia a montagem. Dissolver deixa a figura
+     nascer da penumbra. */
+  mask-image: linear-gradient(to bottom, #000 76%, transparent 99%);
+}
+
+/* Sombra projetada: sem ela a figura flutua, e flutuar é o que mais denuncia
+   uma imagem colada num fundo. */
+.chao {
+  position: absolute;
+  bottom: 7dvh;
+  left: 50%;
+  width: min(60vh, 72%);
+  height: 7vh;
+  translate: -50% 0;
+  background: radial-gradient(ellipse, rgba(0, 0, 0, 0.5) 0%, transparent 72%);
+  filter: blur(14px);
+  z-index: 1;
+}
+
+/* O anel acompanha o estado e gira enquanto ela pensa.
+   ⚠️ Ele precisa CABER na cena e circundar ela. Na primeira versão media 840 px
+   contra uma figura bem menor: aparecia como um arco solto no topo, cortado
+   pela borda da tela, sem relação com o corpo. Agora é dimensionado pelo menor
+   lado disponível e centrado na altura do tronco. */
+.anel {
+  position: absolute;
+  top: 52%;
+  left: 50%;
+  /* Acompanha o crescimento da figura: um anel fixo ficaria pequeno demais
+     dentro dela e voltaria a parecer desconexo. */
+  width: min(64vh, 52vw);
+  height: min(64vh, 52vw);
+  translate: -50% -50%;
+  z-index: 0;
+  overflow: visible;
+  opacity: 0.85;
+  transition: opacity 600ms ease, scale 700ms cubic-bezier(.2,.8,.3,1);
+}
+
+.anel circle { fill: none; transform-origin: 100px 100px; }
+
+/* ⚠️ Estava em 8% e 5% de branco, com traço de 0.5 num viewBox de 200 — cerca
+   de um pixel e meio na tela, quase invisível no repouso. O anel é a moldura
+   que diz que ela está viva antes de qualquer palavra; se não se vê, ele não
+   existe. Reforçado o suficiente para ser lido, e não mais do que isso: aro
+   grosso vira enfeite e rouba a atenção da figura.
+
+   ⚠️ E EM 17% AINDA NÃO SE VIA — o Mestre continuou dizendo "o anel de estado
+   quase não aparece" por várias rodadas, e a obrigação atravessou todas elas
+   confirmada só de olho. Medido em 24/08/2026 por `scripts/medir-anel.mjs`, no
+   PIXEL da tela e não na cor declarada, contra a régua da WCAG 1.4.11 (3:1 para
+   a fronteira de um componente):
+
+       parada 1,484:1 · ouvindo 1,636:1 · pensando 1,660:1 · falando 1,521:1
+
+   Metade do mínimo. Três candidatos foram medidos antes de escolher, para o
+   reforço ser o MENOR que resolve e não o mais confortável de digitar:
+
+       0,30 / 0,7 → 2,22 a 2,68   (ainda reprova)
+       0,42 / 0,9 → 3,13 a 3,98   (passa nos quatro, escolhido)
+       0,55 / 1,0 → 4,01 a 5,77   (passa, e o aro começa a competir com ela)
+
+   O 0,42 é o piso que cumpre a norma; subir mais seria trocar um defeito por
+   outro, e o comentário acima já dizia qual. */
+.anel-base { stroke: rgba(255, 255, 255, 0.42); stroke-width: 0.9; }
+.anel-fino { stroke: rgba(255, 255, 255, 0.10); stroke-width: 0.45; stroke-dasharray: 1.5 6; }
+
+.anel-progresso {
+  stroke: var(--acento);
+  stroke-width: 1.3;
+  stroke-linecap: round;
+  stroke-dasharray: 70 522;
+  opacity: 0;
+  /* ⚠️ O BRILHO SAIU, E O MOTIVO ESTÁ MEDIDO — não é gosto.
+     Era `filter: drop-shadow(0 0 3px var(--acento))` num traço que GIRA. Um
+     filtro sobre elemento animado obriga o navegador a refazer a passagem de
+     filtro a cada quadro, e medido em 24/08/2026 por `medir-desempenho.mjs`,
+     em "pensando": 27,6% dos quadros perdidos com ele, 17,6% sem — dez pontos
+     de orçamento de quadro num efeito que não carrega informação nenhuma.
+     Numa personagem cuja promessa é parecer viva, engasgo custa mais do que
+     brilho entrega.
+     O acento continua legível pela cor e pela espessura do próprio traço, que
+     é o que a medição do anel cobra (WCAG 1.4.11, 3:1) — e o `medir-anel`
+     continua verde depois desta remoção. */
+  /* `stroke` não transita mais por conta própria: a cor já chega interpolada
+     por `--acento`. Duas curvas empilhadas atrasavam o anel em relação ao
+     fundo, que é exatamente o defeito que esta rodada foi corrigir. */
+  transition: opacity 450ms ease;
+}
+
+/* A cena inteira reage: o anel cresce um pouco quando ela entra em ação, e é
+   essa mudança de escala que dá a sensação de acionamento. */
+[data-estado="pensando"] .anel,
+[data-estado="executando"] .anel { scale: 1.06; opacity: 1; }
+[data-estado="ouvindo"] .anel { scale: 1.03; opacity: 1; }
+
+[data-estado="pensando"] .anel-progresso { opacity: 1; animation: girar 2.4s linear infinite; }
+[data-estado="executando"] .anel-progresso { opacity: 1; animation: girar 1.5s linear infinite; }
+[data-estado="falando"] .anel-progresso { opacity: 0.55; animation: girar 6s linear infinite; }
+[data-estado="ouvindo"] .anel-fino { stroke: var(--acento); opacity: 0.6; animation: girar 22s linear infinite reverse; }
+[data-estado="sucesso"] .anel { scale: 1.03; opacity: 1; }
+[data-estado="sucesso"] .anel-progresso { opacity: 0.72; animation: none; stroke-dasharray: 120 472; }
+
+/* ⚠️ Falha, medida na captura de 22/08/2026: o único sinal de que algo tinha
+   quebrado era uma linha de texto no canto do HUD, e o anel continuava
+   invisível como no repouso. O anel é o que se lê de longe — na falha ele fica
+   inteiro, vermelho e PARADO. Parado é o ponto: giro significa trabalho em
+   curso, e não há trabalho em curso depois de o cérebro cair. */
+[data-estado="erro"] .anel { opacity: 1; scale: 1.03; }
+[data-estado="erro"] .anel-progresso {
+  opacity: 1;
+  animation: none;
+  rotate: -90deg;
+  stroke-dasharray: 592 0;
+  stroke-width: 0.9;
+}
+[data-estado="erro"] .anel-base { stroke: rgba(239, 107, 107, 0.18); }
+
+@keyframes girar { to { rotate: 360deg; } }
+
+/* ---------- HUD ---------- */
+
+.hud {
+  position: relative;
+  z-index: 3;
+  grid-column: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 30px 30px 120px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--linha-forte) transparent;
+  /* ⚠️ A divisa era `border-left: 1px solid` — um traço reto de ponta a ponta,
+     igual à `border-top` que cortava a tela no celular. No modo embutido, com o
+     quadro de cantos arredondados do site hospedeiro, a linha ia bater nos
+     cantos e ficava ainda mais dura. Agora ela é um degradê pintado no fundo:
+     nasce e morre em transparente, e só existe onde de fato separa conteúdo. O
+     fundo continua com `background-attachment: scroll`, então a linha fica na
+     borda do painel e não rola com o conteúdo. */
+  background:
+    linear-gradient(to bottom, transparent 0, var(--linha) 12%, var(--linha) 88%, transparent 100%)
+      left / 1px 100% no-repeat,
+    linear-gradient(to left, rgba(10, 7, 34, 0.72), transparent);
+  border-left: 0;
+  /* ⚠️ O `backdrop-filter: blur(2px)` SAIU, e o preço dele estava medido.
+     Medido em 24/08/2026 por `medir-desempenho.mjs`, isolando um elemento de
+     cada vez em "pensando": com ele, 14,7% dos quadros perdidos; sem ele,
+     ZERO. Ele sozinho respondia por toda a perda que sobrava — mais do que o
+     anel, o halo, o chão e a onda somados.
+     A razão é geométrica: este painel ocupa a coluna inteira e a borda
+     esquerda dele é semitransparente, então a região de fundo que o filtro
+     precisa reamostrar inclui a figura que se MEXE. Um desfoque cuja fonte
+     anima é refeito todo quadro, e a área aqui é enorme.
+     E o que ele entregava foi medido também: com e sem, a tela difere em 856
+     pixels — 0,05% da imagem —, contra um controle de duas capturas idênticas
+     que já difere em 134 só pela carga do processador mudando. Meio décimo de
+     por cento de suavidade não paga um sétimo dos quadros numa personagem cuja
+     promessa é parecer viva.
+     O painel continua separado do fundo pelo próprio gradiente, que é opaco o
+     bastante e não custa nada por quadro. */
+}
+
+.hud-topo {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding-bottom: 16px;
+  /* Mesma regra da divisa: régua que nasce e morre em transparente. Uma linha
+     sólida de ponta a ponta corta a coluna e endurece o painel. */
+  background: linear-gradient(to right, var(--linha) 60%, transparent)
+    bottom / 100% 1px no-repeat;
+}
+
+/* ⚠️ Peso 700, não 800. Ampliada a seis vezes em 22/08/2026, a marca lia-se
+   "Jarvio": o corte 800 do Neulis é uma variante de display com o "r" em gancho
+   e o "s" fechado em círculo. Os pesos 500 a 700 usam a forma comum e a palavra
+   volta a ser legível. O espaçamento maior devolve a presença que o peso perdeu. */
+.hud-marca {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.hud-divisor { width: 1px; height: 13px; background: var(--linha-forte); }
+
+.hud-identidade {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--texto-3);
+}
+
+/* ⚠️ O rótulo de estado NÃO pode rolar embora. O painel acompanha a execução
+   rolando — de propósito, é assim que o passo novo entra na vista —, e isso
+   levava junto a linha que diz o que está acontecendo. Medido em 390x844 em
+   22/08/2026: em "executando" o rótulo ficava em 408 com o painel começando em
+   439, trinta e um pixels fora da vista. Numa interface só voz, "Executando" e
+   "Respondendo" são a única confirmação visual de que ela ouviu; perdê-los no
+   instante em que ela trabalha é perder o essencial.
+
+   ⚠️ O fundo tem de ser OPACO na caixa inteira. Na primeira tentativa ele era
+   um degradê que morria dentro da própria caixa, e o rótulo "EXECUÇÃO" rolava
+   por baixo e aparecia como um borrão logo abaixo de "Executando" — pior do
+   que a moldura que o degradê queria evitar. A dissolução mudou de lugar: ela
+   agora acontece FORA da caixa, num `::after` de 16px, onde não há texto para
+   competir. */
+.hud-estado {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  /* ⚠️ FIXA SEM FUNDO É PIOR DO QUE NÃO FIXA. A faixa só ganha fundo opaco
+     enquanto ela trabalha (regra logo abaixo, com o motivo escrito). Em repouso
+     ela continuava `sticky` e TRANSPARENTE — e a premissa de que "em repouso
+     não há nada rolando por baixo" é falsa a 390px, onde o painel já rola
+     sozinho (617px de conteúdo em 405 de altura). Medido em 23/08/2026 por
+     auditoria visual, com rolagem real: "Toque para falar comigo" era impresso
+     por cima do balão de sugestão e, no quadro embutido, por cima do rótulo
+     SISTEMA — dois textos no mesmo pixel. Em repouso ela rola junto, que é o
+     comportamento honesto de uma faixa sem fundo. */
+  flex-shrink: 0;
+  padding-block: 8px;
+  /* De borda a borda do painel. Recuada, a faixa desenhava um retângulo com
+     quina visível DENTRO da coluna — a mesma moldura dura que este projeto
+     removeu da divisa, do rodapé e do topo do celular. Medido em 1600x1000:
+     faixa de 1150 a 1570 num painel de 1120 a 1600. */
+  margin-inline: -30px;
+  padding-inline: 30px;
+}
+
+/* ⚠️ A faixa só PINTA enquanto ela trabalha. Pintada sempre, virava um
+   retângulo mais claro atravessando a coluna em repouso — visível na captura de
+   1600x1000 de 22/08/2026 — e em repouso não há nada rolando por baixo para
+   esconder: o fundo existia sem motivo. Quem precisa dele é o instante em que
+   os passos passam por trás do rótulo.
+
+   ⚠️ E ele tem de ser OPACO na caixa inteira. Na primeira tentativa era um
+   degradê que morria dentro da própria caixa, e o rótulo "EXECUÇÃO" rolava por
+   baixo aparecendo como um borrão logo abaixo de "Executando" — pior do que a
+   moldura que o degradê queria evitar. A dissolução mudou de lugar: acontece
+   FORA da caixa, onde não há texto para competir. */
+.palco:not([data-estado="parada"]) .hud-estado { background: var(--tinta-0); }
+.palco[data-estado="parada"] .hud-estado { position: static; }
+
+.palco:not([data-estado="parada"]) .hud-estado::before,
+.palco:not([data-estado="parada"]) .hud-estado::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 16px;
+  pointer-events: none;
+}
+
+/* Para cima, na faixa de recuo onde o microfone monta; para baixo, sobre os
+   passos que rolam. Sem os dois, a faixa tem duas quinas retas. */
+.palco:not([data-estado="parada"]) .hud-estado::before {
+  bottom: 100%;
+  background: linear-gradient(to top, var(--tinta-0), rgba(10, 7, 34, 0));
+}
+
+.palco:not([data-estado="parada"]) .hud-estado::after {
+  top: 100%;
+  background: linear-gradient(to bottom, var(--tinta-0), rgba(10, 7, 34, 0));
+}
+
+.pulso {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: var(--acento);
+  box-shadow: 0 0 0 0 var(--acento-suave);
+  transition: background 400ms ease;
+}
+
+[data-estado="ouvindo"] .pulso,
+[data-estado="pensando"] .pulso,
+[data-estado="falando"] .pulso,
+[data-estado="executando"] .pulso { animation: pulsar 1.9s ease-out infinite; }
+
+@keyframes pulsar {
+  0% { box-shadow: 0 0 0 0 var(--acento-suave); }
+  70% { box-shadow: 0 0 0 12px transparent; }
+  100% { box-shadow: 0 0 0 0 transparent; }
+}
+
+.estado {
+  flex: 1;
+  margin: 0;
+  font-size: 13.5px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--texto);
+}
+
+.cronometro {
+  font-size: 11.5px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--texto-3);
+}
+
+/* ---------- onda de voz ---------- */
+
+.onda {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  height: 30px;
+  /* ⚠️ `height: 30px` num filho de flex NÃO garante 30px: quando o painel
+     transborda, o navegador encolhe os itens, e este ia a 2px — a altura das
+     barrinhas. Medido em 390x844 em 22/08/2026: a onda passava de 30 para 2 no
+     instante em que a execução enchia o painel, empurrando tudo 28px para cima.
+     Some justamente quando ela fala, que é o único momento em que ela existe. */
+  flex-shrink: 0;
+  opacity: 0;
+  /* ⚠️ TENTATIVA REVERTIDA EM 23/08/2026, registrada para ninguém repetir.
+     Em repouso a onda ocupa 30px mais 20px de `gap` sem mostrar nada — 50px
+     numa coluna de 405px que transborda 212, com as sugestões do "Experimente
+     dizer" cortadas embaixo por causa de um enfeite invisível. Tentei colapsar
+     a altura fora da fala, e depois só no repouso.
+     `scripts/provar-estabilidade.mjs` reprovou as DUAS versões: a altura
+     amostrada durante o trabalho deu 0, 8, 23, 29, 30 — o conteúdo abaixo dela
+     desce cinquenta pixels no meio da execução, e o contrato "o painel não
+     realoca durante o trabalho" é mais antigo, foi medido com controle plantado
+     e vale mais do que os cinquenta pixels que o colapso devolvia.
+     Devolver o espaço em repouso sem mexer no trabalho exigiria outra coisa —
+     não um estado a menos na mesma propriedade. Fica aberto. */
+  transition: opacity 350ms ease;
+}
+
+.onda i {
+  flex: 1;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--acento);
+  transform-origin: center;
+  transition: scale 90ms ease-out;
+}
+
+/* ⚠️ A onda era exibida também em "ouvindo", e ficava PARADA: dezoito
+   tracinhos imóveis prometendo que a voz de quem fala está sendo captada,
+   enquanto nada os move — a articulação só roda quando ela fala. Captado na
+   primeira captura do estado de escuta, em 22/08/2026. Mostrar o nível real do
+   microfone seria a resposta certa, e não foi feito de propósito: exigiria um
+   segundo fluxo de áudio ao lado do reconhecimento, e a transcrição não é
+   verificável nesta máquina — mexer às cegas no caminho do microfone é pior do
+   que esconder um enfeite. A escuta já se anuncia pelo microfone aceso, pelo
+   halo pulsando, pela cena em laranja e pelo anel fino girando. */
+[data-estado="falando"] .onda { opacity: 0.85; }
+
+/* ---------- blocos ---------- */
+
+.bloco { display: flex; flex-direction: column; gap: 9px; }
+.bloco[hidden] { display: none; }
+
+/* ⚠️ Em repouso o painel tinha 467 px de conteúdo numa coluna de 1000, e os
+   375 px de folga caíam TODOS num bloco morto entre a última dica e o rodapé —
+   medido em 1600x1000 em 22/08/2026. O olho lê isso como página que não
+   terminou de carregar. Com uma margem automática aqui, o `margin-top: auto` do
+   rodapé deixa de ser o único a reclamar a folga e os dois dividem: o topo
+   segura quem ela é e o estado, o meio traz medida e sugestão, o rodapé fecha
+   embaixo. Vazio distribuído é respiro; vazio empilhado no fim é falta.
+
+   ⚠️ E é o bloco de SISTEMA, não "o primeiro bloco visível", de propósito: ele
+   é o único que existe SÓ em repouso. Numa regra genérica, a folga passaria a
+   valer durante a execução, e o painel saltaria de baixo para cima conforme os
+   passos chegassem — o HUD realocando durante o trabalho, que é exatamente o
+   que não pode acontecer. */
+#dicas:not([hidden]) { margin-top: auto; }
+
+.rotulo {
+  margin: 0;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.17em;
+  text-transform: uppercase;
+  color: var(--texto-3);
+}
+
+/* ⚠️ RÓTULO FATIADO AO MEIO. Medido em 23/08/2026 em 390x844, durante a fala:
+   "EXECUÇÃO" ocupava 515–528 e a faixa de estado, que é `sticky` e opaca,
+   ocupava 485–519 — quatro pixels de sobreposição, e no recorte a 3× as letras
+   aparecem cortadas na horizontal. Versalete cortado ao meio lê como falha de
+   renderização, não como conteúdo rolando por baixo.
+   E não é azar de posição: com uma faixa fixa no topo, QUALQUER rolagem acaba
+   parando algum rótulo debaixo dela — e o painel rola sozinho enquanto ela
+   trabalha, justamente quando alguém está olhando.
+   Os rótulos passam a ser fixos também, logo abaixo da faixa e ABAIXO dos 16px
+   de dissolução dela, para não serem apagados pelo próprio degradê. Em vez de
+   fatiados, eles param inteiros e a lista rola por baixo — que de quebra diz em
+   que seção o olho está numa lista longa.
+   Só enquanto ela trabalha, pela mesma razão da faixa: pintado em repouso, o
+   fundo opaco vira retângulo mais claro atravessando a coluna, porque o painel
+   não tem fundo sólido — ele é um degradê sobre a cena. */
+.palco:not([data-estado="parada"]) .hud .rotulo {
+  position: sticky;
+  top: 50px;
+  z-index: 1;
+  background: var(--tinta-0);
+  margin-inline: -30px;
+  padding-inline: 30px;
+  padding-block: 3px;
+}
+
+/* ⚠️ O RÓTULO PAROU DE SER FATIADO E PASSOU A FATIAR. Medido em 23/08/2026 por
+   auditoria visual a 390px, com pedido real: a faixa opaca de "EXECUÇÃO"
+   cortava ao meio a linha do passo — sobravam só as metades de cima das letras
+   de "Consultando o conhecimento da educação" —, e a de "EVIDÊNCIAS" apagava a
+   segunda linha do título do primeiro cartão, tirando a palavra "Fundamental".
+   Meia letra debaixo de uma barra opaca lê como falha de renderização, que é
+   exatamente o defeito que esta regra veio corrigir, agora do outro lado.
+   A saída é a mesma que a faixa de estado já usa: a borda de baixo dissolve,
+   FORA da caixa, onde não há texto para competir. O conteúdo passa a
+   desaparecer em degradê ao entrar debaixo do rótulo em vez de ser guilhotinado
+   numa aresta. 10px é o que cobre uma linha de texto pela metade. */
+.palco:not([data-estado="parada"]) .hud .rotulo::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  height: 10px;
+  pointer-events: none;
+  background: linear-gradient(to bottom, var(--tinta-0), rgba(0, 0, 0, 0));
+}
+.palco:not([data-estado="parada"]) .hud .rotulo { isolation: isolate; }
+
+/* Execução: uma linha do tempo, com trilho ligando os passos. */
+.passos { list-style: none; margin: 0; padding: 0 0 0 17px; position: relative; }
+
+.passos::before {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 7px;
+  bottom: 7px;
+  width: 1px;
+  background: var(--linha-forte);
+}
+
+.passos li {
+  position: relative;
+  padding: 5px 0;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--texto-2);
+  animation: entrar 340ms ease both;
+}
+
+.passos li::before {
+  content: "";
+  position: absolute;
+  left: -17px;
+  top: 11px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--tinta-0);
+  border: 1.5px solid var(--texto-3);
+}
+
+.passos li[data-ativo="sim"] { color: var(--texto); font-weight: 500; }
+.passos li[data-ativo="sim"]::before { border-color: var(--acento); box-shadow: 0 0 10px var(--acento-suave); }
+.passos li[data-estado="ok"]::before { border-color: var(--verde); background: var(--verde); }
+.passos li[data-estado="falhou"]::before { border-color: var(--vermelho); background: var(--vermelho); }
+/* ⚠️ A espera por um "sim" NÃO é falha. Até 22/08/2026 a confirmação pendente
+   pintava de vermelho "Registrando a decisão" e "nada foi gravado ainda" — a
+   mesma cor de HTTP 404 e de servidor caído —, e a tela dizia que a gravação
+   deu errado numa hora em que ela nem tinha sido tentada. Oco e na cor de
+   atenção: está armado, falta você. */
+.passos li[data-estado="aguardando"]::before {
+  border-color: var(--laranja);
+  background: transparent;
+  box-shadow: 0 0 8px rgba(240, 138, 62, 0.35);
+}
+.medidas dd[data-estado="aguardando"],
+.fontes li[data-estado="aguardando"] { border-color: var(--laranja); }
+
+/* ⚠️ Encerrado NÃO é falha. Quando a pessoa diz "não, deixa pra lá", o sistema
+   fez exatamente o certo — e a tela dizia que algo deu errado, na mesma cor de
+   servidor caído. Medido em 22/08/2026. Ponto oco e apagado: acabou, e não há
+   nada de errado nisso. */
+.passos li[data-estado="encerrado"] { color: var(--texto-3); }
+.passos li[data-estado="encerrado"]::before {
+  border-color: var(--linha-forte);
+  background: transparent;
+}
+.passos li[data-fora="sim"]::after {
+  content: "sai da máquina";
+  margin-left: 8px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--laranja);
+}
+
+/* Medições: números medidos, alinhados em coluna para comparar de relance. */
+.medidas { margin: 0; display: grid; grid-template-columns: 1fr auto; gap: 7px 14px; }
+
+.medidas dt {
+  font-size: 12.5px;
+  color: var(--texto-2);
+  /* ⚠️ Aqui havia reticências, e elas cortavam informação. Medido em 23/08/2026
+     no modo EMBUTIDO a 1280x800: o painel fica com 332px e a coluna do rótulo
+     com 122, contra 135 de conteúdo — "carga do processador" saía como "carga
+     do process…" dentro do site de um cliente. Não aparecia no desktop (painel
+     de 480) nem no embutido a 390 (348), que é como passou despercebido.
+     Rótulo que quebra em duas linhas mostra tudo; rótulo com reticências
+     esconde. E o alinhamento não sofre: numa grade, o valor e o rótulo dividem
+     a mesma linha, e o valor continua encostado à direita. */
+  overflow-wrap: anywhere;
+}
+
+.medidas dd {
+  margin: 0;
+  font-size: 12.5px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--texto);
+  text-align: right;
+}
+
+.medidas dd[data-estado="falhou"] { color: var(--vermelho); }
+/* ⚠️ Quando a MEDIDA está no fim — disco acabando —, o rótulo vai junto. Só o
+   valor em vermelho, com "disco livre" em cinza claro ao lado, lê-se como um
+   erro de leitura do runtime, que é o outro caso que usa esta cor. Marcando os
+   dois, a linha inteira é o alarme. */
+.medidas dt[data-estado="falhou"] { color: var(--vermelho); opacity: 0.85; }
+
+.medidas .nota {
+  grid-column: 1 / -1;
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--texto-3);
+  /* ⚠️ Herdava `white-space: nowrap` e `text-overflow: ellipsis` do `dt` da
+     tabela, e uma frase inteira virava "… ". Medido na captura do estado de
+     fala em 22/08/2026: a procedência da resposta aparecia cortada. Rótulo de
+     tabela pode truncar; frase, não. */
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+}
+
+.medidas .nota[data-estado="falhou"] { color: var(--vermelho); }
+
+/* Evidências: as fontes, com o domínio destacado do título. */
+.fontes { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 7px; }
+
+.fontes li {
+  padding: 9px 11px;
+  border-radius: 9px;
+  border: 1px solid var(--linha);
+  background: rgba(255, 255, 255, 0.022);
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--texto-2);
+  animation: entrar 340ms ease both;
+}
+
+/* ⚠️ A ressalva desmente o cartão que vem embaixo dela, então não pode ser mais
+   discreta que ele. Medido em 23/08/2026: o aviso de que a base não tinha o
+   número pedido saía em cinza pequeno debaixo de MEDIÇÕES, e logo abaixo o
+   cartão "Áreas do conhecimento da BNCC" aparecia com borda e título em
+   negrito. Quem varre o painel lia o cartão como se fosse a resposta — que é
+   exatamente o engano que o aviso existe para desfazer. */
+.fontes li[data-ressalva="sim"] {
+  border-color: rgba(253, 167, 95, 0.42);
+  background: rgba(253, 167, 95, 0.07);
+  color: var(--texto);
+  font-weight: 500;
+  display: flex;
+  gap: 8px;
+}
+
+.fontes li[data-ressalva="sim"]::before {
+  content: "⚠";
+  color: var(--laranja);
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.fontes li b { display: block; font-weight: 600; color: var(--texto); margin-bottom: 2px; }
+/* ⚠️ `word-break: break-all` existia para domínios compridos, mas parte
+   qualquer palavra no meio. Com a procedência legal aparecendo inteira, isso
+   virou "homologada em 20/12/ 2017" e "Resolução CN E/CP nº 4/2018" — número de
+   norma cortado ao meio, numa tela cujo assunto é justamente a norma.
+   `anywhere` só quebra quando não há alternativa. */
+.fontes li span { color: var(--texto-3); font-size: 11px; overflow-wrap: anywhere; }
+
+@keyframes entrar { from { opacity: 0; translate: 0 6px; } to { opacity: 1; translate: 0 0; } }
+
+/* ⚠️ Centrar o corpo do painel no vazio foi tentado em 22/08/2026 e revertido:
+   o vazio de 377 px do rodapé virou 330 px no MEIO da coluna, entre o estado e
+   o primeiro bloco. Trocar um buraco no fim por um buraco no meio é pior. */
+.hud-rodape {
+  margin-top: auto;
+  padding-top: 14px;
+  /* ⚠️ Era `border-top: 1px solid`. Com 162 px de vazio acima dela em 1024 e
+     377 px em 1600, a linha sólida sublinhava o buraco em vez de separar
+     alguma coisa: o rodapé parecia solto no fundo da coluna, atrás de uma
+     régua. Desvanecendo, ela deixa de ser moldura e vira só o começo da nota
+     de procedência. */
+  background: linear-gradient(to right, var(--linha) 60%, transparent)
+    top / 100% 1px no-repeat;
+}
+
+.motor {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  color: var(--texto-3);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Cérebro ausente é falha, e falha se lê em vermelho — o mesmo tratamento que
+   "oal: HTTP 404" recebe na tabela de medidas. */
+.motor[data-estado="falhou"] { color: var(--vermelho); }
+
+/* ---------- dicas de fala ---------- */
+/* Vivem no HUD e ensinam o que dizer. Não são botões e não enviam nada: a
+   única porta de entrada continua sendo o microfone. */
+
+.dicas ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.dicas li {
+  padding: 8px 11px;
+  border-radius: 9px;
+  border: 1px dashed var(--linha-forte);
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: var(--texto-2);
+}
+
+/* Enquanto ela trabalha, as dicas saem da frente — porque aí a execução, as
+   medições e as evidências disputam a coluna com elas.
+
+   ⚠️ MENOS na escuta. A regra dizia `:not([data-estado="parada"])` e apagava as
+   sugestões também em "ouvindo", onde elas não estão na frente de nada: medido
+   em 1600x1000 em 22/08/2026, durante a escuta os blocos de execução, medições
+   e evidências estão TODOS ocultos, e o que sobrava no lugar das dicas eram
+   430 px de vazio até o rodapé. E é justamente aí que elas servem — quem acabou
+   de apertar o microfone e não sabe o que dizer some com a única pista no
+   segundo exato em que precisa dela. */
+.palco:not([data-estado="parada"]):not([data-estado="ouvindo"]) .dicas { display: none; }
+
+/* ---------- microfone ---------- */
+
+.microfone {
+  position: absolute;
+  z-index: 4;
+  /* Encostado na borda esquerda, e não no meio: no centro ele cai em cima do
+     corpo dela, que é a figura que a tela existe para mostrar.
+     ⚠️ Tentei mover para o eixo dela em 22/08/2026, com o argumento de que a
+     259 px de distância ele parecia órfão. A captura mostrou o botão em cima da
+     mão e do antebraço dela. Revertido: a premissa original estava certa. */
+  left: 46px;
+  bottom: 46px;
+  width: 78px;
+  height: 78px;
+  border-radius: 50%;
+  /* ⚠️ A FRONTEIRA DO ÚNICO CONTROLE DA INTERFACE ESTAVA EM 1,37:1.
+     Medido no pixel em 23/08/2026, amostrando 24 ângulos da borda contra o que
+     está atrás: 1,37:1 a 1600x1000 e 1,80:1 a 390x844, em repouso. A WCAG
+     1.4.11 pede 3:1 para a fronteira de um componente de interface — não é
+     régua minha, é a mesma família do 4,5:1 que já governa o texto daqui. Em
+     "ouvindo" o botão fica laranja cheio e a fronteira vai a 10,67:1; o defeito
+     era só do REPOUSO, que é justamente o primeiro momento de quem chega e não
+     sabe onde tocar.
+     `--linha-forte` continua valendo para divisas e cartões, que são enfeite; o
+     botão precisa de mais, e só ele.
+     ⚠️ Continua sendo hairline de 1px: a cicatriz do anel diz que aro grosso
+     vira enfeite e rouba a atenção da figura. O que mudou é a opacidade. */
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  background: rgba(18, 13, 51, 0.72);
+  color: var(--texto);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  backdrop-filter: blur(14px);
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.5);
+  transition: scale 220ms cubic-bezier(.2,.9,.3,1.2), border-color 260ms ease, background 260ms ease;
+}
+
+.microfone svg { position: relative; z-index: 1; }
+.microfone-texto { display: none; }
+.microfone:hover { scale: 1.06; border-color: var(--acento); }
+.microfone:active { scale: 0.97; }
+.microfone:focus-visible { outline: 2px solid var(--acento); outline-offset: 4px; }
+
+.microfone-halo {
+  position: absolute;
+  inset: -1px;
+  border-radius: 50%;
+  border: 1.5px solid var(--acento);
+  opacity: 0;
+}
+
+[data-estado="ouvindo"] .microfone { background: var(--laranja); color: var(--tinta-0); border-color: var(--laranja); }
+[data-estado="pensando"] .microfone,
+[data-estado="executando"] .microfone { border-color: var(--acento); box-shadow: 0 12px 34px rgba(0,0,0,.5), 0 0 0 4px var(--acento-suave); }
+[data-estado="ouvindo"] .microfone-halo { opacity: 1; animation: expandir 1.6s ease-out infinite; }
+
+@keyframes expandir {
+  0% { scale: 1; opacity: 0.8; }
+  100% { scale: 1.55; opacity: 0; }
+}
+
+.microfone:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ---------- respeito ao movimento reduzido ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .anel-progresso, .anel-fino, .pulso, .microfone-halo,
+  .passos li, .fontes li { animation: none !important; }
+  .anel, .brilho { transition: none; scale: 1 !important; }
+  .onda i { transition: none; }
+}
+
+/* ---------- telas menores ---------- */
+
+@media (max-width: 900px) {
+  /* Uma coluna só, figura centrada — e o foco do cenário vai junto com ela. */
+  .palco { grid-template-columns: 1fr; grid-template-rows: minmax(0, 1fr) auto; --foco-x: 50%; }
+  .cena { grid-column: 1; grid-row: 1; height: 100%; place-items: end center; padding-left: 0; }
+  .anel, .chao { left: 50%; }
+
+  /* A figura precisa CABER na faixa de cima. Com altura de 100% ela era maior
+     que a cena e o excesso saía cortado em linha reta na cintura, antes de a
+     dissolução da base começar — visível na captura de 390 px em 22/08/2026. */
+  .avatar { height: 96%; width: min(48vh, 96%); }
+  .anel { width: min(46vh, 78%); height: min(46vh, 78%); top: 46%; }
+  .chao { bottom: 2dvh; width: min(40vh, 62%); height: 5vh; }
+
+  .hud {
+    grid-column: 1;
+    grid-row: 2;
+    /* ⚠️ Era `max-height`, e por isso o painel CRESCIA conforme os passos
+       chegavam, até bater no teto — 390px de altura em "pensando", 405 em
+       "executando". Como ele está ancorado embaixo, crescer significa subir: o
+       painel inteiro, com o rótulo de estado e o microfone na borda, dava um
+       salto de 15px no meio do trabalho. Altura fixa não muda nada em repouso,
+       onde o conteúdo já passa do teto (935 contra 405), e elimina o salto. */
+    height: 48dvh;
+    /* O recuo de cima abre a faixa onde o microfone fica; o de baixo respeita a
+       área de gestos do aparelho e mantém a última linha longe do
+       desvanecimento de rolagem. */
+    padding: 46px 18px calc(46px + env(safe-area-inset-bottom, 0px));
+    /* ⚠️ O painel rola e não dizia isso. Medido em 22/08/2026: em 390x844 o
+       conteúdo tem 549 px numa janela de 405 — transborda 144, e a terceira
+       sugestão fica 68 px fora da vista; num aparelho de 360x740 são 194 px de
+       transbordo e 118 px da última dica escondidos. A linha era simplesmente
+       cortada, sem nenhuma pista de que havia mais. O desvanecimento no fim é a
+       pista, e o recuo de baixo garante que nada útil fique debaixo dele. */
+    mask-image: linear-gradient(to bottom, #000 92%, transparent 100%);
+    /* ⚠️ E O TOPO TAMBÉM CORTA — só que apenas em REPOUSO, que é quando dá para
+       desvanecer sem custo. Medido em 23/08/2026 a 390x844, rolando o painel
+       até o fim: o rótulo "EXPERIMENTE DIZER" ficava FATIADO ao meio pela borda
+       de cima, com só a metade de baixo das letras à mostra — versalete cortado
+       lê como falha de renderização, o mesmo defeito que a faixa de estado e os
+       rótulos grudentos já tiveram.
+       A tentativa de 22/08 (registrada logo abaixo) desvanecia o topo SEMPRE e
+       apagava "Respondendo", que é a informação mais importante da tela durante
+       o trabalho. Por isso agora é só em repouso: aí não há faixa fixa no topo,
+       e os 30px do desvanecimento caem dentro dos 46px de recuo — no início da
+       rolagem não há nada para apagar, e o que sobe dissolve em vez de ser
+       guilhotinado. */
+  }
+
+  .palco[data-estado="parada"] .hud {
+    mask-image: linear-gradient(to bottom, transparent 0, #000 30px, #000 92%, transparent 100%);
+    /* ⚠️ Tentei desvanecer o topo também, em 22/08/2026, porque a medição
+       geométrica acusava o microfone sobrepondo o bloco de estado quando o
+       painel rola. A captura mostrou o custo: o rótulo "Respondendo" — a
+       informação mais importante da tela naquele instante — saiu apagado.
+       Revertido. A sobreposição existe no papel e não se lê na imagem: o botão
+       é redondo e translúcido, o rótulo fica à esquerda dele e o que passa por
+       trás são barras simétricas da onda. Métrica geométrica não é defeito
+       visual. */
+    /* ⚠️ Aqui havia `border-top: 1px solid` — uma linha dura atravessando a tela
+       inteira na divisa. Medido em 22/08/2026: a última linha da cena tem
+       luminância 40 e a primeira do painel 21, um degrau de 19 numa linha, com
+       um traço desenhado por cima. Era isso que eu vinha lendo na captura como
+       "a figura corta em linha reta" — a contribuição da figura nas últimas
+       doze linhas é 3, 2, 1, 0, 0…, ou seja, a dissolução dela funciona. O que
+       cortava era a moldura do painel. Sem a linha, e com o fundo nascendo
+       transparente, a cena escorre para dentro do painel. */
+    border-top: 0;
+    background: linear-gradient(to top,
+      var(--tinta-0) 58%,
+      rgba(10, 7, 34, 0.86) 88%,
+      rgba(10, 7, 34, 0) 100%);
+  }
+
+  /* ⚠️ O microfone sai de dentro do HUD e passa a montar na divisa entre a cena
+     e o painel. Fixo no rodapé ele cobria a primeira dica — medido:
+     `microSobreHud: true` — e num aparelho de toque isso rouba o alvo de quem
+     tenta ler. Aqui ele fica sozinho na sua faixa, sem nada embaixo. */
+  .microfone {
+    left: 50%;
+    top: 52dvh;
+    bottom: auto;
+    translate: -50% -50%;
+    width: 64px;
+    height: 64px;
+  }
+
+  /* O recuo lateral do painel aqui é 18px, não 30: a faixa fixa do rótulo de
+     estado precisa acompanhar, senão sobra ou falta borda. */
+  .hud-estado { margin-inline: -18px; padding-inline: 18px; }
+
+  /* ⚠️ NO TELEFONE, AS DICAS PERDIAM PARA A TELEMETRIA E SUMIAM. Medido em
+     23/08/2026 em 390x844, no repouso: painel de 405px com 617 de conteúdo, e
+     as TRÊS sugestões fora da vista — a primeira cortada 8px, a segunda 68px
+     fora, a terceira 111. O rótulo "EXPERIMENTE DIZER" aparecia sem nada
+     embaixo. Numa interface só voz, a única coisa que ensina o que dizer é
+     justamente essa lista, e ela desaparecia no aparelho em que um gestor mais
+     vai usar isto.
+     A troca é de ORDEM, não de tamanho: as dicas sobem, o bloco de sistema
+     desce. Os números da máquina são o que este mesmo painel já tira de cena
+     durante o trabalho — são o conteúdo secundário aqui, e são o que o operador
+     olha no desktop, onde nada é cortado.
+     ⚠️ Só abaixo de 900px, e só afeta repouso e escuta: durante o trabalho as
+     dicas e o bloco de sistema estão os dois escondidos, então isto não realoca
+     nada enquanto ela trabalha. */
+  /* ⚠️ E OS BLOCOS DE TRABALHO VÊM ANTES DAS DICAS. A primeira versão desta
+     reordenação pôs as dicas em 1 e o trabalho em 2, e isso empurrou a
+     EXECUÇÃO para fora da vista: medido em 390x844 com os passos na tela, o
+     bloco ficava em 825-962 num painel que acaba em 844 — 118px abaixo da
+     dobra — enquanto as sugestões ocupavam 645-805. Quem acabara de ser
+     RECUSADO via as dicas e não o motivo. Em repouso não muda nada, porque os
+     três blocos de trabalho estão escondidos e as dicas continuam sendo as
+     primeiras. */
+  .hud #bloco-passos, .hud #bloco-medidas, .hud #bloco-fontes { order: 1; }
+  .hud #dicas { order: 2; }
+  .hud #bloco-sistema { order: 3; }
+  .hud .hud-rodape { order: 4; }
+  /* Mesma sangria dos rótulos fixos: o painel tem 18px de recuo aqui. */
+  .palco:not([data-estado="parada"]) .hud .rotulo { margin-inline: -18px; padding-inline: 18px; }
+}
+
+/* ---------- modo embutido ---------- */
+/* Dentro do site hospedeiro ela ocupa uma caixa, não a tela: `100dvh` ali mede
+   a janela inteira do navegador e estoura o quadro do iframe. */
+
+[data-embutido="sim"] .palco { height: 100%; }
+[data-embutido="sim"] .cena { height: 100%; }
+
+/* ⚠️ 88%, não 96%. A dissolução da base começa aos 76% da altura do canvas: com
+   a figura ocupando quase todo o quadro, o trecho que desvanece caía fora da
+   área visível do iframe e ela terminava num corte reto no rodapé — visto na
+   captura de 22/08/2026. Encolher traz a dissolução para dentro do quadro. */
+/* ⚠️ A largura era `min(56vh, 88%)` e sufocava a figura. O enquadramento
+   dimensiona a arte pela ALTURA e depois a limita a 1,35 vez a largura do
+   canvas; num quadro de 930 px de altura essa trava entrava e a arte encolhia
+   de 897 para 703 px. Resultado medido em 22/08/2026: figura de 265 px de
+   largura e 340 px de vazio acima da cabeça — ela ficava pequena e afundada na
+   metade de baixo do quadro. Com a caixa mais larga a trava não entra; a arte
+   passa a transbordar o canvas em 88 px de cada lado, e isso cai dentro da
+   margem transparente do recorte, que tem quase 200. */
+[data-embutido="sim"] .avatar { height: 88%; width: min(96vh, 96%); }
+/* ⚠️ O ANEL ENCOLHIA A METADE DA FIGURA NO EMBUTIDO. Medido em 23/08/2026,
+   diâmetro do anel contra a altura visível dela: 0,75 no desktop, 0,75 no
+   tablet, 0,78 no telefone — e 0,56 no embutido de 1280, 0,50 no de 390. Na
+   captura da falha dá para ver: em vez de moldura, um aro em volta da cabeça,
+   com a borda de baixo atravessando o peito dela. É o mesmo defeito que o anel
+   tinha na primeira versão, com 840px contra uma figura bem menor — "arco solto
+   no topo, sem relação com o corpo".
+   A causa é a unidade: `vh` num quadro embutido é a altura do QUADRO, e a
+   figura ali ocupa 88% dela. Agora o anel é 66% da altura do quadro — 0,66/0,88
+   = 0,75 da figura, a mesma proporção dos outros três enquadramentos —, com
+   `aspect-ratio` para continuar redondo e um teto de largura para não estourar
+   num quadro estreito. */
+[data-embutido="sim"] .anel {
+  height: 64%;
+  width: auto;
+  aspect-ratio: 1;
+  /* Teto de largura só para quadro muito estreito: em 52vw ele passava a mandar
+     no de 390 e devolvia o aro pequeno pela outra porta. */
+  max-width: 92%;
+  top: 50%;
+}
+[data-embutido="sim"] .chao { bottom: 10%; width: min(38vh, 58%); height: 5%; }
+[data-embutido="sim"] .microfone { left: 26px; bottom: 26px; width: 58px; height: 58px; }
+[data-embutido="sim"] .hud { padding-bottom: 100px; }
+
+/* ⚠️ E em tela estreita a colocação de celular precisa VOLTAR a valer. A regra
+   de cima ancora o botão em `left: 26px` e não desfaz o `translate: -50%` que
+   a consulta de mídia aplica — mesma especificidade, e esta vinha depois, então
+   ganhava o `left` e herdava o deslocamento. Medido em 22/08/2026 num quadro de
+   390x844: borda esquerda do botão em −3, três pixels do controle fora da tela.
+   Precisa vir DEPOIS do bloco embutido para vencer; dentro da consulta de mídia
+   lá em cima ela perdia por ordem de fonte — tentado e medido, continuava −3. */
+@media (max-width: 900px) {
+  [data-embutido="sim"] .microfone {
+    left: 50%;
+    top: 52dvh;
+    bottom: auto;
+    translate: -50% -50%;
+  }
+}
+
+/* ---------- navegação por teclado ---------- */
+/* Quem não usa mouse precisa VER onde está. O anel de foco usa a cor do estado
+   e fica por fora do elemento, para não sumir contra o fundo escuro. */
+
+:focus-visible {
+  outline: 2px solid var(--acento);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* O painel é rolável e recebe foco para ser lido com as setas; sem `tabindex`
+   no HTML, quem navega por teclado não alcança o conteúdo que rola. */
+.hud:focus-visible { outline-offset: -2px; }
+
+/* ---------- avatar standalone ---------- */
+/* A mesma experiência sem HUD: figura, halo de estado e um único controle de
+   conversa. O cenário volta a respirar atrás dela, mas continua sem disputar
+   espaço com painéis, textos de telemetria ou outros controles. */
+html[data-modo="avatar"] body { background: var(--tinta-0); }
+
+html[data-modo="avatar"] .palco {
+  display: block;
+  height: 100dvh;
+  min-height: 100%;
+  --foco-x: 50%;
+}
+
+html[data-modo="avatar"] .palco .cenario { display: block; }
+
+html[data-modo="avatar"] .palco .brilho {
+  left: 50%;
+  top: 48%;
+  width: 112dvh;
+  height: 112dvh;
+  opacity: 0.92;
+}
+
+html[data-modo="avatar"] .palco .grade {
+  opacity: 0.72;
+  mask-image: radial-gradient(ellipse 62% 62% at 50% 52%, #000 0%, transparent 78%);
+}
+
+html[data-modo="avatar"] .palco .vinheta {
+  background: radial-gradient(ellipse 68% 82% at 50% 50%, transparent 35%, rgba(5, 3, 15, 0.86) 100%);
+}
+
+html[data-modo="avatar"] .palco .cena {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: end center;
+  padding: 0;
+}
+
+html[data-modo="avatar"] .palco .avatar {
+  width: min(84dvh, 78vw);
+  height: 88dvh;
+  max-width: 100%;
+  max-height: 100%;
+  filter: drop-shadow(0 22px 58px rgba(0, 0, 0, 0.52));
+}
+
+html[data-modo="avatar"] .palco .anel {
+  display: block;
+  top: 50%;
+  left: 50%;
+  width: min(68dvh, 58vw);
+  height: min(68dvh, 58vw);
+  opacity: 0.9;
+}
+
+html[data-modo="avatar"] .palco .chao {
+  display: block;
+  left: 50%;
+  bottom: 5dvh;
+  width: min(48dvh, 38vw);
+  height: 6dvh;
+}
+
+html[data-modo="avatar"] .palco[data-estado="parada"] .anel-fino {
+  animation: girar 38s linear infinite;
+}
+
+html[data-modo="avatar"] .palco .hud {
+  display: none !important;
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0 0 0 0) !important;
+  clip-path: inset(50%) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+  background: none !important;
+  backdrop-filter: none !important;
+}
+
+html[data-modo="avatar"] .palco .microfone {
+  position: absolute;
+  inset: auto auto 30px 30px;
+  width: 58px;
+  min-width: 58px;
+  height: 58px;
+  padding: 0;
+  gap: 0;
+  translate: none;
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  border-radius: 999px;
+  background: rgba(18, 13, 51, 0.78);
+  color: var(--texto);
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(14px);
+  opacity: 1;
+  cursor: pointer;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: scale 220ms cubic-bezier(.2,.9,.3,1.2), border-color 260ms ease, background 260ms ease;
+  scale: 1;
+  touch-action: manipulation;
+}
+
+html[data-modo="avatar"] .palco .microfone svg {
+  display: block;
+  width: 22px;
+  height: 22px;
+  flex: 0 0 auto;
+}
+
+html[data-modo="avatar"] .palco .microfone-texto {
+  display: none;
+}
+
+html[data-modo="avatar"] .palco .microfone-halo {
+  display: block;
+  border-radius: inherit;
+}
+
+html[data-modo="avatar"] .palco .microfone:hover,
+html[data-modo="avatar"] .palco .microfone:active {
+  border-color: var(--acento);
+}
+
+html[data-modo="avatar"] .palco .microfone:hover { scale: 1.035; }
+html[data-modo="avatar"] .palco .microfone:active { scale: 0.98; }
+
+html[data-modo="avatar"] .palco .microfone:focus-visible {
+  outline: 2px solid var(--acento);
+  outline-offset: 4px;
+}
+
+html[data-modo="avatar"] .palco .microfone:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
