@@ -8,7 +8,7 @@
  * a resposta.
  */
 
-import { criarAvatar } from "./avatar.js";
+import { criarAvatar } from "./avatar.js?v=20260825-arm-safe-1";
 import { explicarFalhaDeMicrofone, falhaEmPortugues, motivoDoBilheteEmPortugues, motivoDoCerebroEmPortugues } from "./lib/confirmacao.js";
 import { aberturaDaLetra, larguraDaLetra } from "./lib/movimento.js";
 import { CARACTERES_POR_SEGUNDO, prepararParaVoz } from "./lib/voz.js";
